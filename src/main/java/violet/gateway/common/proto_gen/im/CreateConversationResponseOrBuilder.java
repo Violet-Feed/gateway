@@ -4,32 +4,36 @@
 package violet.gateway.common.proto_gen.im;
 
 public interface CreateConversationResponseOrBuilder extends
-    // @@protoc_insertion_point(interface_extends:im.CreateConversationResponse)
-    com.google.protobuf.MessageOrBuilder {
+        // @@protoc_insertion_point(interface_extends:im.CreateConversationResponse)
+        com.google.protobuf.MessageOrBuilder {
 
-  /**
-   * <code>.im.ConversationCoreInfo con_info = 1;</code>
-   */
-  boolean hasConInfo();
-  /**
-   * <code>.im.ConversationCoreInfo con_info = 1;</code>
-   */
-  violet.gateway.common.proto_gen.im.ConversationCoreInfo getConInfo();
-  /**
-   * <code>.im.ConversationCoreInfo con_info = 1;</code>
-   */
-  violet.gateway.common.proto_gen.im.ConversationCoreInfoOrBuilder getConInfoOrBuilder();
+    /**
+     * <code>.im.ConversationCoreInfo con_info = 1;</code>
+     */
+    boolean hasConInfo();
 
-  /**
-   * <code>.im.BaseResp baseResp = 255;</code>
-   */
-  boolean hasBaseResp();
-  /**
-   * <code>.im.BaseResp baseResp = 255;</code>
-   */
-  violet.gateway.common.proto_gen.im.BaseResp getBaseResp();
-  /**
-   * <code>.im.BaseResp baseResp = 255;</code>
-   */
-  violet.gateway.common.proto_gen.im.BaseRespOrBuilder getBaseRespOrBuilder();
+    /**
+     * <code>.im.ConversationCoreInfo con_info = 1;</code>
+     */
+    violet.gateway.common.proto_gen.im.ConversationCoreInfo getConInfo();
+
+    /**
+     * <code>.im.ConversationCoreInfo con_info = 1;</code>
+     */
+    violet.gateway.common.proto_gen.im.ConversationCoreInfoOrBuilder getConInfoOrBuilder();
+
+    /**
+     * <code>.common.BaseResp baseResp = 255;</code>
+     */
+    boolean hasBaseResp();
+
+    /**
+     * <code>.common.BaseResp baseResp = 255;</code>
+     */
+    violet.gateway.common.proto_gen.common.BaseResp getBaseResp();
+
+    /**
+     * <code>.common.BaseResp baseResp = 255;</code>
+     */
+    violet.gateway.common.proto_gen.common.BaseRespOrBuilder getBaseRespOrBuilder();
 }

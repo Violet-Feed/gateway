@@ -4,54 +4,56 @@
 package violet.gateway.common.proto_gen.im;
 
 public interface MessageEventOrBuilder extends
-    // @@protoc_insertion_point(interface_extends:im.MessageEvent)
-    com.google.protobuf.MessageOrBuilder {
+        // @@protoc_insertion_point(interface_extends:im.MessageEvent)
+        com.google.protobuf.MessageOrBuilder {
 
-  /**
-   * <code>.im.MessageBody msg_body = 1;</code>
-   */
-  boolean hasMsgBody();
-  /**
-   * <code>.im.MessageBody msg_body = 1;</code>
-   */
-  violet.gateway.common.proto_gen.im.MessageBody getMsgBody();
-  /**
-   * <code>.im.MessageBody msg_body = 1;</code>
-   */
-  violet.gateway.common.proto_gen.im.MessageBodyOrBuilder getMsgBodyOrBuilder();
+    /**
+     * <code>.im.MessageBody msg_body = 1;</code>
+     */
+    boolean hasMsgBody();
 
-  /**
-   * <code>int64 con_index = 2;</code>
-   */
-  long getConIndex();
+    /**
+     * <code>.im.MessageBody msg_body = 1;</code>
+     */
+    violet.gateway.common.proto_gen.im.MessageBody getMsgBody();
 
-  /**
-   * <code>bool stored = 3;</code>
-   */
-  boolean getStored();
+    /**
+     * <code>.im.MessageBody msg_body = 1;</code>
+     */
+    violet.gateway.common.proto_gen.im.MessageBodyOrBuilder getMsgBodyOrBuilder();
 
-  /**
-   * <code>int64 user_con_index = 4;</code>
-   */
-  long getUserConIndex();
+    /**
+     * <code>int64 con_index = 2;</code>
+     */
+    long getConIndex();
 
-  /**
-   * <code>int64 pre_user_con_index = 5;</code>
-   */
-  long getPreUserConIndex();
+    /**
+     * <code>bool stored = 3;</code>
+     */
+    boolean getStored();
 
-  /**
-   * <code>int64 badge_count = 6;</code>
-   */
-  long getBadgeCount();
+    /**
+     * <code>int64 user_con_index = 4;</code>
+     */
+    long getUserConIndex();
 
-  /**
-   * <code>int64 user_cmd_index = 7;</code>
-   */
-  long getUserCmdIndex();
+    /**
+     * <code>int64 pre_user_con_index = 5;</code>
+     */
+    long getPreUserConIndex();
 
-  /**
-   * <code>int32 retry_count = 8;</code>
-   */
-  int getRetryCount();
+    /**
+     * <code>int64 badge_count = 6;</code>
+     */
+    long getBadgeCount();
+
+    /**
+     * <code>int64 user_cmd_index = 7;</code>
+     */
+    long getUserCmdIndex();
+
+    /**
+     * <code>int32 retry_count = 8;</code>
+     */
+    int getRetryCount();
 }

@@ -1,17 +1,17 @@
 package violet.gateway.common.controller;
 
 import com.alibaba.fastjson.JSONObject;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import violet.gateway.common.proto_gen.http.GetMessageByConversationRequest;
-import violet.gateway.common.proto_gen.http.GetMessageByInitRequest;
-import violet.gateway.common.proto_gen.http.MarkReadRequest;
-import violet.gateway.common.proto_gen.http.SendMessageRequest;
+import violet.gateway.common.proto_gen.common.StatusCode;
 import violet.gateway.common.service.IMService;
+import violet.gateway.common.utils.RpcException;
 
+@Slf4j
 @RestController
 @RequestMapping("/api/im")
 public class IMController {
@@ -19,22 +19,78 @@ public class IMController {
     private IMService imService;
 
     @PostMapping("/send_message")
-    public JSONObject sendMessage(@RequestBody SendMessageRequest req) {
-        return imService.sendMessage(req);
+    public JSONObject sendMessage(@RequestBody JSONObject req) {
+        JSONObject resp = new JSONObject();
+        try {
+            JSONObject data = imService.sendMessage(req);
+            resp.put("code", StatusCode.Success_VALUE);
+            resp.put("message", StatusCode.Success);
+            resp.put("data", data);
+        } catch (RpcException e) {
+            resp.put("code", e.getStatus().getStatusCodeValue());
+            resp.put("message", e.getStatus().getStatusMessage());
+        } catch (Exception e) {
+            resp.put("code", StatusCode.Unknown_Error_VALUE);
+            resp.put("message", StatusCode.Unknown_Error);
+            log.error(String.format("[sendMessage] err, err = %s.", e));
+        }
+        return resp;
     }
 
     @PostMapping("/get_message_by_init")
-    public JSONObject getMessageByInit(@RequestBody GetMessageByInitRequest req) {
-        return imService.getMessageByInit(req);
+    public JSONObject getMessageByInit(@RequestBody JSONObject req) {
+        JSONObject resp = new JSONObject();
+        try {
+            JSONObject data = imService.getMessageByInit(req);
+            resp.put("code", StatusCode.Success_VALUE);
+            resp.put("message", StatusCode.Success);
+            resp.put("data", data);
+        } catch (RpcException e) {
+            resp.put("code", e.getStatus().getStatusCodeValue());
+            resp.put("message", e.getStatus().getStatusMessage());
+        } catch (Exception e) {
+            resp.put("code", StatusCode.Unknown_Error_VALUE);
+            resp.put("message", StatusCode.Unknown_Error);
+            log.error(String.format("[getMessageByInit] err, err = %s.", e));
+        }
+        return resp;
     }
 
     @PostMapping("/get_message_by_conversation")
-    public JSONObject getMessageByConversation(@RequestBody GetMessageByConversationRequest req) {
-        return imService.getMessageByConversation(req);
+    public JSONObject getMessageByConversation(@RequestBody JSONObject req) {
+        JSONObject resp = new JSONObject();
+        try {
+            JSONObject data = imService.getMessageByConversation(req);
+            resp.put("code", StatusCode.Success_VALUE);
+            resp.put("message", StatusCode.Success);
+            resp.put("data", data);
+        } catch (RpcException e) {
+            resp.put("code", e.getStatus().getStatusCodeValue());
+            resp.put("message", e.getStatus().getStatusMessage());
+        } catch (Exception e) {
+            resp.put("code", StatusCode.Unknown_Error_VALUE);
+            resp.put("message", StatusCode.Unknown_Error);
+            log.error(String.format("[getMessageByConversation] err, err = %s.", e));
+        }
+        return resp;
     }
 
     @PostMapping("/mark_read")
-    public JSONObject markRead(@RequestBody MarkReadRequest req) {
-        return imService.markRead(req);
+    public JSONObject markRead(@RequestBody JSONObject req) {
+        JSONObject resp = new JSONObject();
+        try {
+            JSONObject data = imService.markRead(req);
+            resp.put("code", StatusCode.Success_VALUE);
+            resp.put("message", StatusCode.Success);
+            resp.put("data", data);
+        } catch (RpcException e) {
+            resp.put("code", e.getStatus().getStatusCodeValue());
+            resp.put("message", e.getStatus().getStatusMessage());
+        } catch (Exception e) {
+            resp.put("code", StatusCode.Unknown_Error_VALUE);
+            resp.put("message", StatusCode.Unknown_Error);
+            log.error(String.format("[markRead] err, err = %s.", e));
+        }
+        return resp;
     }
 }

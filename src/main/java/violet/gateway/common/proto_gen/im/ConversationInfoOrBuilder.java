@@ -4,91 +4,100 @@
 package violet.gateway.common.proto_gen.im;
 
 public interface ConversationInfoOrBuilder extends
-    // @@protoc_insertion_point(interface_extends:im.ConversationInfo)
-    com.google.protobuf.MessageOrBuilder {
+        // @@protoc_insertion_point(interface_extends:im.ConversationInfo)
+        com.google.protobuf.MessageOrBuilder {
 
-  /**
-   * <code>int64 con_short_id = 1;</code>
-   */
-  long getConShortId();
+    /**
+     * <code>int64 con_short_id = 1;</code>
+     */
+    long getConShortId();
 
-  /**
-   * <code>string con_id = 2;</code>
-   */
-  java.lang.String getConId();
-  /**
-   * <code>string con_id = 2;</code>
-   */
-  com.google.protobuf.ByteString
-      getConIdBytes();
+    /**
+     * <code>string con_id = 2;</code>
+     */
+    java.lang.String getConId();
 
-  /**
-   * <code>int32 con_type = 3;</code>
-   */
-  int getConType();
+    /**
+     * <code>string con_id = 2;</code>
+     */
+    com.google.protobuf.ByteString
+    getConIdBytes();
 
-  /**
-   * <code>int64 user_con_index = 4;</code>
-   */
-  long getUserConIndex();
+    /**
+     * <code>int32 con_type = 3;</code>
+     */
+    int getConType();
 
-  /**
-   * <code>int64 badge_count = 5;</code>
-   */
-  long getBadgeCount();
+    /**
+     * <code>int64 user_con_index = 4;</code>
+     */
+    long getUserConIndex();
 
-  /**
-   * <code>bool is_member = 6;</code>
-   */
-  boolean getIsMember();
+    /**
+     * <code>int64 badge_count = 5;</code>
+     */
+    long getBadgeCount();
 
-  /**
-   * <code>repeated .im.ConversationUserInfo members = 7;</code>
-   */
-  java.util.List<violet.gateway.common.proto_gen.im.ConversationUserInfo> 
-      getMembersList();
-  /**
-   * <code>repeated .im.ConversationUserInfo members = 7;</code>
-   */
-  violet.gateway.common.proto_gen.im.ConversationUserInfo getMembers(int index);
-  /**
-   * <code>repeated .im.ConversationUserInfo members = 7;</code>
-   */
-  int getMembersCount();
-  /**
-   * <code>repeated .im.ConversationUserInfo members = 7;</code>
-   */
-  java.util.List<? extends violet.gateway.common.proto_gen.im.ConversationUserInfoOrBuilder> 
-      getMembersOrBuilderList();
-  /**
-   * <code>repeated .im.ConversationUserInfo members = 7;</code>
-   */
-  violet.gateway.common.proto_gen.im.ConversationUserInfoOrBuilder getMembersOrBuilder(
-      int index);
+    /**
+     * <code>bool is_member = 6;</code>
+     */
+    boolean getIsMember();
 
-  /**
-   * <code>.im.ConversationCoreInfo con_core_info = 8;</code>
-   */
-  boolean hasConCoreInfo();
-  /**
-   * <code>.im.ConversationCoreInfo con_core_info = 8;</code>
-   */
-  violet.gateway.common.proto_gen.im.ConversationCoreInfo getConCoreInfo();
-  /**
-   * <code>.im.ConversationCoreInfo con_core_info = 8;</code>
-   */
-  violet.gateway.common.proto_gen.im.ConversationCoreInfoOrBuilder getConCoreInfoOrBuilder();
+    /**
+     * <code>repeated .im.ConversationUserInfo members = 7;</code>
+     */
+    java.util.List<violet.gateway.common.proto_gen.im.ConversationUserInfo>
+    getMembersList();
 
-  /**
-   * <code>.im.ConversationSettingInfo con_setting_info = 9;</code>
-   */
-  boolean hasConSettingInfo();
-  /**
-   * <code>.im.ConversationSettingInfo con_setting_info = 9;</code>
-   */
-  violet.gateway.common.proto_gen.im.ConversationSettingInfo getConSettingInfo();
-  /**
-   * <code>.im.ConversationSettingInfo con_setting_info = 9;</code>
-   */
-  violet.gateway.common.proto_gen.im.ConversationSettingInfoOrBuilder getConSettingInfoOrBuilder();
+    /**
+     * <code>repeated .im.ConversationUserInfo members = 7;</code>
+     */
+    violet.gateway.common.proto_gen.im.ConversationUserInfo getMembers(int index);
+
+    /**
+     * <code>repeated .im.ConversationUserInfo members = 7;</code>
+     */
+    int getMembersCount();
+
+    /**
+     * <code>repeated .im.ConversationUserInfo members = 7;</code>
+     */
+    java.util.List<? extends violet.gateway.common.proto_gen.im.ConversationUserInfoOrBuilder>
+    getMembersOrBuilderList();
+
+    /**
+     * <code>repeated .im.ConversationUserInfo members = 7;</code>
+     */
+    violet.gateway.common.proto_gen.im.ConversationUserInfoOrBuilder getMembersOrBuilder(
+            int index);
+
+    /**
+     * <code>.im.ConversationCoreInfo con_core_info = 8;</code>
+     */
+    boolean hasConCoreInfo();
+
+    /**
+     * <code>.im.ConversationCoreInfo con_core_info = 8;</code>
+     */
+    violet.gateway.common.proto_gen.im.ConversationCoreInfo getConCoreInfo();
+
+    /**
+     * <code>.im.ConversationCoreInfo con_core_info = 8;</code>
+     */
+    violet.gateway.common.proto_gen.im.ConversationCoreInfoOrBuilder getConCoreInfoOrBuilder();
+
+    /**
+     * <code>.im.ConversationSettingInfo con_setting_info = 9;</code>
+     */
+    boolean hasConSettingInfo();
+
+    /**
+     * <code>.im.ConversationSettingInfo con_setting_info = 9;</code>
+     */
+    violet.gateway.common.proto_gen.im.ConversationSettingInfo getConSettingInfo();
+
+    /**
+     * <code>.im.ConversationSettingInfo con_setting_info = 9;</code>
+     */
+    violet.gateway.common.proto_gen.im.ConversationSettingInfoOrBuilder getConSettingInfoOrBuilder();
 }

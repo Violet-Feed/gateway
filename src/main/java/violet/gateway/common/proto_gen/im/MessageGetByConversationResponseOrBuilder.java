@@ -4,30 +4,34 @@
 package violet.gateway.common.proto_gen.im;
 
 public interface MessageGetByConversationResponseOrBuilder extends
-    // @@protoc_insertion_point(interface_extends:im.MessageGetByConversationResponse)
-    com.google.protobuf.MessageOrBuilder {
+        // @@protoc_insertion_point(interface_extends:im.MessageGetByConversationResponse)
+        com.google.protobuf.MessageOrBuilder {
 
-  /**
-   * <code>repeated .im.MessageBody msg_bodies = 1;</code>
-   */
-  java.util.List<violet.gateway.common.proto_gen.im.MessageBody> 
-      getMsgBodiesList();
-  /**
-   * <code>repeated .im.MessageBody msg_bodies = 1;</code>
-   */
-  violet.gateway.common.proto_gen.im.MessageBody getMsgBodies(int index);
-  /**
-   * <code>repeated .im.MessageBody msg_bodies = 1;</code>
-   */
-  int getMsgBodiesCount();
-  /**
-   * <code>repeated .im.MessageBody msg_bodies = 1;</code>
-   */
-  java.util.List<? extends violet.gateway.common.proto_gen.im.MessageBodyOrBuilder> 
-      getMsgBodiesOrBuilderList();
-  /**
-   * <code>repeated .im.MessageBody msg_bodies = 1;</code>
-   */
-  violet.gateway.common.proto_gen.im.MessageBodyOrBuilder getMsgBodiesOrBuilder(
-      int index);
+    /**
+     * <code>repeated .im.MessageBody msg_bodies = 1;</code>
+     */
+    java.util.List<violet.gateway.common.proto_gen.im.MessageBody>
+    getMsgBodiesList();
+
+    /**
+     * <code>repeated .im.MessageBody msg_bodies = 1;</code>
+     */
+    violet.gateway.common.proto_gen.im.MessageBody getMsgBodies(int index);
+
+    /**
+     * <code>repeated .im.MessageBody msg_bodies = 1;</code>
+     */
+    int getMsgBodiesCount();
+
+    /**
+     * <code>repeated .im.MessageBody msg_bodies = 1;</code>
+     */
+    java.util.List<? extends violet.gateway.common.proto_gen.im.MessageBodyOrBuilder>
+    getMsgBodiesOrBuilderList();
+
+    /**
+     * <code>repeated .im.MessageBody msg_bodies = 1;</code>
+     */
+    violet.gateway.common.proto_gen.im.MessageBodyOrBuilder getMsgBodiesOrBuilder(
+            int index);
 }

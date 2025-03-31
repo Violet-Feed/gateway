@@ -4,26 +4,26 @@
 package violet.gateway.common.proto_gen.im;
 
 public interface MarkReadRequestOrBuilder extends
-    // @@protoc_insertion_point(interface_extends:im.MarkReadRequest)
-    com.google.protobuf.MessageOrBuilder {
+        // @@protoc_insertion_point(interface_extends:im.MarkReadRequest)
+        com.google.protobuf.MessageOrBuilder {
 
-  /**
-   * <code>int64 user_id = 1;</code>
-   */
-  long getUserId();
+    /**
+     * <code>int64 user_id = 1;</code>
+     */
+    long getUserId();
 
-  /**
-   * <code>int64 con_short_id = 2;</code>
-   */
-  long getConShortId();
+    /**
+     * <code>int64 con_short_id = 2;</code>
+     */
+    long getConShortId();
 
-  /**
-   * <code>int64 read_con_index = 3;</code>
-   */
-  long getReadConIndex();
+    /**
+     * <code>int64 read_con_index = 3;</code>
+     */
+    long getReadConIndex();
 
-  /**
-   * <code>int64 read_badge_count = 4;</code>
-   */
-  long getReadBadgeCount();
+    /**
+     * <code>int64 read_badge_count = 4;</code>
+     */
+    long getReadBadgeCount();
 }

@@ -1,36 +1,33 @@
 package violet.gateway.common.service.impl;
 
 import com.alibaba.fastjson.JSONObject;
-import org.springframework.security.core.context.SecurityContextHolder;
+import net.devh.boot.grpc.client.inject.GrpcClient;
 import org.springframework.stereotype.Service;
-import violet.gateway.common.proto_gen.http.GetMessageByConversationRequest;
-import violet.gateway.common.proto_gen.http.GetMessageByInitRequest;
-import violet.gateway.common.proto_gen.http.MarkReadRequest;
-import violet.gateway.common.proto_gen.http.SendMessageRequest;
+import violet.gateway.common.proto_gen.im.IMServiceGrpc;
 import violet.gateway.common.service.IMService;
-import violet.gateway.common.utils.CustomAuthenticationToken;
 
 @Service
 public class IMServiceImpl implements IMService {
+    @GrpcClient("im")
+    private IMServiceGrpc.IMServiceBlockingStub imStub;
+
     @Override
-    public JSONObject sendMessage(SendMessageRequest req) {
-        CustomAuthenticationToken authentication = (CustomAuthenticationToken) SecurityContextHolder.getContext().getAuthentication();
-        Long userId = authentication.getUserId();
+    public JSONObject sendMessage(JSONObject req) throws Exception {
         return null;
     }
 
     @Override
-    public JSONObject getMessageByInit(GetMessageByInitRequest req) {
+    public JSONObject getMessageByInit(JSONObject req) throws Exception {
         return null;
     }
 
     @Override
-    public JSONObject getMessageByConversation(GetMessageByConversationRequest req) {
+    public JSONObject getMessageByConversation(JSONObject req) throws Exception {
         return null;
     }
 
     @Override
-    public JSONObject markRead(MarkReadRequest req) {
+    public JSONObject markRead(JSONObject req) throws Exception {
         return null;
     }
 }

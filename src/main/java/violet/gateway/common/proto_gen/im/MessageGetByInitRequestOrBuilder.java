@@ -4,11 +4,11 @@
 package violet.gateway.common.proto_gen.im;
 
 public interface MessageGetByInitRequestOrBuilder extends
-    // @@protoc_insertion_point(interface_extends:im.MessageGetByInitRequest)
-    com.google.protobuf.MessageOrBuilder {
+        // @@protoc_insertion_point(interface_extends:im.MessageGetByInitRequest)
+        com.google.protobuf.MessageOrBuilder {
 
-  /**
-   * <code>int64 user_con_index = 1;</code>
-   */
-  long getUserConIndex();
+    /**
+     * <code>int64 user_con_index = 1;</code>
+     */
+    long getUserConIndex();
 }

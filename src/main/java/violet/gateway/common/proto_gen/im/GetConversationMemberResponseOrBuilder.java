@@ -4,48 +4,54 @@
 package violet.gateway.common.proto_gen.im;
 
 public interface GetConversationMemberResponseOrBuilder extends
-    // @@protoc_insertion_point(interface_extends:im.GetConversationMemberResponse)
-    com.google.protobuf.MessageOrBuilder {
+        // @@protoc_insertion_point(interface_extends:im.GetConversationMemberResponse)
+        com.google.protobuf.MessageOrBuilder {
 
-  /**
-   * <code>repeated .im.ConversationUserInfo user_infos = 1;</code>
-   */
-  java.util.List<violet.gateway.common.proto_gen.im.ConversationUserInfo> 
-      getUserInfosList();
-  /**
-   * <code>repeated .im.ConversationUserInfo user_infos = 1;</code>
-   */
-  violet.gateway.common.proto_gen.im.ConversationUserInfo getUserInfos(int index);
-  /**
-   * <code>repeated .im.ConversationUserInfo user_infos = 1;</code>
-   */
-  int getUserInfosCount();
-  /**
-   * <code>repeated .im.ConversationUserInfo user_infos = 1;</code>
-   */
-  java.util.List<? extends violet.gateway.common.proto_gen.im.ConversationUserInfoOrBuilder> 
-      getUserInfosOrBuilderList();
-  /**
-   * <code>repeated .im.ConversationUserInfo user_infos = 1;</code>
-   */
-  violet.gateway.common.proto_gen.im.ConversationUserInfoOrBuilder getUserInfosOrBuilder(
-      int index);
+    /**
+     * <code>repeated .im.ConversationUserInfo user_infos = 1;</code>
+     */
+    java.util.List<violet.gateway.common.proto_gen.im.ConversationUserInfo>
+    getUserInfosList();
 
-  /**
-   * <code>int64 next_cursor = 2;</code>
-   */
-  long getNextCursor();
+    /**
+     * <code>repeated .im.ConversationUserInfo user_infos = 1;</code>
+     */
+    violet.gateway.common.proto_gen.im.ConversationUserInfo getUserInfos(int index);
 
-  /**
-   * <code>.im.BaseResp baseResp = 255;</code>
-   */
-  boolean hasBaseResp();
-  /**
-   * <code>.im.BaseResp baseResp = 255;</code>
-   */
-  violet.gateway.common.proto_gen.im.BaseResp getBaseResp();
-  /**
-   * <code>.im.BaseResp baseResp = 255;</code>
-   */
-  violet.gateway.common.proto_gen.im.BaseRespOrBuilder getBaseRespOrBuilder();
+    /**
+     * <code>repeated .im.ConversationUserInfo user_infos = 1;</code>
+     */
+    int getUserInfosCount();
+
+    /**
+     * <code>repeated .im.ConversationUserInfo user_infos = 1;</code>
+     */
+    java.util.List<? extends violet.gateway.common.proto_gen.im.ConversationUserInfoOrBuilder>
+    getUserInfosOrBuilderList();
+
+    /**
+     * <code>repeated .im.ConversationUserInfo user_infos = 1;</code>
+     */
+    violet.gateway.common.proto_gen.im.ConversationUserInfoOrBuilder getUserInfosOrBuilder(
+            int index);
+
+    /**
+     * <code>int64 next_cursor = 2;</code>
+     */
+    long getNextCursor();
+
+    /**
+     * <code>.common.BaseResp baseResp = 255;</code>
+     */
+    boolean hasBaseResp();
+
+    /**
+     * <code>.common.BaseResp baseResp = 255;</code>
+     */
+    violet.gateway.common.proto_gen.common.BaseResp getBaseResp();
+
+    /**
+     * <code>.common.BaseResp baseResp = 255;</code>
+     */
+    violet.gateway.common.proto_gen.common.BaseRespOrBuilder getBaseRespOrBuilder();
 }

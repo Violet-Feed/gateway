@@ -4,19 +4,21 @@
 package violet.gateway.common.proto_gen.im;
 
 public interface MarkReadResponseOrBuilder extends
-    // @@protoc_insertion_point(interface_extends:im.MarkReadResponse)
-    com.google.protobuf.MessageOrBuilder {
+        // @@protoc_insertion_point(interface_extends:im.MarkReadResponse)
+        com.google.protobuf.MessageOrBuilder {
 
-  /**
-   * <code>.im.BaseResp baseResp = 255;</code>
-   */
-  boolean hasBaseResp();
-  /**
-   * <code>.im.BaseResp baseResp = 255;</code>
-   */
-  violet.gateway.common.proto_gen.im.BaseResp getBaseResp();
-  /**
-   * <code>.im.BaseResp baseResp = 255;</code>
-   */
-  violet.gateway.common.proto_gen.im.BaseRespOrBuilder getBaseRespOrBuilder();
+    /**
+     * <code>.common.BaseResp baseResp = 255;</code>
+     */
+    boolean hasBaseResp();
+
+    /**
+     * <code>.common.BaseResp baseResp = 255;</code>
+     */
+    violet.gateway.common.proto_gen.common.BaseResp getBaseResp();
+
+    /**
+     * <code>.common.BaseResp baseResp = 255;</code>
+     */
+    violet.gateway.common.proto_gen.common.BaseRespOrBuilder getBaseRespOrBuilder();
 }

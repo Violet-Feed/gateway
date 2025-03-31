@@ -4,6 +4,6 @@
 package violet.gateway.common.proto_gen.im;
 
 public interface MessageSendResponseOrBuilder extends
-    // @@protoc_insertion_point(interface_extends:im.MessageSendResponse)
-    com.google.protobuf.MessageOrBuilder {
+        // @@protoc_insertion_point(interface_extends:im.MessageSendResponse)
+        com.google.protobuf.MessageOrBuilder {
 }

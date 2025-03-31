@@ -4,50 +4,54 @@
 package violet.gateway.common.proto_gen.im;
 
 public interface MessageGetByInitResponseOrBuilder extends
-    // @@protoc_insertion_point(interface_extends:im.MessageGetByInitResponse)
-    com.google.protobuf.MessageOrBuilder {
+        // @@protoc_insertion_point(interface_extends:im.MessageGetByInitResponse)
+        com.google.protobuf.MessageOrBuilder {
 
-  /**
-   * <code>repeated .im.ConversationMessage cons = 1;</code>
-   */
-  java.util.List<violet.gateway.common.proto_gen.im.ConversationMessage> 
-      getConsList();
-  /**
-   * <code>repeated .im.ConversationMessage cons = 1;</code>
-   */
-  violet.gateway.common.proto_gen.im.ConversationMessage getCons(int index);
-  /**
-   * <code>repeated .im.ConversationMessage cons = 1;</code>
-   */
-  int getConsCount();
-  /**
-   * <code>repeated .im.ConversationMessage cons = 1;</code>
-   */
-  java.util.List<? extends violet.gateway.common.proto_gen.im.ConversationMessageOrBuilder> 
-      getConsOrBuilderList();
-  /**
-   * <code>repeated .im.ConversationMessage cons = 1;</code>
-   */
-  violet.gateway.common.proto_gen.im.ConversationMessageOrBuilder getConsOrBuilder(
-      int index);
+    /**
+     * <code>repeated .im.ConversationMessage cons = 1;</code>
+     */
+    java.util.List<violet.gateway.common.proto_gen.im.ConversationMessage>
+    getConsList();
 
-  /**
-   * <code>bool has_more = 2;</code>
-   */
-  boolean getHasMore();
+    /**
+     * <code>repeated .im.ConversationMessage cons = 1;</code>
+     */
+    violet.gateway.common.proto_gen.im.ConversationMessage getCons(int index);
 
-  /**
-   * <code>int64 next_user_con_index = 3;</code>
-   */
-  long getNextUserConIndex();
+    /**
+     * <code>repeated .im.ConversationMessage cons = 1;</code>
+     */
+    int getConsCount();
 
-  /**
-   * <code>int64 user_con_index = 4;</code>
-   */
-  long getUserConIndex();
+    /**
+     * <code>repeated .im.ConversationMessage cons = 1;</code>
+     */
+    java.util.List<? extends violet.gateway.common.proto_gen.im.ConversationMessageOrBuilder>
+    getConsOrBuilderList();
 
-  /**
-   * <code>int64 user_cmd_index = 5;</code>
-   */
-  long getUserCmdIndex();
+    /**
+     * <code>repeated .im.ConversationMessage cons = 1;</code>
+     */
+    violet.gateway.common.proto_gen.im.ConversationMessageOrBuilder getConsOrBuilder(
+            int index);
+
+    /**
+     * <code>bool has_more = 2;</code>
+     */
+    boolean getHasMore();
+
+    /**
+     * <code>int64 next_user_con_index = 3;</code>
+     */
+    long getNextUserConIndex();
+
+    /**
+     * <code>int64 user_con_index = 4;</code>
+     */
+    long getUserConIndex();
+
+    /**
+     * <code>int64 user_cmd_index = 5;</code>
+     */
+    long getUserCmdIndex();
 }

@@ -4,76 +4,79 @@
 package violet.gateway.common.proto_gen.im;
 
 public interface MessageBodyOrBuilder extends
-    // @@protoc_insertion_point(interface_extends:im.MessageBody)
-    com.google.protobuf.MessageOrBuilder {
+        // @@protoc_insertion_point(interface_extends:im.MessageBody)
+        com.google.protobuf.MessageOrBuilder {
 
-  /**
-   * <code>int64 user_id = 1;</code>
-   */
-  long getUserId();
+    /**
+     * <code>int64 user_id = 1;</code>
+     */
+    long getUserId();
 
-  /**
-   * <code>string con_id = 2;</code>
-   */
-  java.lang.String getConId();
-  /**
-   * <code>string con_id = 2;</code>
-   */
-  com.google.protobuf.ByteString
-      getConIdBytes();
+    /**
+     * <code>string con_id = 2;</code>
+     */
+    java.lang.String getConId();
 
-  /**
-   * <code>int64 con_short_id = 3;</code>
-   */
-  long getConShortId();
+    /**
+     * <code>string con_id = 2;</code>
+     */
+    com.google.protobuf.ByteString
+    getConIdBytes();
 
-  /**
-   * <code>int32 con_type = 4;</code>
-   */
-  int getConType();
+    /**
+     * <code>int64 con_short_id = 3;</code>
+     */
+    long getConShortId();
 
-  /**
-   * <code>int64 client_msg_id = 5;</code>
-   */
-  long getClientMsgId();
+    /**
+     * <code>int32 con_type = 4;</code>
+     */
+    int getConType();
 
-  /**
-   * <code>int64 msg_id = 6;</code>
-   */
-  long getMsgId();
+    /**
+     * <code>int64 client_msg_id = 5;</code>
+     */
+    long getClientMsgId();
 
-  /**
-   * <code>int32 msg_type = 7;</code>
-   */
-  int getMsgType();
+    /**
+     * <code>int64 msg_id = 6;</code>
+     */
+    long getMsgId();
 
-  /**
-   * <code>string msg_content = 8;</code>
-   */
-  java.lang.String getMsgContent();
-  /**
-   * <code>string msg_content = 8;</code>
-   */
-  com.google.protobuf.ByteString
-      getMsgContentBytes();
+    /**
+     * <code>int32 msg_type = 7;</code>
+     */
+    int getMsgType();
 
-  /**
-   * <code>int64 create_time = 9;</code>
-   */
-  long getCreateTime();
+    /**
+     * <code>string msg_content = 8;</code>
+     */
+    java.lang.String getMsgContent();
 
-  /**
-   * <code>string extra = 10;</code>
-   */
-  java.lang.String getExtra();
-  /**
-   * <code>string extra = 10;</code>
-   */
-  com.google.protobuf.ByteString
-      getExtraBytes();
+    /**
+     * <code>string msg_content = 8;</code>
+     */
+    com.google.protobuf.ByteString
+    getMsgContentBytes();
 
-  /**
-   * <code>int64 con_index = 11;</code>
-   */
-  long getConIndex();
+    /**
+     * <code>int64 create_time = 9;</code>
+     */
+    long getCreateTime();
+
+    /**
+     * <code>string extra = 10;</code>
+     */
+    java.lang.String getExtra();
+
+    /**
+     * <code>string extra = 10;</code>
+     */
+    com.google.protobuf.ByteString
+    getExtraBytes();
+
+    /**
+     * <code>int64 con_index = 11;</code>
+     */
+    long getConIndex();
 }

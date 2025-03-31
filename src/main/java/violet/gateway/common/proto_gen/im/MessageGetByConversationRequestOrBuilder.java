@@ -4,21 +4,21 @@
 package violet.gateway.common.proto_gen.im;
 
 public interface MessageGetByConversationRequestOrBuilder extends
-    // @@protoc_insertion_point(interface_extends:im.MessageGetByConversationRequest)
-    com.google.protobuf.MessageOrBuilder {
+        // @@protoc_insertion_point(interface_extends:im.MessageGetByConversationRequest)
+        com.google.protobuf.MessageOrBuilder {
 
-  /**
-   * <code>int64 con_short_id = 1;</code>
-   */
-  long getConShortId();
+    /**
+     * <code>int64 con_short_id = 1;</code>
+     */
+    long getConShortId();
 
-  /**
-   * <code>int64 con_index = 2;</code>
-   */
-  long getConIndex();
+    /**
+     * <code>int64 con_index = 2;</code>
+     */
+    long getConIndex();
 
-  /**
-   * <code>int64 limit = 3;</code>
-   */
-  long getLimit();
+    /**
+     * <code>int64 limit = 3;</code>
+     */
+    long getLimit();
 }
