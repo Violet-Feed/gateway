@@ -34,28 +34,28 @@ public final class IMServiceGrpc {
                             violet.gateway.common.proto_gen.im.SendMessageResponse.getDefaultInstance()))
                     .build();
     @io.grpc.ExperimentalApi("https://github.com/grpc/grpc-java/issues/1901")
-    public static final io.grpc.MethodDescriptor<violet.gateway.common.proto_gen.im.MessageGetByInitRequest,
-            violet.gateway.common.proto_gen.im.MessageGetByInitResponse> METHOD_MESSAGE_GET_BY_INIT =
-            io.grpc.MethodDescriptor.<violet.gateway.common.proto_gen.im.MessageGetByInitRequest, violet.gateway.common.proto_gen.im.MessageGetByInitResponse>newBuilder()
+    public static final io.grpc.MethodDescriptor<violet.gateway.common.proto_gen.im.GetMessageByInitRequest,
+            violet.gateway.common.proto_gen.im.GetMessageByInitResponse> METHOD_GET_MESSAGE_BY_INIT =
+            io.grpc.MethodDescriptor.<violet.gateway.common.proto_gen.im.GetMessageByInitRequest, violet.gateway.common.proto_gen.im.GetMessageByInitResponse>newBuilder()
                     .setType(io.grpc.MethodDescriptor.MethodType.UNARY)
                     .setFullMethodName(generateFullMethodName(
-                            "im.IMService", "MessageGetByInit"))
+                            "im.IMService", "GetMessageByInit"))
                     .setRequestMarshaller(io.grpc.protobuf.ProtoUtils.marshaller(
-                            violet.gateway.common.proto_gen.im.MessageGetByInitRequest.getDefaultInstance()))
+                            violet.gateway.common.proto_gen.im.GetMessageByInitRequest.getDefaultInstance()))
                     .setResponseMarshaller(io.grpc.protobuf.ProtoUtils.marshaller(
-                            violet.gateway.common.proto_gen.im.MessageGetByInitResponse.getDefaultInstance()))
+                            violet.gateway.common.proto_gen.im.GetMessageByInitResponse.getDefaultInstance()))
                     .build();
     @io.grpc.ExperimentalApi("https://github.com/grpc/grpc-java/issues/1901")
-    public static final io.grpc.MethodDescriptor<violet.gateway.common.proto_gen.im.MessageGetByConversationRequest,
-            violet.gateway.common.proto_gen.im.MessageGetByConversationResponse> METHOD_MESSAGE_GET_BY_CONVERSATION =
-            io.grpc.MethodDescriptor.<violet.gateway.common.proto_gen.im.MessageGetByConversationRequest, violet.gateway.common.proto_gen.im.MessageGetByConversationResponse>newBuilder()
+    public static final io.grpc.MethodDescriptor<violet.gateway.common.proto_gen.im.GetMessageByConversationRequest,
+            violet.gateway.common.proto_gen.im.GetMessageByConversationResponse> METHOD_GET_MESSAGE_BY_CONVERSATION =
+            io.grpc.MethodDescriptor.<violet.gateway.common.proto_gen.im.GetMessageByConversationRequest, violet.gateway.common.proto_gen.im.GetMessageByConversationResponse>newBuilder()
                     .setType(io.grpc.MethodDescriptor.MethodType.UNARY)
                     .setFullMethodName(generateFullMethodName(
-                            "im.IMService", "MessageGetByConversation"))
+                            "im.IMService", "GetMessageByConversation"))
                     .setRequestMarshaller(io.grpc.protobuf.ProtoUtils.marshaller(
-                            violet.gateway.common.proto_gen.im.MessageGetByConversationRequest.getDefaultInstance()))
+                            violet.gateway.common.proto_gen.im.GetMessageByConversationRequest.getDefaultInstance()))
                     .setResponseMarshaller(io.grpc.protobuf.ProtoUtils.marshaller(
-                            violet.gateway.common.proto_gen.im.MessageGetByConversationResponse.getDefaultInstance()))
+                            violet.gateway.common.proto_gen.im.GetMessageByConversationResponse.getDefaultInstance()))
                     .build();
     @io.grpc.ExperimentalApi("https://github.com/grpc/grpc-java/issues/1901")
     public static final io.grpc.MethodDescriptor<violet.gateway.common.proto_gen.im.MarkReadRequest,
@@ -145,17 +145,17 @@ public final class IMServiceGrpc {
         /**
          *
          */
-        public void messageGetByInit(violet.gateway.common.proto_gen.im.MessageGetByInitRequest request,
-                                     io.grpc.stub.StreamObserver<violet.gateway.common.proto_gen.im.MessageGetByInitResponse> responseObserver) {
-            asyncUnimplementedUnaryCall(METHOD_MESSAGE_GET_BY_INIT, responseObserver);
+        public void getMessageByInit(violet.gateway.common.proto_gen.im.GetMessageByInitRequest request,
+                                     io.grpc.stub.StreamObserver<violet.gateway.common.proto_gen.im.GetMessageByInitResponse> responseObserver) {
+            asyncUnimplementedUnaryCall(METHOD_GET_MESSAGE_BY_INIT, responseObserver);
         }
 
         /**
          *
          */
-        public void messageGetByConversation(violet.gateway.common.proto_gen.im.MessageGetByConversationRequest request,
-                                             io.grpc.stub.StreamObserver<violet.gateway.common.proto_gen.im.MessageGetByConversationResponse> responseObserver) {
-            asyncUnimplementedUnaryCall(METHOD_MESSAGE_GET_BY_CONVERSATION, responseObserver);
+        public void getMessageByConversation(violet.gateway.common.proto_gen.im.GetMessageByConversationRequest request,
+                                             io.grpc.stub.StreamObserver<violet.gateway.common.proto_gen.im.GetMessageByConversationResponse> responseObserver) {
+            asyncUnimplementedUnaryCall(METHOD_GET_MESSAGE_BY_CONVERSATION, responseObserver);
         }
 
         /**
@@ -201,19 +201,19 @@ public final class IMServiceGrpc {
                                             violet.gateway.common.proto_gen.im.SendMessageResponse>(
                                             this, METHODID_SEND_MESSAGE)))
                     .addMethod(
-                            METHOD_MESSAGE_GET_BY_INIT,
+                            METHOD_GET_MESSAGE_BY_INIT,
                             asyncUnaryCall(
                                     new MethodHandlers<
-                                            violet.gateway.common.proto_gen.im.MessageGetByInitRequest,
-                                            violet.gateway.common.proto_gen.im.MessageGetByInitResponse>(
-                                            this, METHODID_MESSAGE_GET_BY_INIT)))
+                                            violet.gateway.common.proto_gen.im.GetMessageByInitRequest,
+                                            violet.gateway.common.proto_gen.im.GetMessageByInitResponse>(
+                                            this, METHODID_GET_MESSAGE_BY_INIT)))
                     .addMethod(
-                            METHOD_MESSAGE_GET_BY_CONVERSATION,
+                            METHOD_GET_MESSAGE_BY_CONVERSATION,
                             asyncUnaryCall(
                                     new MethodHandlers<
-                                            violet.gateway.common.proto_gen.im.MessageGetByConversationRequest,
-                                            violet.gateway.common.proto_gen.im.MessageGetByConversationResponse>(
-                                            this, METHODID_MESSAGE_GET_BY_CONVERSATION)))
+                                            violet.gateway.common.proto_gen.im.GetMessageByConversationRequest,
+                                            violet.gateway.common.proto_gen.im.GetMessageByConversationResponse>(
+                                            this, METHODID_GET_MESSAGE_BY_CONVERSATION)))
                     .addMethod(
                             METHOD_MARK_READ,
                             asyncUnaryCall(
@@ -277,19 +277,19 @@ public final class IMServiceGrpc {
         /**
          *
          */
-        public void messageGetByInit(violet.gateway.common.proto_gen.im.MessageGetByInitRequest request,
-                                     io.grpc.stub.StreamObserver<violet.gateway.common.proto_gen.im.MessageGetByInitResponse> responseObserver) {
+        public void getMessageByInit(violet.gateway.common.proto_gen.im.GetMessageByInitRequest request,
+                                     io.grpc.stub.StreamObserver<violet.gateway.common.proto_gen.im.GetMessageByInitResponse> responseObserver) {
             asyncUnaryCall(
-                    getChannel().newCall(METHOD_MESSAGE_GET_BY_INIT, getCallOptions()), request, responseObserver);
+                    getChannel().newCall(METHOD_GET_MESSAGE_BY_INIT, getCallOptions()), request, responseObserver);
         }
 
         /**
          *
          */
-        public void messageGetByConversation(violet.gateway.common.proto_gen.im.MessageGetByConversationRequest request,
-                                             io.grpc.stub.StreamObserver<violet.gateway.common.proto_gen.im.MessageGetByConversationResponse> responseObserver) {
+        public void getMessageByConversation(violet.gateway.common.proto_gen.im.GetMessageByConversationRequest request,
+                                             io.grpc.stub.StreamObserver<violet.gateway.common.proto_gen.im.GetMessageByConversationResponse> responseObserver) {
             asyncUnaryCall(
-                    getChannel().newCall(METHOD_MESSAGE_GET_BY_CONVERSATION, getCallOptions()), request, responseObserver);
+                    getChannel().newCall(METHOD_GET_MESSAGE_BY_CONVERSATION, getCallOptions()), request, responseObserver);
         }
 
         /**
@@ -359,17 +359,17 @@ public final class IMServiceGrpc {
         /**
          *
          */
-        public violet.gateway.common.proto_gen.im.MessageGetByInitResponse messageGetByInit(violet.gateway.common.proto_gen.im.MessageGetByInitRequest request) {
+        public violet.gateway.common.proto_gen.im.GetMessageByInitResponse getMessageByInit(violet.gateway.common.proto_gen.im.GetMessageByInitRequest request) {
             return blockingUnaryCall(
-                    getChannel(), METHOD_MESSAGE_GET_BY_INIT, getCallOptions(), request);
+                    getChannel(), METHOD_GET_MESSAGE_BY_INIT, getCallOptions(), request);
         }
 
         /**
          *
          */
-        public violet.gateway.common.proto_gen.im.MessageGetByConversationResponse messageGetByConversation(violet.gateway.common.proto_gen.im.MessageGetByConversationRequest request) {
+        public violet.gateway.common.proto_gen.im.GetMessageByConversationResponse getMessageByConversation(violet.gateway.common.proto_gen.im.GetMessageByConversationRequest request) {
             return blockingUnaryCall(
-                    getChannel(), METHOD_MESSAGE_GET_BY_CONVERSATION, getCallOptions(), request);
+                    getChannel(), METHOD_GET_MESSAGE_BY_CONVERSATION, getCallOptions(), request);
         }
 
         /**
@@ -436,19 +436,19 @@ public final class IMServiceGrpc {
         /**
          *
          */
-        public com.google.common.util.concurrent.ListenableFuture<violet.gateway.common.proto_gen.im.MessageGetByInitResponse> messageGetByInit(
-                violet.gateway.common.proto_gen.im.MessageGetByInitRequest request) {
+        public com.google.common.util.concurrent.ListenableFuture<violet.gateway.common.proto_gen.im.GetMessageByInitResponse> getMessageByInit(
+                violet.gateway.common.proto_gen.im.GetMessageByInitRequest request) {
             return futureUnaryCall(
-                    getChannel().newCall(METHOD_MESSAGE_GET_BY_INIT, getCallOptions()), request);
+                    getChannel().newCall(METHOD_GET_MESSAGE_BY_INIT, getCallOptions()), request);
         }
 
         /**
          *
          */
-        public com.google.common.util.concurrent.ListenableFuture<violet.gateway.common.proto_gen.im.MessageGetByConversationResponse> messageGetByConversation(
-                violet.gateway.common.proto_gen.im.MessageGetByConversationRequest request) {
+        public com.google.common.util.concurrent.ListenableFuture<violet.gateway.common.proto_gen.im.GetMessageByConversationResponse> getMessageByConversation(
+                violet.gateway.common.proto_gen.im.GetMessageByConversationRequest request) {
             return futureUnaryCall(
-                    getChannel().newCall(METHOD_MESSAGE_GET_BY_CONVERSATION, getCallOptions()), request);
+                    getChannel().newCall(METHOD_GET_MESSAGE_BY_CONVERSATION, getCallOptions()), request);
         }
 
         /**
@@ -489,8 +489,8 @@ public final class IMServiceGrpc {
     }
 
     private static final int METHODID_SEND_MESSAGE = 0;
-    private static final int METHODID_MESSAGE_GET_BY_INIT = 1;
-    private static final int METHODID_MESSAGE_GET_BY_CONVERSATION = 2;
+    private static final int METHODID_GET_MESSAGE_BY_INIT = 1;
+    private static final int METHODID_GET_MESSAGE_BY_CONVERSATION = 2;
     private static final int METHODID_MARK_READ = 3;
     private static final int METHODID_CREATE_CONVERSATION = 4;
     private static final int METHODID_GET_CONVERSATION_MEMBERS = 5;
@@ -517,13 +517,13 @@ public final class IMServiceGrpc {
                     serviceImpl.sendMessage((violet.gateway.common.proto_gen.im.SendMessageRequest) request,
                             (io.grpc.stub.StreamObserver<violet.gateway.common.proto_gen.im.SendMessageResponse>) responseObserver);
                     break;
-                case METHODID_MESSAGE_GET_BY_INIT:
-                    serviceImpl.messageGetByInit((violet.gateway.common.proto_gen.im.MessageGetByInitRequest) request,
-                            (io.grpc.stub.StreamObserver<violet.gateway.common.proto_gen.im.MessageGetByInitResponse>) responseObserver);
+                case METHODID_GET_MESSAGE_BY_INIT:
+                    serviceImpl.getMessageByInit((violet.gateway.common.proto_gen.im.GetMessageByInitRequest) request,
+                            (io.grpc.stub.StreamObserver<violet.gateway.common.proto_gen.im.GetMessageByInitResponse>) responseObserver);
                     break;
-                case METHODID_MESSAGE_GET_BY_CONVERSATION:
-                    serviceImpl.messageGetByConversation((violet.gateway.common.proto_gen.im.MessageGetByConversationRequest) request,
-                            (io.grpc.stub.StreamObserver<violet.gateway.common.proto_gen.im.MessageGetByConversationResponse>) responseObserver);
+                case METHODID_GET_MESSAGE_BY_CONVERSATION:
+                    serviceImpl.getMessageByConversation((violet.gateway.common.proto_gen.im.GetMessageByConversationRequest) request,
+                            (io.grpc.stub.StreamObserver<violet.gateway.common.proto_gen.im.GetMessageByConversationResponse>) responseObserver);
                     break;
                 case METHODID_MARK_READ:
                     serviceImpl.markRead((violet.gateway.common.proto_gen.im.MarkReadRequest) request,
@@ -575,8 +575,8 @@ public final class IMServiceGrpc {
                     serviceDescriptor = result = io.grpc.ServiceDescriptor.newBuilder(SERVICE_NAME)
                             .setSchemaDescriptor(new IMServiceDescriptorSupplier())
                             .addMethod(METHOD_SEND_MESSAGE)
-                            .addMethod(METHOD_MESSAGE_GET_BY_INIT)
-                            .addMethod(METHOD_MESSAGE_GET_BY_CONVERSATION)
+                            .addMethod(METHOD_GET_MESSAGE_BY_INIT)
+                            .addMethod(METHOD_GET_MESSAGE_BY_CONVERSATION)
                             .addMethod(METHOD_MARK_READ)
                             .addMethod(METHOD_CREATE_CONVERSATION)
                             .addMethod(METHOD_GET_CONVERSATION_MEMBERS)

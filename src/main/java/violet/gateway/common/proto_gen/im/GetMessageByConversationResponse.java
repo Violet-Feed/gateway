@@ -4,18 +4,18 @@
 package violet.gateway.common.proto_gen.im;
 
 /**
- * Protobuf type {@code im.MessageGetByConversationResponse}
+ * Protobuf type {@code im.GetMessageByConversationResponse}
  */
-public final class MessageGetByConversationResponse extends
+public final class GetMessageByConversationResponse extends
         com.google.protobuf.GeneratedMessageV3 implements
-        // @@protoc_insertion_point(message_implements:im.MessageGetByConversationResponse)
-        MessageGetByConversationResponseOrBuilder {
-    // Use MessageGetByConversationResponse.newBuilder() to construct.
-    private MessageGetByConversationResponse(com.google.protobuf.GeneratedMessageV3.Builder<?> builder) {
+        // @@protoc_insertion_point(message_implements:im.GetMessageByConversationResponse)
+        GetMessageByConversationResponseOrBuilder {
+    // Use GetMessageByConversationResponse.newBuilder() to construct.
+    private GetMessageByConversationResponse(com.google.protobuf.GeneratedMessageV3.Builder<?> builder) {
         super(builder);
     }
 
-    private MessageGetByConversationResponse() {
+    private GetMessageByConversationResponse() {
         msgBodies_ = java.util.Collections.emptyList();
     }
 
@@ -25,7 +25,7 @@ public final class MessageGetByConversationResponse extends
         return com.google.protobuf.UnknownFieldSet.getDefaultInstance();
     }
 
-    private MessageGetByConversationResponse(
+    private GetMessageByConversationResponse(
             com.google.protobuf.CodedInputStream input,
             com.google.protobuf.ExtensionRegistryLite extensionRegistry)
             throws com.google.protobuf.InvalidProtocolBufferException {
@@ -54,6 +54,19 @@ public final class MessageGetByConversationResponse extends
                                 input.readMessage(violet.gateway.common.proto_gen.im.MessageBody.parser(), extensionRegistry));
                         break;
                     }
+                    case 2042: {
+                        violet.gateway.common.proto_gen.common.BaseResp.Builder subBuilder = null;
+                        if (baseResp_ != null) {
+                            subBuilder = baseResp_.toBuilder();
+                        }
+                        baseResp_ = input.readMessage(violet.gateway.common.proto_gen.common.BaseResp.parser(), extensionRegistry);
+                        if (subBuilder != null) {
+                            subBuilder.mergeFrom(baseResp_);
+                            baseResp_ = subBuilder.buildPartial();
+                        }
+
+                        break;
+                    }
                 }
             }
         } catch (com.google.protobuf.InvalidProtocolBufferException e) {
@@ -71,16 +84,17 @@ public final class MessageGetByConversationResponse extends
 
     public static final com.google.protobuf.Descriptors.Descriptor
     getDescriptor() {
-        return violet.gateway.common.proto_gen.im.Im.internal_static_im_MessageGetByConversationResponse_descriptor;
+        return violet.gateway.common.proto_gen.im.Im.internal_static_im_GetMessageByConversationResponse_descriptor;
     }
 
     protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
     internalGetFieldAccessorTable() {
-        return violet.gateway.common.proto_gen.im.Im.internal_static_im_MessageGetByConversationResponse_fieldAccessorTable
+        return violet.gateway.common.proto_gen.im.Im.internal_static_im_GetMessageByConversationResponse_fieldAccessorTable
                 .ensureFieldAccessorsInitialized(
-                        violet.gateway.common.proto_gen.im.MessageGetByConversationResponse.class, violet.gateway.common.proto_gen.im.MessageGetByConversationResponse.Builder.class);
+                        violet.gateway.common.proto_gen.im.GetMessageByConversationResponse.class, violet.gateway.common.proto_gen.im.GetMessageByConversationResponse.Builder.class);
     }
 
+    private int bitField0_;
     public static final int MSG_BODIES_FIELD_NUMBER = 1;
     private java.util.List<violet.gateway.common.proto_gen.im.MessageBody> msgBodies_;
 
@@ -121,6 +135,30 @@ public final class MessageGetByConversationResponse extends
         return msgBodies_.get(index);
     }
 
+    public static final int BASERESP_FIELD_NUMBER = 255;
+    private violet.gateway.common.proto_gen.common.BaseResp baseResp_;
+
+    /**
+     * <code>.common.BaseResp baseResp = 255;</code>
+     */
+    public boolean hasBaseResp() {
+        return baseResp_ != null;
+    }
+
+    /**
+     * <code>.common.BaseResp baseResp = 255;</code>
+     */
+    public violet.gateway.common.proto_gen.common.BaseResp getBaseResp() {
+        return baseResp_ == null ? violet.gateway.common.proto_gen.common.BaseResp.getDefaultInstance() : baseResp_;
+    }
+
+    /**
+     * <code>.common.BaseResp baseResp = 255;</code>
+     */
+    public violet.gateway.common.proto_gen.common.BaseRespOrBuilder getBaseRespOrBuilder() {
+        return getBaseResp();
+    }
+
     private byte memoizedIsInitialized = -1;
 
     public final boolean isInitialized() {
@@ -137,6 +175,9 @@ public final class MessageGetByConversationResponse extends
         for (int i = 0; i < msgBodies_.size(); i++) {
             output.writeMessage(1, msgBodies_.get(i));
         }
+        if (baseResp_ != null) {
+            output.writeMessage(255, getBaseResp());
+        }
     }
 
     public int getSerializedSize() {
@@ -147,6 +188,10 @@ public final class MessageGetByConversationResponse extends
         for (int i = 0; i < msgBodies_.size(); i++) {
             size += com.google.protobuf.CodedOutputStream
                     .computeMessageSize(1, msgBodies_.get(i));
+        }
+        if (baseResp_ != null) {
+            size += com.google.protobuf.CodedOutputStream
+                    .computeMessageSize(255, getBaseResp());
         }
         memoizedSize = size;
         return size;
@@ -159,14 +204,19 @@ public final class MessageGetByConversationResponse extends
         if (obj == this) {
             return true;
         }
-        if (!(obj instanceof violet.gateway.common.proto_gen.im.MessageGetByConversationResponse)) {
+        if (!(obj instanceof violet.gateway.common.proto_gen.im.GetMessageByConversationResponse)) {
             return super.equals(obj);
         }
-        violet.gateway.common.proto_gen.im.MessageGetByConversationResponse other = (violet.gateway.common.proto_gen.im.MessageGetByConversationResponse) obj;
+        violet.gateway.common.proto_gen.im.GetMessageByConversationResponse other = (violet.gateway.common.proto_gen.im.GetMessageByConversationResponse) obj;
 
         boolean result = true;
         result = result && getMsgBodiesList()
                 .equals(other.getMsgBodiesList());
+        result = result && (hasBaseResp() == other.hasBaseResp());
+        if (hasBaseResp()) {
+            result = result && getBaseResp()
+                    .equals(other.getBaseResp());
+        }
         return result;
     }
 
@@ -181,56 +231,60 @@ public final class MessageGetByConversationResponse extends
             hash = (37 * hash) + MSG_BODIES_FIELD_NUMBER;
             hash = (53 * hash) + getMsgBodiesList().hashCode();
         }
+        if (hasBaseResp()) {
+            hash = (37 * hash) + BASERESP_FIELD_NUMBER;
+            hash = (53 * hash) + getBaseResp().hashCode();
+        }
         hash = (29 * hash) + unknownFields.hashCode();
         memoizedHashCode = hash;
         return hash;
     }
 
-    public static violet.gateway.common.proto_gen.im.MessageGetByConversationResponse parseFrom(
+    public static violet.gateway.common.proto_gen.im.GetMessageByConversationResponse parseFrom(
             java.nio.ByteBuffer data)
             throws com.google.protobuf.InvalidProtocolBufferException {
         return PARSER.parseFrom(data);
     }
 
-    public static violet.gateway.common.proto_gen.im.MessageGetByConversationResponse parseFrom(
+    public static violet.gateway.common.proto_gen.im.GetMessageByConversationResponse parseFrom(
             java.nio.ByteBuffer data,
             com.google.protobuf.ExtensionRegistryLite extensionRegistry)
             throws com.google.protobuf.InvalidProtocolBufferException {
         return PARSER.parseFrom(data, extensionRegistry);
     }
 
-    public static violet.gateway.common.proto_gen.im.MessageGetByConversationResponse parseFrom(
+    public static violet.gateway.common.proto_gen.im.GetMessageByConversationResponse parseFrom(
             com.google.protobuf.ByteString data)
             throws com.google.protobuf.InvalidProtocolBufferException {
         return PARSER.parseFrom(data);
     }
 
-    public static violet.gateway.common.proto_gen.im.MessageGetByConversationResponse parseFrom(
+    public static violet.gateway.common.proto_gen.im.GetMessageByConversationResponse parseFrom(
             com.google.protobuf.ByteString data,
             com.google.protobuf.ExtensionRegistryLite extensionRegistry)
             throws com.google.protobuf.InvalidProtocolBufferException {
         return PARSER.parseFrom(data, extensionRegistry);
     }
 
-    public static violet.gateway.common.proto_gen.im.MessageGetByConversationResponse parseFrom(byte[] data)
+    public static violet.gateway.common.proto_gen.im.GetMessageByConversationResponse parseFrom(byte[] data)
             throws com.google.protobuf.InvalidProtocolBufferException {
         return PARSER.parseFrom(data);
     }
 
-    public static violet.gateway.common.proto_gen.im.MessageGetByConversationResponse parseFrom(
+    public static violet.gateway.common.proto_gen.im.GetMessageByConversationResponse parseFrom(
             byte[] data,
             com.google.protobuf.ExtensionRegistryLite extensionRegistry)
             throws com.google.protobuf.InvalidProtocolBufferException {
         return PARSER.parseFrom(data, extensionRegistry);
     }
 
-    public static violet.gateway.common.proto_gen.im.MessageGetByConversationResponse parseFrom(java.io.InputStream input)
+    public static violet.gateway.common.proto_gen.im.GetMessageByConversationResponse parseFrom(java.io.InputStream input)
             throws java.io.IOException {
         return com.google.protobuf.GeneratedMessageV3
                 .parseWithIOException(PARSER, input);
     }
 
-    public static violet.gateway.common.proto_gen.im.MessageGetByConversationResponse parseFrom(
+    public static violet.gateway.common.proto_gen.im.GetMessageByConversationResponse parseFrom(
             java.io.InputStream input,
             com.google.protobuf.ExtensionRegistryLite extensionRegistry)
             throws java.io.IOException {
@@ -238,13 +292,13 @@ public final class MessageGetByConversationResponse extends
                 .parseWithIOException(PARSER, input, extensionRegistry);
     }
 
-    public static violet.gateway.common.proto_gen.im.MessageGetByConversationResponse parseDelimitedFrom(java.io.InputStream input)
+    public static violet.gateway.common.proto_gen.im.GetMessageByConversationResponse parseDelimitedFrom(java.io.InputStream input)
             throws java.io.IOException {
         return com.google.protobuf.GeneratedMessageV3
                 .parseDelimitedWithIOException(PARSER, input);
     }
 
-    public static violet.gateway.common.proto_gen.im.MessageGetByConversationResponse parseDelimitedFrom(
+    public static violet.gateway.common.proto_gen.im.GetMessageByConversationResponse parseDelimitedFrom(
             java.io.InputStream input,
             com.google.protobuf.ExtensionRegistryLite extensionRegistry)
             throws java.io.IOException {
@@ -252,14 +306,14 @@ public final class MessageGetByConversationResponse extends
                 .parseDelimitedWithIOException(PARSER, input, extensionRegistry);
     }
 
-    public static violet.gateway.common.proto_gen.im.MessageGetByConversationResponse parseFrom(
+    public static violet.gateway.common.proto_gen.im.GetMessageByConversationResponse parseFrom(
             com.google.protobuf.CodedInputStream input)
             throws java.io.IOException {
         return com.google.protobuf.GeneratedMessageV3
                 .parseWithIOException(PARSER, input);
     }
 
-    public static violet.gateway.common.proto_gen.im.MessageGetByConversationResponse parseFrom(
+    public static violet.gateway.common.proto_gen.im.GetMessageByConversationResponse parseFrom(
             com.google.protobuf.CodedInputStream input,
             com.google.protobuf.ExtensionRegistryLite extensionRegistry)
             throws java.io.IOException {
@@ -275,7 +329,7 @@ public final class MessageGetByConversationResponse extends
         return DEFAULT_INSTANCE.toBuilder();
     }
 
-    public static Builder newBuilder(violet.gateway.common.proto_gen.im.MessageGetByConversationResponse prototype) {
+    public static Builder newBuilder(violet.gateway.common.proto_gen.im.GetMessageByConversationResponse prototype) {
         return DEFAULT_INSTANCE.toBuilder().mergeFrom(prototype);
     }
 
@@ -292,25 +346,25 @@ public final class MessageGetByConversationResponse extends
     }
 
     /**
-     * Protobuf type {@code im.MessageGetByConversationResponse}
+     * Protobuf type {@code im.GetMessageByConversationResponse}
      */
     public static final class Builder extends
             com.google.protobuf.GeneratedMessageV3.Builder<Builder> implements
-            // @@protoc_insertion_point(builder_implements:im.MessageGetByConversationResponse)
-            violet.gateway.common.proto_gen.im.MessageGetByConversationResponseOrBuilder {
+            // @@protoc_insertion_point(builder_implements:im.GetMessageByConversationResponse)
+            violet.gateway.common.proto_gen.im.GetMessageByConversationResponseOrBuilder {
         public static final com.google.protobuf.Descriptors.Descriptor
         getDescriptor() {
-            return violet.gateway.common.proto_gen.im.Im.internal_static_im_MessageGetByConversationResponse_descriptor;
+            return violet.gateway.common.proto_gen.im.Im.internal_static_im_GetMessageByConversationResponse_descriptor;
         }
 
         protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
         internalGetFieldAccessorTable() {
-            return violet.gateway.common.proto_gen.im.Im.internal_static_im_MessageGetByConversationResponse_fieldAccessorTable
+            return violet.gateway.common.proto_gen.im.Im.internal_static_im_GetMessageByConversationResponse_fieldAccessorTable
                     .ensureFieldAccessorsInitialized(
-                            violet.gateway.common.proto_gen.im.MessageGetByConversationResponse.class, violet.gateway.common.proto_gen.im.MessageGetByConversationResponse.Builder.class);
+                            violet.gateway.common.proto_gen.im.GetMessageByConversationResponse.class, violet.gateway.common.proto_gen.im.GetMessageByConversationResponse.Builder.class);
         }
 
-        // Construct using violet.gateway.common.proto_gen.im.MessageGetByConversationResponse.newBuilder()
+        // Construct using violet.gateway.common.proto_gen.im.GetMessageByConversationResponse.newBuilder()
         private Builder() {
             maybeForceBuilderInitialization();
         }
@@ -336,29 +390,36 @@ public final class MessageGetByConversationResponse extends
             } else {
                 msgBodiesBuilder_.clear();
             }
+            if (baseRespBuilder_ == null) {
+                baseResp_ = null;
+            } else {
+                baseResp_ = null;
+                baseRespBuilder_ = null;
+            }
             return this;
         }
 
         public com.google.protobuf.Descriptors.Descriptor
         getDescriptorForType() {
-            return violet.gateway.common.proto_gen.im.Im.internal_static_im_MessageGetByConversationResponse_descriptor;
+            return violet.gateway.common.proto_gen.im.Im.internal_static_im_GetMessageByConversationResponse_descriptor;
         }
 
-        public violet.gateway.common.proto_gen.im.MessageGetByConversationResponse getDefaultInstanceForType() {
-            return violet.gateway.common.proto_gen.im.MessageGetByConversationResponse.getDefaultInstance();
+        public violet.gateway.common.proto_gen.im.GetMessageByConversationResponse getDefaultInstanceForType() {
+            return violet.gateway.common.proto_gen.im.GetMessageByConversationResponse.getDefaultInstance();
         }
 
-        public violet.gateway.common.proto_gen.im.MessageGetByConversationResponse build() {
-            violet.gateway.common.proto_gen.im.MessageGetByConversationResponse result = buildPartial();
+        public violet.gateway.common.proto_gen.im.GetMessageByConversationResponse build() {
+            violet.gateway.common.proto_gen.im.GetMessageByConversationResponse result = buildPartial();
             if (!result.isInitialized()) {
                 throw newUninitializedMessageException(result);
             }
             return result;
         }
 
-        public violet.gateway.common.proto_gen.im.MessageGetByConversationResponse buildPartial() {
-            violet.gateway.common.proto_gen.im.MessageGetByConversationResponse result = new violet.gateway.common.proto_gen.im.MessageGetByConversationResponse(this);
+        public violet.gateway.common.proto_gen.im.GetMessageByConversationResponse buildPartial() {
+            violet.gateway.common.proto_gen.im.GetMessageByConversationResponse result = new violet.gateway.common.proto_gen.im.GetMessageByConversationResponse(this);
             int from_bitField0_ = bitField0_;
+            int to_bitField0_ = 0;
             if (msgBodiesBuilder_ == null) {
                 if (((bitField0_ & 0x00000001) == 0x00000001)) {
                     msgBodies_ = java.util.Collections.unmodifiableList(msgBodies_);
@@ -368,6 +429,12 @@ public final class MessageGetByConversationResponse extends
             } else {
                 result.msgBodies_ = msgBodiesBuilder_.build();
             }
+            if (baseRespBuilder_ == null) {
+                result.baseResp_ = baseResp_;
+            } else {
+                result.baseResp_ = baseRespBuilder_.build();
+            }
+            result.bitField0_ = to_bitField0_;
             onBuilt();
             return result;
         }
@@ -405,16 +472,16 @@ public final class MessageGetByConversationResponse extends
         }
 
         public Builder mergeFrom(com.google.protobuf.Message other) {
-            if (other instanceof violet.gateway.common.proto_gen.im.MessageGetByConversationResponse) {
-                return mergeFrom((violet.gateway.common.proto_gen.im.MessageGetByConversationResponse) other);
+            if (other instanceof violet.gateway.common.proto_gen.im.GetMessageByConversationResponse) {
+                return mergeFrom((violet.gateway.common.proto_gen.im.GetMessageByConversationResponse) other);
             } else {
                 super.mergeFrom(other);
                 return this;
             }
         }
 
-        public Builder mergeFrom(violet.gateway.common.proto_gen.im.MessageGetByConversationResponse other) {
-            if (other == violet.gateway.common.proto_gen.im.MessageGetByConversationResponse.getDefaultInstance())
+        public Builder mergeFrom(violet.gateway.common.proto_gen.im.GetMessageByConversationResponse other) {
+            if (other == violet.gateway.common.proto_gen.im.GetMessageByConversationResponse.getDefaultInstance())
                 return this;
             if (msgBodiesBuilder_ == null) {
                 if (!other.msgBodies_.isEmpty()) {
@@ -442,6 +509,9 @@ public final class MessageGetByConversationResponse extends
                     }
                 }
             }
+            if (other.hasBaseResp()) {
+                mergeBaseResp(other.getBaseResp());
+            }
             onChanged();
             return this;
         }
@@ -454,11 +524,11 @@ public final class MessageGetByConversationResponse extends
                 com.google.protobuf.CodedInputStream input,
                 com.google.protobuf.ExtensionRegistryLite extensionRegistry)
                 throws java.io.IOException {
-            violet.gateway.common.proto_gen.im.MessageGetByConversationResponse parsedMessage = null;
+            violet.gateway.common.proto_gen.im.GetMessageByConversationResponse parsedMessage = null;
             try {
                 parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
             } catch (com.google.protobuf.InvalidProtocolBufferException e) {
-                parsedMessage = (violet.gateway.common.proto_gen.im.MessageGetByConversationResponse) e.getUnfinishedMessage();
+                parsedMessage = (violet.gateway.common.proto_gen.im.GetMessageByConversationResponse) e.getUnfinishedMessage();
                 throw e.unwrapIOException();
             } finally {
                 if (parsedMessage != null) {
@@ -730,6 +800,132 @@ public final class MessageGetByConversationResponse extends
             return msgBodiesBuilder_;
         }
 
+        private violet.gateway.common.proto_gen.common.BaseResp baseResp_ = null;
+        private com.google.protobuf.SingleFieldBuilderV3<
+                violet.gateway.common.proto_gen.common.BaseResp, violet.gateway.common.proto_gen.common.BaseResp.Builder, violet.gateway.common.proto_gen.common.BaseRespOrBuilder> baseRespBuilder_;
+
+        /**
+         * <code>.common.BaseResp baseResp = 255;</code>
+         */
+        public boolean hasBaseResp() {
+            return baseRespBuilder_ != null || baseResp_ != null;
+        }
+
+        /**
+         * <code>.common.BaseResp baseResp = 255;</code>
+         */
+        public violet.gateway.common.proto_gen.common.BaseResp getBaseResp() {
+            if (baseRespBuilder_ == null) {
+                return baseResp_ == null ? violet.gateway.common.proto_gen.common.BaseResp.getDefaultInstance() : baseResp_;
+            } else {
+                return baseRespBuilder_.getMessage();
+            }
+        }
+
+        /**
+         * <code>.common.BaseResp baseResp = 255;</code>
+         */
+        public Builder setBaseResp(violet.gateway.common.proto_gen.common.BaseResp value) {
+            if (baseRespBuilder_ == null) {
+                if (value == null) {
+                    throw new NullPointerException();
+                }
+                baseResp_ = value;
+                onChanged();
+            } else {
+                baseRespBuilder_.setMessage(value);
+            }
+
+            return this;
+        }
+
+        /**
+         * <code>.common.BaseResp baseResp = 255;</code>
+         */
+        public Builder setBaseResp(
+                violet.gateway.common.proto_gen.common.BaseResp.Builder builderForValue) {
+            if (baseRespBuilder_ == null) {
+                baseResp_ = builderForValue.build();
+                onChanged();
+            } else {
+                baseRespBuilder_.setMessage(builderForValue.build());
+            }
+
+            return this;
+        }
+
+        /**
+         * <code>.common.BaseResp baseResp = 255;</code>
+         */
+        public Builder mergeBaseResp(violet.gateway.common.proto_gen.common.BaseResp value) {
+            if (baseRespBuilder_ == null) {
+                if (baseResp_ != null) {
+                    baseResp_ =
+                            violet.gateway.common.proto_gen.common.BaseResp.newBuilder(baseResp_).mergeFrom(value).buildPartial();
+                } else {
+                    baseResp_ = value;
+                }
+                onChanged();
+            } else {
+                baseRespBuilder_.mergeFrom(value);
+            }
+
+            return this;
+        }
+
+        /**
+         * <code>.common.BaseResp baseResp = 255;</code>
+         */
+        public Builder clearBaseResp() {
+            if (baseRespBuilder_ == null) {
+                baseResp_ = null;
+                onChanged();
+            } else {
+                baseResp_ = null;
+                baseRespBuilder_ = null;
+            }
+
+            return this;
+        }
+
+        /**
+         * <code>.common.BaseResp baseResp = 255;</code>
+         */
+        public violet.gateway.common.proto_gen.common.BaseResp.Builder getBaseRespBuilder() {
+
+            onChanged();
+            return getBaseRespFieldBuilder().getBuilder();
+        }
+
+        /**
+         * <code>.common.BaseResp baseResp = 255;</code>
+         */
+        public violet.gateway.common.proto_gen.common.BaseRespOrBuilder getBaseRespOrBuilder() {
+            if (baseRespBuilder_ != null) {
+                return baseRespBuilder_.getMessageOrBuilder();
+            } else {
+                return baseResp_ == null ?
+                        violet.gateway.common.proto_gen.common.BaseResp.getDefaultInstance() : baseResp_;
+            }
+        }
+
+        /**
+         * <code>.common.BaseResp baseResp = 255;</code>
+         */
+        private com.google.protobuf.SingleFieldBuilderV3<
+                violet.gateway.common.proto_gen.common.BaseResp, violet.gateway.common.proto_gen.common.BaseResp.Builder, violet.gateway.common.proto_gen.common.BaseRespOrBuilder>
+        getBaseRespFieldBuilder() {
+            if (baseRespBuilder_ == null) {
+                baseRespBuilder_ = new com.google.protobuf.SingleFieldBuilderV3<
+                        violet.gateway.common.proto_gen.common.BaseResp, violet.gateway.common.proto_gen.common.BaseResp.Builder, violet.gateway.common.proto_gen.common.BaseRespOrBuilder>(
+                        getBaseResp(),
+                        getParentForChildren(),
+                        isClean());
+                baseResp_ = null;
+            }
+            return baseRespBuilder_;
+        }
+
         public final Builder setUnknownFields(
                 final com.google.protobuf.UnknownFieldSet unknownFields) {
             return this;
@@ -741,40 +937,40 @@ public final class MessageGetByConversationResponse extends
         }
 
 
-        // @@protoc_insertion_point(builder_scope:im.MessageGetByConversationResponse)
+        // @@protoc_insertion_point(builder_scope:im.GetMessageByConversationResponse)
     }
 
-    // @@protoc_insertion_point(class_scope:im.MessageGetByConversationResponse)
-    private static final violet.gateway.common.proto_gen.im.MessageGetByConversationResponse DEFAULT_INSTANCE;
+    // @@protoc_insertion_point(class_scope:im.GetMessageByConversationResponse)
+    private static final violet.gateway.common.proto_gen.im.GetMessageByConversationResponse DEFAULT_INSTANCE;
 
     static {
-        DEFAULT_INSTANCE = new violet.gateway.common.proto_gen.im.MessageGetByConversationResponse();
+        DEFAULT_INSTANCE = new violet.gateway.common.proto_gen.im.GetMessageByConversationResponse();
     }
 
-    public static violet.gateway.common.proto_gen.im.MessageGetByConversationResponse getDefaultInstance() {
+    public static violet.gateway.common.proto_gen.im.GetMessageByConversationResponse getDefaultInstance() {
         return DEFAULT_INSTANCE;
     }
 
-    private static final com.google.protobuf.Parser<MessageGetByConversationResponse>
-            PARSER = new com.google.protobuf.AbstractParser<MessageGetByConversationResponse>() {
-        public MessageGetByConversationResponse parsePartialFrom(
+    private static final com.google.protobuf.Parser<GetMessageByConversationResponse>
+            PARSER = new com.google.protobuf.AbstractParser<GetMessageByConversationResponse>() {
+        public GetMessageByConversationResponse parsePartialFrom(
                 com.google.protobuf.CodedInputStream input,
                 com.google.protobuf.ExtensionRegistryLite extensionRegistry)
                 throws com.google.protobuf.InvalidProtocolBufferException {
-            return new MessageGetByConversationResponse(input, extensionRegistry);
+            return new GetMessageByConversationResponse(input, extensionRegistry);
         }
     };
 
-    public static com.google.protobuf.Parser<MessageGetByConversationResponse> parser() {
+    public static com.google.protobuf.Parser<GetMessageByConversationResponse> parser() {
         return PARSER;
     }
 
     @java.lang.Override
-    public com.google.protobuf.Parser<MessageGetByConversationResponse> getParserForType() {
+    public com.google.protobuf.Parser<GetMessageByConversationResponse> getParserForType() {
         return PARSER;
     }
 
-    public violet.gateway.common.proto_gen.im.MessageGetByConversationResponse getDefaultInstanceForType() {
+    public violet.gateway.common.proto_gen.im.GetMessageByConversationResponse getDefaultInstanceForType() {
         return DEFAULT_INSTANCE;
     }
 

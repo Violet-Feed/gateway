@@ -3,8 +3,8 @@
 
 package violet.gateway.common.proto_gen.im;
 
-public interface MessageGetByInitResponseOrBuilder extends
-        // @@protoc_insertion_point(interface_extends:im.MessageGetByInitResponse)
+public interface GetMessageByInitResponseOrBuilder extends
+        // @@protoc_insertion_point(interface_extends:im.GetMessageByInitResponse)
         com.google.protobuf.MessageOrBuilder {
 
     /**
@@ -54,4 +54,19 @@ public interface MessageGetByInitResponseOrBuilder extends
      * <code>int64 user_cmd_index = 5;</code>
      */
     long getUserCmdIndex();
+
+    /**
+     * <code>.common.BaseResp baseResp = 255;</code>
+     */
+    boolean hasBaseResp();
+
+    /**
+     * <code>.common.BaseResp baseResp = 255;</code>
+     */
+    violet.gateway.common.proto_gen.common.BaseResp getBaseResp();
+
+    /**
+     * <code>.common.BaseResp baseResp = 255;</code>
+     */
+    violet.gateway.common.proto_gen.common.BaseRespOrBuilder getBaseRespOrBuilder();
 }

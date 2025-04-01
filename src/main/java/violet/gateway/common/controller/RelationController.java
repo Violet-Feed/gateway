@@ -28,11 +28,15 @@ public class RelationController {
             resp.put("data", data);
         } catch (RpcException e) {
             resp.put("code", e.getStatus().getStatusCodeValue());
-            resp.put("message", e.getStatus().getStatusMessage());
+            resp.put("message", e.getStatus().getStatusCode());
+        } catch (NullPointerException e) {
+            resp.put("code", StatusCode.Param_Error_VALUE);
+            resp.put("message", StatusCode.Param_Error);
+            log.error("[follow] err, err = {}", e.toString());
         } catch (Exception e) {
             resp.put("code", StatusCode.Unknown_Error_VALUE);
             resp.put("message", StatusCode.Unknown_Error);
-            log.error(String.format("[follow] err, err = %s.", e));
+            log.error("[follow] err, err = {}", e.toString());
         }
         return resp;
     }
@@ -47,11 +51,15 @@ public class RelationController {
             resp.put("data", data);
         } catch (RpcException e) {
             resp.put("code", e.getStatus().getStatusCodeValue());
-            resp.put("message", e.getStatus().getStatusMessage());
+            resp.put("message", e.getStatus().getStatusCode());
+        } catch (NullPointerException e) {
+            resp.put("code", StatusCode.Param_Error_VALUE);
+            resp.put("message", StatusCode.Param_Error);
+            log.error("[unfollow] err, err = {}", e.toString());
         } catch (Exception e) {
             resp.put("code", StatusCode.Unknown_Error_VALUE);
             resp.put("message", StatusCode.Unknown_Error);
-            log.error(String.format("[unfollow] err, err = %s.", e));
+            log.error("[unfollow] err, err = {}", e.toString());
         }
         return resp;
     }
@@ -66,11 +74,15 @@ public class RelationController {
             resp.put("data", data);
         } catch (RpcException e) {
             resp.put("code", e.getStatus().getStatusCodeValue());
-            resp.put("message", e.getStatus().getStatusMessage());
+            resp.put("message", e.getStatus().getStatusCode());
+        } catch (NullPointerException e) {
+            resp.put("code", StatusCode.Param_Error_VALUE);
+            resp.put("message", StatusCode.Param_Error);
+            log.error("[getFollowingList] err, err = {}", e.toString());
         } catch (Exception e) {
             resp.put("code", StatusCode.Unknown_Error_VALUE);
             resp.put("message", StatusCode.Unknown_Error);
-            log.error(String.format("[getFollowingList] err, err = %s.", e));
+            log.error("[getFollowingList] err, err = {}", e.toString());
         }
         return resp;
     }
@@ -85,11 +97,15 @@ public class RelationController {
             resp.put("data", data);
         } catch (RpcException e) {
             resp.put("code", e.getStatus().getStatusCodeValue());
-            resp.put("message", e.getStatus().getStatusMessage());
+            resp.put("message", e.getStatus().getStatusCode());
+        } catch (NullPointerException e) {
+            resp.put("code", StatusCode.Param_Error_VALUE);
+            resp.put("message", StatusCode.Param_Error);
+            log.error("[getFollowerList] err, err = {}", e.toString());
         } catch (Exception e) {
             resp.put("code", StatusCode.Unknown_Error_VALUE);
             resp.put("message", StatusCode.Unknown_Error);
-            log.error(String.format("[getFollowerList] err, err = %s.", e));
+            log.error("[getFollowerList] err, err = {}", e.toString());
         }
         return resp;
     }
@@ -104,11 +120,15 @@ public class RelationController {
             resp.put("data", data);
         } catch (RpcException e) {
             resp.put("code", e.getStatus().getStatusCodeValue());
-            resp.put("message", e.getStatus().getStatusMessage());
+            resp.put("message", e.getStatus().getStatusCode());
+        } catch (NullPointerException e) {
+            resp.put("code", StatusCode.Param_Error_VALUE);
+            resp.put("message", StatusCode.Param_Error);
+            log.error("[getFriendList] err, err = {}", e.toString());
         } catch (Exception e) {
             resp.put("code", StatusCode.Unknown_Error_VALUE);
             resp.put("message", StatusCode.Unknown_Error);
-            log.error(String.format("[getFriendList] err, err = %s.", e));
+            log.error("[getFriendList] err, err = {}", e.toString());
         }
         return resp;
     }

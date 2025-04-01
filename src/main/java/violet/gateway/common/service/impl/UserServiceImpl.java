@@ -25,6 +25,7 @@ public class UserServiceImpl implements UserService {
         LoginRequest loginRequest = LoginRequest.newBuilder().setUsername(username).setPassword(password).build();
         LoginResponse loginResponse = actionStub.login(loginRequest);
         if (loginResponse.getBaseResp().getStatusCode() != StatusCode.Success) {
+            log.error("[login] Login rpc err, err = {}", loginResponse.getBaseResp());
             throw new RpcException(loginResponse.getBaseResp());
         }
         String token = JwtUtil.createJWT(String.valueOf(loginResponse.getUserId()));
@@ -41,6 +42,7 @@ public class UserServiceImpl implements UserService {
         RegisterRequest registerRequest = RegisterRequest.newBuilder().setUsername(username).setPassword(password).setConfirmPassword(confirmPassword).build();
         RegisterResponse registerResponse = actionStub.register(registerRequest);
         if (registerResponse.getBaseResp().getStatusCode() != StatusCode.Success) {
+            log.error("[register] Register rpc err, err = {}", registerResponse.getBaseResp());
             throw new RpcException(registerResponse.getBaseResp());
         }
         JSONObject data = new JSONObject();
@@ -58,14 +60,16 @@ public class UserServiceImpl implements UserService {
         GetUserInfosRequest getUserInfosRequest = GetUserInfosRequest.newBuilder().addUserIds(userId).build();
         GetUserInfosResponse getUserInfosResponse = actionStub.getUserInfos(getUserInfosRequest);
         if (getUserInfosResponse.getBaseResp().getStatusCode() != StatusCode.Success) {
+            log.error("[getUserProfile] GetUserInfos rpc err, err = {}", getUserInfosResponse.getBaseResp());
             throw new RpcException(getUserInfosResponse.getBaseResp());
         }
         JSONObject data = new JSONObject();
         data.put("user_info", getUserInfosResponse.getUserInfos(0));
         if (needFollowInfo == Boolean.TRUE) {
             MGetFollowCountRequest mGetFollowCountRequest = MGetFollowCountRequest.newBuilder().addUserIds(userId).setNeedFollowing(true).setNeedFollower(true).setNeedFriend(true).build();
-            MGetFollowCountResponse mGetFollowCountResponse = actionStub.getFollowCount(mGetFollowCountRequest);
+            MGetFollowCountResponse mGetFollowCountResponse = actionStub.mGetFollowCount(mGetFollowCountRequest);
             if (mGetFollowCountResponse.getBaseResp().getStatusCode() != StatusCode.Success) {
+                log.error("[getUserProfile] MGetFollowCount rpc err, err = {}", mGetFollowCountResponse.getBaseResp());
                 throw new RpcException(mGetFollowCountResponse.getBaseResp());
             }
             data.put("friend_count", mGetFollowCountResponse.getFriendCountMap().get(userId));
@@ -81,6 +85,7 @@ public class UserServiceImpl implements UserService {
         SearchUsersRequest searchUserRequest = SearchUsersRequest.newBuilder().setKeyword(keyword).build();
         SearchUsersResponse searchUsersResponse = actionStub.searchUsers(searchUserRequest);
         if (searchUsersResponse.getBaseResp().getStatusCode() != StatusCode.Success) {
+            log.error("[searchUsers] SearchUsers rpc err, err = {}", searchUsersResponse.getBaseResp());
             throw new RpcException(searchUsersResponse.getBaseResp());
         }
         JSONObject data = new JSONObject();

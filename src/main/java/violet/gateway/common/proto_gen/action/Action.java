@@ -185,7 +185,7 @@ public final class Action {
                         "(\003\022\r\n\005value\030\002 \001(\003:\0028\001\0324\n\022FollowerCountEn" +
                         "try\022\013\n\003key\030\001 \001(\003\022\r\n\005value\030\002 \001(\003:\0028\001\0322\n\020F" +
                         "riendCountEntry\022\013\n\003key\030\001 \001(\003\022\r\n\005value\030\002 " +
-                        "\001(\003:\0028\0012\356\006\n\rActionService\0226\n\005Login\022\024.act" +
+                        "\001(\003:\0028\0012\357\006\n\rActionService\0226\n\005Login\022\024.act" +
                         "ion.LoginRequest\032\025.action.LoginResponse\"" +
                         "\000\022?\n\010Register\022\027.action.RegisterRequest\032\030",
                 ".action.RegisterResponse\"\000\022K\n\014GetUserInf" +
@@ -205,10 +205,10 @@ public final class Action {
                         "istRequest\032\035.action.GetFollowListRespons" +
                         "e\"\000\022N\n\rGetFriendList\022\034.action.GetFollowL" +
                         "istRequest\032\035.action.GetFollowListRespons" +
-                        "e\"\000\022S\n\016GetFollowCount\022\036.action.MGetFollo" +
-                        "wCountRequest\032\037.action.MGetFollowCountRe" +
-                        "sponse\"\000B=\n&violet.gateway.common.proto_",
-                "gen.actionP\001Z\021/proto_gen/actionb\006proto3"
+                        "e\"\000\022T\n\017MGetFollowCount\022\036.action.MGetFoll" +
+                        "owCountRequest\032\037.action.MGetFollowCountR" +
+                        "esponse\"\000B=\n&violet.gateway.common.proto",
+                "_gen.actionP\001Z\021/proto_gen/actionb\006proto3"
         };
         com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner assigner =
                 new com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner() {

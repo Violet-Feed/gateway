@@ -41,8 +41,11 @@ public final class Common {
                         "rFrequency_Error\020\353\007\022\024\n\017OverLimit_Error\020\354" +
                         "\007\022\024\n\017Duplicate_Error\020\355\007\022\024\n\017RetryTime_Err" +
                         "or\020\356\007\022\024\n\017Not_Found_Error\020\357\007\022\022\n\rUnknown_E" +
-                        "rror\020\217NB=\n&violet.gateway.common.proto_g" +
-                        "en.commonP\001Z\021/proto_gen/commonb\006proto3"
+                        "rror\020\217N*d\n\013SpecialUser\022\027\n\023SpecialUser_No" +
+                        "t_Use\020\000\022\n\n\006System\020\001\022\n\n\006Action\020\002\022\n\n\006Marke",
+                "t\020\003\022\006\n\002AI\020\004\022\020\n\014Conversation\020\005B=\n&violet." +
+                        "gateway.common.proto_gen.commonP\001Z\021/prot" +
+                        "o_gen/commonb\006proto3"
         };
         com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner assigner =
                 new com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner() {

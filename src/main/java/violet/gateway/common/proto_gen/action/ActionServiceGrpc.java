@@ -155,11 +155,11 @@ public final class ActionServiceGrpc {
                     .build();
     @io.grpc.ExperimentalApi("https://github.com/grpc/grpc-java/issues/1901")
     public static final io.grpc.MethodDescriptor<violet.gateway.common.proto_gen.action.MGetFollowCountRequest,
-            violet.gateway.common.proto_gen.action.MGetFollowCountResponse> METHOD_GET_FOLLOW_COUNT =
+            violet.gateway.common.proto_gen.action.MGetFollowCountResponse> METHOD_MGET_FOLLOW_COUNT =
             io.grpc.MethodDescriptor.<violet.gateway.common.proto_gen.action.MGetFollowCountRequest, violet.gateway.common.proto_gen.action.MGetFollowCountResponse>newBuilder()
                     .setType(io.grpc.MethodDescriptor.MethodType.UNARY)
                     .setFullMethodName(generateFullMethodName(
-                            "action.ActionService", "GetFollowCount"))
+                            "action.ActionService", "MGetFollowCount"))
                     .setRequestMarshaller(io.grpc.protobuf.ProtoUtils.marshaller(
                             violet.gateway.common.proto_gen.action.MGetFollowCountRequest.getDefaultInstance()))
                     .setResponseMarshaller(io.grpc.protobuf.ProtoUtils.marshaller(
@@ -285,9 +285,9 @@ public final class ActionServiceGrpc {
         /**
          *
          */
-        public void getFollowCount(violet.gateway.common.proto_gen.action.MGetFollowCountRequest request,
-                                   io.grpc.stub.StreamObserver<violet.gateway.common.proto_gen.action.MGetFollowCountResponse> responseObserver) {
-            asyncUnimplementedUnaryCall(METHOD_GET_FOLLOW_COUNT, responseObserver);
+        public void mGetFollowCount(violet.gateway.common.proto_gen.action.MGetFollowCountRequest request,
+                                    io.grpc.stub.StreamObserver<violet.gateway.common.proto_gen.action.MGetFollowCountResponse> responseObserver) {
+            asyncUnimplementedUnaryCall(METHOD_MGET_FOLLOW_COUNT, responseObserver);
         }
 
         @java.lang.Override
@@ -371,12 +371,12 @@ public final class ActionServiceGrpc {
                                             violet.gateway.common.proto_gen.action.GetFollowListResponse>(
                                             this, METHODID_GET_FRIEND_LIST)))
                     .addMethod(
-                            METHOD_GET_FOLLOW_COUNT,
+                            METHOD_MGET_FOLLOW_COUNT,
                             asyncUnaryCall(
                                     new MethodHandlers<
                                             violet.gateway.common.proto_gen.action.MGetFollowCountRequest,
                                             violet.gateway.common.proto_gen.action.MGetFollowCountResponse>(
-                                            this, METHODID_GET_FOLLOW_COUNT)))
+                                            this, METHODID_MGET_FOLLOW_COUNT)))
                     .build();
         }
     }
@@ -502,10 +502,10 @@ public final class ActionServiceGrpc {
         /**
          *
          */
-        public void getFollowCount(violet.gateway.common.proto_gen.action.MGetFollowCountRequest request,
-                                   io.grpc.stub.StreamObserver<violet.gateway.common.proto_gen.action.MGetFollowCountResponse> responseObserver) {
+        public void mGetFollowCount(violet.gateway.common.proto_gen.action.MGetFollowCountRequest request,
+                                    io.grpc.stub.StreamObserver<violet.gateway.common.proto_gen.action.MGetFollowCountResponse> responseObserver) {
             asyncUnaryCall(
-                    getChannel().newCall(METHOD_GET_FOLLOW_COUNT, getCallOptions()), request, responseObserver);
+                    getChannel().newCall(METHOD_MGET_FOLLOW_COUNT, getCallOptions()), request, responseObserver);
         }
     }
 
@@ -619,9 +619,9 @@ public final class ActionServiceGrpc {
         /**
          *
          */
-        public violet.gateway.common.proto_gen.action.MGetFollowCountResponse getFollowCount(violet.gateway.common.proto_gen.action.MGetFollowCountRequest request) {
+        public violet.gateway.common.proto_gen.action.MGetFollowCountResponse mGetFollowCount(violet.gateway.common.proto_gen.action.MGetFollowCountRequest request) {
             return blockingUnaryCall(
-                    getChannel(), METHOD_GET_FOLLOW_COUNT, getCallOptions(), request);
+                    getChannel(), METHOD_MGET_FOLLOW_COUNT, getCallOptions(), request);
         }
     }
 
@@ -746,10 +746,10 @@ public final class ActionServiceGrpc {
         /**
          *
          */
-        public com.google.common.util.concurrent.ListenableFuture<violet.gateway.common.proto_gen.action.MGetFollowCountResponse> getFollowCount(
+        public com.google.common.util.concurrent.ListenableFuture<violet.gateway.common.proto_gen.action.MGetFollowCountResponse> mGetFollowCount(
                 violet.gateway.common.proto_gen.action.MGetFollowCountRequest request) {
             return futureUnaryCall(
-                    getChannel().newCall(METHOD_GET_FOLLOW_COUNT, getCallOptions()), request);
+                    getChannel().newCall(METHOD_MGET_FOLLOW_COUNT, getCallOptions()), request);
         }
     }
 
@@ -764,7 +764,7 @@ public final class ActionServiceGrpc {
     private static final int METHODID_GET_FOLLOWING_LIST = 8;
     private static final int METHODID_GET_FOLLOWER_LIST = 9;
     private static final int METHODID_GET_FRIEND_LIST = 10;
-    private static final int METHODID_GET_FOLLOW_COUNT = 11;
+    private static final int METHODID_MGET_FOLLOW_COUNT = 11;
 
     private static final class MethodHandlers<Req, Resp> implements
             io.grpc.stub.ServerCalls.UnaryMethod<Req, Resp>,
@@ -827,8 +827,8 @@ public final class ActionServiceGrpc {
                     serviceImpl.getFriendList((violet.gateway.common.proto_gen.action.GetFollowListRequest) request,
                             (io.grpc.stub.StreamObserver<violet.gateway.common.proto_gen.action.GetFollowListResponse>) responseObserver);
                     break;
-                case METHODID_GET_FOLLOW_COUNT:
-                    serviceImpl.getFollowCount((violet.gateway.common.proto_gen.action.MGetFollowCountRequest) request,
+                case METHODID_MGET_FOLLOW_COUNT:
+                    serviceImpl.mGetFollowCount((violet.gateway.common.proto_gen.action.MGetFollowCountRequest) request,
                             (io.grpc.stub.StreamObserver<violet.gateway.common.proto_gen.action.MGetFollowCountResponse>) responseObserver);
                     break;
                 default:
@@ -875,7 +875,7 @@ public final class ActionServiceGrpc {
                             .addMethod(METHOD_GET_FOLLOWING_LIST)
                             .addMethod(METHOD_GET_FOLLOWER_LIST)
                             .addMethod(METHOD_GET_FRIEND_LIST)
-                            .addMethod(METHOD_GET_FOLLOW_COUNT)
+                            .addMethod(METHOD_MGET_FOLLOW_COUNT)
                             .build();
                 }
             }

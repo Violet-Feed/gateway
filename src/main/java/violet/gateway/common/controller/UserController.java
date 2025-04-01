@@ -28,11 +28,15 @@ public class UserController {
             resp.put("data", data);
         } catch (RpcException e) {
             resp.put("code", e.getStatus().getStatusCodeValue());
-            resp.put("message", e.getStatus().getStatusMessage());
+            resp.put("message", e.getStatus().getStatusCode());
+        } catch (NullPointerException e) {
+            resp.put("code", StatusCode.Param_Error_VALUE);
+            resp.put("message", StatusCode.Param_Error);
+            log.error("[getFriendList] err, err = {}", e.toString());
         } catch (Exception e) {
             resp.put("code", StatusCode.Unknown_Error_VALUE);
             resp.put("message", StatusCode.Unknown_Error);
-            log.error(String.format("[login] err, err = %s.", e));
+            log.error("[getFriendList] err, err = {}", e.toString());
         }
         return resp;
     }
@@ -47,17 +51,21 @@ public class UserController {
             resp.put("data", data);
         } catch (RpcException e) {
             resp.put("code", e.getStatus().getStatusCodeValue());
-            resp.put("message", e.getStatus().getStatusMessage());
+            resp.put("message", e.getStatus().getStatusCode());
+        } catch (NullPointerException e) {
+            resp.put("code", StatusCode.Param_Error_VALUE);
+            resp.put("message", StatusCode.Param_Error);
+            log.error("[getFriendList] err, err = {}", e.toString());
         } catch (Exception e) {
             resp.put("code", StatusCode.Unknown_Error_VALUE);
             resp.put("message", StatusCode.Unknown_Error);
-            log.error(String.format("[register] err, err = %s.", e));
+            log.error("[getFriendList] err, err = {}", e.toString());
         }
         return resp;
     }
 
-    @PostMapping("/get_info")
-    public JSONObject GetUserProfile(@RequestBody JSONObject req) {
+    @PostMapping("/get_user_profile")
+    public JSONObject getUserProfile(@RequestBody JSONObject req) {
         JSONObject resp = new JSONObject();
         try {
             JSONObject data = userService.getUserProfile(req);
@@ -66,16 +74,20 @@ public class UserController {
             resp.put("data", data);
         } catch (RpcException e) {
             resp.put("code", e.getStatus().getStatusCodeValue());
-            resp.put("message", e.getStatus().getStatusMessage());
+            resp.put("message", e.getStatus().getStatusCode());
+        } catch (NullPointerException e) {
+            resp.put("code", StatusCode.Param_Error_VALUE);
+            resp.put("message", StatusCode.Param_Error);
+            log.error("[getUserProfile] err, err = {}", e.toString());
         } catch (Exception e) {
             resp.put("code", StatusCode.Unknown_Error_VALUE);
             resp.put("message", StatusCode.Unknown_Error);
-            log.error(String.format("[GetUserProfile] err, err = %s.", e));
+            log.error("[getUserProfile] err, err = {}", e.toString());
         }
         return resp;
     }
 
-    @PostMapping("/search")
+    @PostMapping("/search_users")
     public JSONObject searchUsers(@RequestBody JSONObject req) {
         JSONObject resp = new JSONObject();
         try {
@@ -85,11 +97,15 @@ public class UserController {
             resp.put("data", data);
         } catch (RpcException e) {
             resp.put("code", e.getStatus().getStatusCodeValue());
-            resp.put("message", e.getStatus().getStatusMessage());
+            resp.put("message", e.getStatus().getStatusCode());
+        } catch (NullPointerException e) {
+            resp.put("code", StatusCode.Param_Error_VALUE);
+            resp.put("message", StatusCode.Param_Error);
+            log.error("[searchUsers] err, err = {}", e.toString());
         } catch (Exception e) {
             resp.put("code", StatusCode.Unknown_Error_VALUE);
             resp.put("message", StatusCode.Unknown_Error);
-            log.error(String.format("[searchUsers] err, err = %s.", e));
+            log.error("[searchUsers] err, err = {}", e.toString());
         }
         return resp;
     }

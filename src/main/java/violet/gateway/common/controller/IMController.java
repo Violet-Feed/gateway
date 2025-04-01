@@ -28,11 +28,15 @@ public class IMController {
             resp.put("data", data);
         } catch (RpcException e) {
             resp.put("code", e.getStatus().getStatusCodeValue());
-            resp.put("message", e.getStatus().getStatusMessage());
+            resp.put("message", e.getStatus().getStatusCode());
+        } catch (NullPointerException e) {
+            resp.put("code", StatusCode.Param_Error_VALUE);
+            resp.put("message", StatusCode.Param_Error);
+            log.error("[sendMessage] err, err = {}", e.toString());
         } catch (Exception e) {
             resp.put("code", StatusCode.Unknown_Error_VALUE);
             resp.put("message", StatusCode.Unknown_Error);
-            log.error(String.format("[sendMessage] err, err = %s.", e));
+            log.error("[sendMessage] err, err = {}", e.toString());
         }
         return resp;
     }
@@ -47,11 +51,15 @@ public class IMController {
             resp.put("data", data);
         } catch (RpcException e) {
             resp.put("code", e.getStatus().getStatusCodeValue());
-            resp.put("message", e.getStatus().getStatusMessage());
+            resp.put("message", e.getStatus().getStatusCode());
+        } catch (NullPointerException e) {
+            resp.put("code", StatusCode.Param_Error_VALUE);
+            resp.put("message", StatusCode.Param_Error);
+            log.error("[getMessageByInit] err, err = {}", e.toString());
         } catch (Exception e) {
             resp.put("code", StatusCode.Unknown_Error_VALUE);
             resp.put("message", StatusCode.Unknown_Error);
-            log.error(String.format("[getMessageByInit] err, err = %s.", e));
+            log.error("[getMessageByInit] err, err = {}", e.toString());
         }
         return resp;
     }
@@ -66,11 +74,15 @@ public class IMController {
             resp.put("data", data);
         } catch (RpcException e) {
             resp.put("code", e.getStatus().getStatusCodeValue());
-            resp.put("message", e.getStatus().getStatusMessage());
+            resp.put("message", e.getStatus().getStatusCode());
+        } catch (NullPointerException e) {
+            resp.put("code", StatusCode.Param_Error_VALUE);
+            resp.put("message", StatusCode.Param_Error);
+            log.error("[getMessageByConversation] err, err = {}", e.toString());
         } catch (Exception e) {
             resp.put("code", StatusCode.Unknown_Error_VALUE);
             resp.put("message", StatusCode.Unknown_Error);
-            log.error(String.format("[getMessageByConversation] err, err = %s.", e));
+            log.error("[getMessageByConversation] err, err = {}", e.toString());
         }
         return resp;
     }
@@ -85,11 +97,15 @@ public class IMController {
             resp.put("data", data);
         } catch (RpcException e) {
             resp.put("code", e.getStatus().getStatusCodeValue());
-            resp.put("message", e.getStatus().getStatusMessage());
+            resp.put("message", e.getStatus().getStatusCode());
+        } catch (NullPointerException e) {
+            resp.put("code", StatusCode.Param_Error_VALUE);
+            resp.put("message", StatusCode.Param_Error);
+            log.error("[markRead] err, err = {}", e.toString());
         } catch (Exception e) {
             resp.put("code", StatusCode.Unknown_Error_VALUE);
             resp.put("message", StatusCode.Unknown_Error);
-            log.error(String.format("[markRead] err, err = %s.", e));
+            log.error("[markRead] err, err = {}", e.toString());
         }
         return resp;
     }

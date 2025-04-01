@@ -26,6 +26,7 @@ public class RelationServiceImpl implements RelationService {
         FollowRequest followRequest = FollowRequest.newBuilder().setFromUserId(userId).setToUserId(toUserId).build();
         FollowResponse followResponse = actionStub.follow(followRequest);
         if (followResponse.getBaseResp().getStatusCode() != StatusCode.Success) {
+            log.error("[follow] Follow rpc err, err = {}", followResponse.getBaseResp());
             throw new RpcException(followResponse.getBaseResp());
         }
         JSONObject data = new JSONObject();
@@ -40,6 +41,7 @@ public class RelationServiceImpl implements RelationService {
         FollowRequest followRequest = FollowRequest.newBuilder().setFromUserId(userId).setToUserId(toUserId).build();
         FollowResponse followResponse = actionStub.unfollow(followRequest);
         if (followResponse.getBaseResp().getStatusCode() != StatusCode.Success) {
+            log.error("[unfollow] Unfollow rpc err, err = {}", followResponse.getBaseResp());
             throw new RpcException(followResponse.getBaseResp());
         }
         JSONObject data = new JSONObject();
@@ -53,11 +55,13 @@ public class RelationServiceImpl implements RelationService {
         GetFollowListRequest getFollowListRequest = GetFollowListRequest.newBuilder().setUserId(userId).build();
         GetFollowListResponse getFollowListResponse = actionStub.getFollowingList(getFollowListRequest);
         if (getFollowListResponse.getBaseResp().getStatusCode() != StatusCode.Success) {
+            log.error("[getFollowingList] GetFollowingList rpc err, err = {}", getFollowListResponse.getBaseResp());
             throw new RpcException(getFollowListResponse.getBaseResp());
         }
         GetUserInfosRequest getUserInfosRequest = GetUserInfosRequest.newBuilder().addAllUserIds(getFollowListResponse.getUserIdsList()).build();
         GetUserInfosResponse getUserInfosResponse = actionStub.getUserInfos(getUserInfosRequest);
         if (getUserInfosResponse.getBaseResp().getStatusCode() != StatusCode.Success) {
+            log.error("[getFollowingList] GetUserInfos rpc err, err = {}", getUserInfosResponse.getBaseResp());
             throw new RpcException(getUserInfosResponse.getBaseResp());
         }
         JSONObject data = new JSONObject();
@@ -72,11 +76,13 @@ public class RelationServiceImpl implements RelationService {
         GetFollowListRequest getFollowListRequest = GetFollowListRequest.newBuilder().setUserId(userId).build();
         GetFollowListResponse getFollowListResponse = actionStub.getFollowerList(getFollowListRequest);
         if (getFollowListResponse.getBaseResp().getStatusCode() != StatusCode.Success) {
+            log.error("[getFollowerList] GetFollowerList rpc err, err = {}", getFollowListResponse.getBaseResp());
             throw new RpcException(getFollowListResponse.getBaseResp());
         }
         GetUserInfosRequest getUserInfosRequest = GetUserInfosRequest.newBuilder().addAllUserIds(getFollowListResponse.getUserIdsList()).build();
         GetUserInfosResponse getUserInfosResponse = actionStub.getUserInfos(getUserInfosRequest);
         if (getUserInfosResponse.getBaseResp().getStatusCode() != StatusCode.Success) {
+            log.error("[getFollowerList] GetUserInfos rpc err, err = {}", getUserInfosResponse.getBaseResp());
             throw new RpcException(getUserInfosResponse.getBaseResp());
         }
         JSONObject data = new JSONObject();
@@ -91,11 +97,13 @@ public class RelationServiceImpl implements RelationService {
         GetFollowListRequest getFollowListRequest = GetFollowListRequest.newBuilder().setUserId(userId).build();
         GetFollowListResponse getFollowListResponse = actionStub.getFriendList(getFollowListRequest);
         if (getFollowListResponse.getBaseResp().getStatusCode() != StatusCode.Success) {
+            log.error("[getFriendList] GetFriendList rpc err, err = {}", getFollowListResponse.getBaseResp());
             throw new RpcException(getFollowListResponse.getBaseResp());
         }
         GetUserInfosRequest getUserInfosRequest = GetUserInfosRequest.newBuilder().addAllUserIds(getFollowListResponse.getUserIdsList()).build();
         GetUserInfosResponse getUserInfosResponse = actionStub.getUserInfos(getUserInfosRequest);
         if (getUserInfosResponse.getBaseResp().getStatusCode() != StatusCode.Success) {
+            log.error("[getFriendList] GetUserInfos rpc err, err = {}", getUserInfosResponse.getBaseResp());
             throw new RpcException(getUserInfosResponse.getBaseResp());
         }
         JSONObject data = new JSONObject();

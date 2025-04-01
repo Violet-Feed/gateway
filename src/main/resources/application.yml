@@ -2,11 +2,11 @@ server:
   port: 3000
 grpc:
   server:
-    port: 3001
+    port: 3002
   client:
     action:
-      address: 'static://127.0.0.1:3002'
+      address: 'static://127.0.0.1:3003'
       negotiation-type: plaintext
     im:
-      address: 'static://127.0.0.1:3003'
+      address: 'static://127.0.0.1:3004'
       negotiation-type: plaintext

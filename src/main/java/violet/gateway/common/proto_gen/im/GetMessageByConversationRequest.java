@@ -4,18 +4,19 @@
 package violet.gateway.common.proto_gen.im;
 
 /**
- * Protobuf type {@code im.MessageGetByConversationRequest}
+ * Protobuf type {@code im.GetMessageByConversationRequest}
  */
-public final class MessageGetByConversationRequest extends
+public final class GetMessageByConversationRequest extends
         com.google.protobuf.GeneratedMessageV3 implements
-        // @@protoc_insertion_point(message_implements:im.MessageGetByConversationRequest)
-        MessageGetByConversationRequestOrBuilder {
-    // Use MessageGetByConversationRequest.newBuilder() to construct.
-    private MessageGetByConversationRequest(com.google.protobuf.GeneratedMessageV3.Builder<?> builder) {
+        // @@protoc_insertion_point(message_implements:im.GetMessageByConversationRequest)
+        GetMessageByConversationRequestOrBuilder {
+    // Use GetMessageByConversationRequest.newBuilder() to construct.
+    private GetMessageByConversationRequest(com.google.protobuf.GeneratedMessageV3.Builder<?> builder) {
         super(builder);
     }
 
-    private MessageGetByConversationRequest() {
+    private GetMessageByConversationRequest() {
+        userId_ = 0L;
         conShortId_ = 0L;
         conIndex_ = 0L;
         limit_ = 0L;
@@ -27,7 +28,7 @@ public final class MessageGetByConversationRequest extends
         return com.google.protobuf.UnknownFieldSet.getDefaultInstance();
     }
 
-    private MessageGetByConversationRequest(
+    private GetMessageByConversationRequest(
             com.google.protobuf.CodedInputStream input,
             com.google.protobuf.ExtensionRegistryLite extensionRegistry)
             throws com.google.protobuf.InvalidProtocolBufferException {
@@ -49,15 +50,20 @@ public final class MessageGetByConversationRequest extends
                     }
                     case 8: {
 
-                        conShortId_ = input.readInt64();
+                        userId_ = input.readInt64();
                         break;
                     }
                     case 16: {
 
-                        conIndex_ = input.readInt64();
+                        conShortId_ = input.readInt64();
                         break;
                     }
                     case 24: {
+
+                        conIndex_ = input.readInt64();
+                        break;
+                    }
+                    case 32: {
 
                         limit_ = input.readInt64();
                         break;
@@ -76,41 +82,51 @@ public final class MessageGetByConversationRequest extends
 
     public static final com.google.protobuf.Descriptors.Descriptor
     getDescriptor() {
-        return violet.gateway.common.proto_gen.im.Im.internal_static_im_MessageGetByConversationRequest_descriptor;
+        return violet.gateway.common.proto_gen.im.Im.internal_static_im_GetMessageByConversationRequest_descriptor;
     }
 
     protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
     internalGetFieldAccessorTable() {
-        return violet.gateway.common.proto_gen.im.Im.internal_static_im_MessageGetByConversationRequest_fieldAccessorTable
+        return violet.gateway.common.proto_gen.im.Im.internal_static_im_GetMessageByConversationRequest_fieldAccessorTable
                 .ensureFieldAccessorsInitialized(
-                        violet.gateway.common.proto_gen.im.MessageGetByConversationRequest.class, violet.gateway.common.proto_gen.im.MessageGetByConversationRequest.Builder.class);
+                        violet.gateway.common.proto_gen.im.GetMessageByConversationRequest.class, violet.gateway.common.proto_gen.im.GetMessageByConversationRequest.Builder.class);
     }
 
-    public static final int CON_SHORT_ID_FIELD_NUMBER = 1;
+    public static final int USER_ID_FIELD_NUMBER = 1;
+    private long userId_;
+
+    /**
+     * <code>int64 user_id = 1;</code>
+     */
+    public long getUserId() {
+        return userId_;
+    }
+
+    public static final int CON_SHORT_ID_FIELD_NUMBER = 2;
     private long conShortId_;
 
     /**
-     * <code>int64 con_short_id = 1;</code>
+     * <code>int64 con_short_id = 2;</code>
      */
     public long getConShortId() {
         return conShortId_;
     }
 
-    public static final int CON_INDEX_FIELD_NUMBER = 2;
+    public static final int CON_INDEX_FIELD_NUMBER = 3;
     private long conIndex_;
 
     /**
-     * <code>int64 con_index = 2;</code>
+     * <code>int64 con_index = 3;</code>
      */
     public long getConIndex() {
         return conIndex_;
     }
 
-    public static final int LIMIT_FIELD_NUMBER = 3;
+    public static final int LIMIT_FIELD_NUMBER = 4;
     private long limit_;
 
     /**
-     * <code>int64 limit = 3;</code>
+     * <code>int64 limit = 4;</code>
      */
     public long getLimit() {
         return limit_;
@@ -129,14 +145,17 @@ public final class MessageGetByConversationRequest extends
 
     public void writeTo(com.google.protobuf.CodedOutputStream output)
             throws java.io.IOException {
+        if (userId_ != 0L) {
+            output.writeInt64(1, userId_);
+        }
         if (conShortId_ != 0L) {
-            output.writeInt64(1, conShortId_);
+            output.writeInt64(2, conShortId_);
         }
         if (conIndex_ != 0L) {
-            output.writeInt64(2, conIndex_);
+            output.writeInt64(3, conIndex_);
         }
         if (limit_ != 0L) {
-            output.writeInt64(3, limit_);
+            output.writeInt64(4, limit_);
         }
     }
 
@@ -145,17 +164,21 @@ public final class MessageGetByConversationRequest extends
         if (size != -1) return size;
 
         size = 0;
+        if (userId_ != 0L) {
+            size += com.google.protobuf.CodedOutputStream
+                    .computeInt64Size(1, userId_);
+        }
         if (conShortId_ != 0L) {
             size += com.google.protobuf.CodedOutputStream
-                    .computeInt64Size(1, conShortId_);
+                    .computeInt64Size(2, conShortId_);
         }
         if (conIndex_ != 0L) {
             size += com.google.protobuf.CodedOutputStream
-                    .computeInt64Size(2, conIndex_);
+                    .computeInt64Size(3, conIndex_);
         }
         if (limit_ != 0L) {
             size += com.google.protobuf.CodedOutputStream
-                    .computeInt64Size(3, limit_);
+                    .computeInt64Size(4, limit_);
         }
         memoizedSize = size;
         return size;
@@ -168,12 +191,14 @@ public final class MessageGetByConversationRequest extends
         if (obj == this) {
             return true;
         }
-        if (!(obj instanceof violet.gateway.common.proto_gen.im.MessageGetByConversationRequest)) {
+        if (!(obj instanceof violet.gateway.common.proto_gen.im.GetMessageByConversationRequest)) {
             return super.equals(obj);
         }
-        violet.gateway.common.proto_gen.im.MessageGetByConversationRequest other = (violet.gateway.common.proto_gen.im.MessageGetByConversationRequest) obj;
+        violet.gateway.common.proto_gen.im.GetMessageByConversationRequest other = (violet.gateway.common.proto_gen.im.GetMessageByConversationRequest) obj;
 
         boolean result = true;
+        result = result && (getUserId()
+                == other.getUserId());
         result = result && (getConShortId()
                 == other.getConShortId());
         result = result && (getConIndex()
@@ -190,6 +215,9 @@ public final class MessageGetByConversationRequest extends
         }
         int hash = 41;
         hash = (19 * hash) + getDescriptor().hashCode();
+        hash = (37 * hash) + USER_ID_FIELD_NUMBER;
+        hash = (53 * hash) + com.google.protobuf.Internal.hashLong(
+                getUserId());
         hash = (37 * hash) + CON_SHORT_ID_FIELD_NUMBER;
         hash = (53 * hash) + com.google.protobuf.Internal.hashLong(
                 getConShortId());
@@ -204,51 +232,51 @@ public final class MessageGetByConversationRequest extends
         return hash;
     }
 
-    public static violet.gateway.common.proto_gen.im.MessageGetByConversationRequest parseFrom(
+    public static violet.gateway.common.proto_gen.im.GetMessageByConversationRequest parseFrom(
             java.nio.ByteBuffer data)
             throws com.google.protobuf.InvalidProtocolBufferException {
         return PARSER.parseFrom(data);
     }
 
-    public static violet.gateway.common.proto_gen.im.MessageGetByConversationRequest parseFrom(
+    public static violet.gateway.common.proto_gen.im.GetMessageByConversationRequest parseFrom(
             java.nio.ByteBuffer data,
             com.google.protobuf.ExtensionRegistryLite extensionRegistry)
             throws com.google.protobuf.InvalidProtocolBufferException {
         return PARSER.parseFrom(data, extensionRegistry);
     }
 
-    public static violet.gateway.common.proto_gen.im.MessageGetByConversationRequest parseFrom(
+    public static violet.gateway.common.proto_gen.im.GetMessageByConversationRequest parseFrom(
             com.google.protobuf.ByteString data)
             throws com.google.protobuf.InvalidProtocolBufferException {
         return PARSER.parseFrom(data);
     }
 
-    public static violet.gateway.common.proto_gen.im.MessageGetByConversationRequest parseFrom(
+    public static violet.gateway.common.proto_gen.im.GetMessageByConversationRequest parseFrom(
             com.google.protobuf.ByteString data,
             com.google.protobuf.ExtensionRegistryLite extensionRegistry)
             throws com.google.protobuf.InvalidProtocolBufferException {
         return PARSER.parseFrom(data, extensionRegistry);
     }
 
-    public static violet.gateway.common.proto_gen.im.MessageGetByConversationRequest parseFrom(byte[] data)
+    public static violet.gateway.common.proto_gen.im.GetMessageByConversationRequest parseFrom(byte[] data)
             throws com.google.protobuf.InvalidProtocolBufferException {
         return PARSER.parseFrom(data);
     }
 
-    public static violet.gateway.common.proto_gen.im.MessageGetByConversationRequest parseFrom(
+    public static violet.gateway.common.proto_gen.im.GetMessageByConversationRequest parseFrom(
             byte[] data,
             com.google.protobuf.ExtensionRegistryLite extensionRegistry)
             throws com.google.protobuf.InvalidProtocolBufferException {
         return PARSER.parseFrom(data, extensionRegistry);
     }
 
-    public static violet.gateway.common.proto_gen.im.MessageGetByConversationRequest parseFrom(java.io.InputStream input)
+    public static violet.gateway.common.proto_gen.im.GetMessageByConversationRequest parseFrom(java.io.InputStream input)
             throws java.io.IOException {
         return com.google.protobuf.GeneratedMessageV3
                 .parseWithIOException(PARSER, input);
     }
 
-    public static violet.gateway.common.proto_gen.im.MessageGetByConversationRequest parseFrom(
+    public static violet.gateway.common.proto_gen.im.GetMessageByConversationRequest parseFrom(
             java.io.InputStream input,
             com.google.protobuf.ExtensionRegistryLite extensionRegistry)
             throws java.io.IOException {
@@ -256,13 +284,13 @@ public final class MessageGetByConversationRequest extends
                 .parseWithIOException(PARSER, input, extensionRegistry);
     }
 
-    public static violet.gateway.common.proto_gen.im.MessageGetByConversationRequest parseDelimitedFrom(java.io.InputStream input)
+    public static violet.gateway.common.proto_gen.im.GetMessageByConversationRequest parseDelimitedFrom(java.io.InputStream input)
             throws java.io.IOException {
         return com.google.protobuf.GeneratedMessageV3
                 .parseDelimitedWithIOException(PARSER, input);
     }
 
-    public static violet.gateway.common.proto_gen.im.MessageGetByConversationRequest parseDelimitedFrom(
+    public static violet.gateway.common.proto_gen.im.GetMessageByConversationRequest parseDelimitedFrom(
             java.io.InputStream input,
             com.google.protobuf.ExtensionRegistryLite extensionRegistry)
             throws java.io.IOException {
@@ -270,14 +298,14 @@ public final class MessageGetByConversationRequest extends
                 .parseDelimitedWithIOException(PARSER, input, extensionRegistry);
     }
 
-    public static violet.gateway.common.proto_gen.im.MessageGetByConversationRequest parseFrom(
+    public static violet.gateway.common.proto_gen.im.GetMessageByConversationRequest parseFrom(
             com.google.protobuf.CodedInputStream input)
             throws java.io.IOException {
         return com.google.protobuf.GeneratedMessageV3
                 .parseWithIOException(PARSER, input);
     }
 
-    public static violet.gateway.common.proto_gen.im.MessageGetByConversationRequest parseFrom(
+    public static violet.gateway.common.proto_gen.im.GetMessageByConversationRequest parseFrom(
             com.google.protobuf.CodedInputStream input,
             com.google.protobuf.ExtensionRegistryLite extensionRegistry)
             throws java.io.IOException {
@@ -293,7 +321,7 @@ public final class MessageGetByConversationRequest extends
         return DEFAULT_INSTANCE.toBuilder();
     }
 
-    public static Builder newBuilder(violet.gateway.common.proto_gen.im.MessageGetByConversationRequest prototype) {
+    public static Builder newBuilder(violet.gateway.common.proto_gen.im.GetMessageByConversationRequest prototype) {
         return DEFAULT_INSTANCE.toBuilder().mergeFrom(prototype);
     }
 
@@ -310,25 +338,25 @@ public final class MessageGetByConversationRequest extends
     }
 
     /**
-     * Protobuf type {@code im.MessageGetByConversationRequest}
+     * Protobuf type {@code im.GetMessageByConversationRequest}
      */
     public static final class Builder extends
             com.google.protobuf.GeneratedMessageV3.Builder<Builder> implements
-            // @@protoc_insertion_point(builder_implements:im.MessageGetByConversationRequest)
-            violet.gateway.common.proto_gen.im.MessageGetByConversationRequestOrBuilder {
+            // @@protoc_insertion_point(builder_implements:im.GetMessageByConversationRequest)
+            violet.gateway.common.proto_gen.im.GetMessageByConversationRequestOrBuilder {
         public static final com.google.protobuf.Descriptors.Descriptor
         getDescriptor() {
-            return violet.gateway.common.proto_gen.im.Im.internal_static_im_MessageGetByConversationRequest_descriptor;
+            return violet.gateway.common.proto_gen.im.Im.internal_static_im_GetMessageByConversationRequest_descriptor;
         }
 
         protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
         internalGetFieldAccessorTable() {
-            return violet.gateway.common.proto_gen.im.Im.internal_static_im_MessageGetByConversationRequest_fieldAccessorTable
+            return violet.gateway.common.proto_gen.im.Im.internal_static_im_GetMessageByConversationRequest_fieldAccessorTable
                     .ensureFieldAccessorsInitialized(
-                            violet.gateway.common.proto_gen.im.MessageGetByConversationRequest.class, violet.gateway.common.proto_gen.im.MessageGetByConversationRequest.Builder.class);
+                            violet.gateway.common.proto_gen.im.GetMessageByConversationRequest.class, violet.gateway.common.proto_gen.im.GetMessageByConversationRequest.Builder.class);
         }
 
-        // Construct using violet.gateway.common.proto_gen.im.MessageGetByConversationRequest.newBuilder()
+        // Construct using violet.gateway.common.proto_gen.im.GetMessageByConversationRequest.newBuilder()
         private Builder() {
             maybeForceBuilderInitialization();
         }
@@ -347,6 +375,8 @@ public final class MessageGetByConversationRequest extends
 
         public Builder clear() {
             super.clear();
+            userId_ = 0L;
+
             conShortId_ = 0L;
 
             conIndex_ = 0L;
@@ -358,23 +388,24 @@ public final class MessageGetByConversationRequest extends
 
         public com.google.protobuf.Descriptors.Descriptor
         getDescriptorForType() {
-            return violet.gateway.common.proto_gen.im.Im.internal_static_im_MessageGetByConversationRequest_descriptor;
+            return violet.gateway.common.proto_gen.im.Im.internal_static_im_GetMessageByConversationRequest_descriptor;
         }
 
-        public violet.gateway.common.proto_gen.im.MessageGetByConversationRequest getDefaultInstanceForType() {
-            return violet.gateway.common.proto_gen.im.MessageGetByConversationRequest.getDefaultInstance();
+        public violet.gateway.common.proto_gen.im.GetMessageByConversationRequest getDefaultInstanceForType() {
+            return violet.gateway.common.proto_gen.im.GetMessageByConversationRequest.getDefaultInstance();
         }
 
-        public violet.gateway.common.proto_gen.im.MessageGetByConversationRequest build() {
-            violet.gateway.common.proto_gen.im.MessageGetByConversationRequest result = buildPartial();
+        public violet.gateway.common.proto_gen.im.GetMessageByConversationRequest build() {
+            violet.gateway.common.proto_gen.im.GetMessageByConversationRequest result = buildPartial();
             if (!result.isInitialized()) {
                 throw newUninitializedMessageException(result);
             }
             return result;
         }
 
-        public violet.gateway.common.proto_gen.im.MessageGetByConversationRequest buildPartial() {
-            violet.gateway.common.proto_gen.im.MessageGetByConversationRequest result = new violet.gateway.common.proto_gen.im.MessageGetByConversationRequest(this);
+        public violet.gateway.common.proto_gen.im.GetMessageByConversationRequest buildPartial() {
+            violet.gateway.common.proto_gen.im.GetMessageByConversationRequest result = new violet.gateway.common.proto_gen.im.GetMessageByConversationRequest(this);
+            result.userId_ = userId_;
             result.conShortId_ = conShortId_;
             result.conIndex_ = conIndex_;
             result.limit_ = limit_;
@@ -415,17 +446,20 @@ public final class MessageGetByConversationRequest extends
         }
 
         public Builder mergeFrom(com.google.protobuf.Message other) {
-            if (other instanceof violet.gateway.common.proto_gen.im.MessageGetByConversationRequest) {
-                return mergeFrom((violet.gateway.common.proto_gen.im.MessageGetByConversationRequest) other);
+            if (other instanceof violet.gateway.common.proto_gen.im.GetMessageByConversationRequest) {
+                return mergeFrom((violet.gateway.common.proto_gen.im.GetMessageByConversationRequest) other);
             } else {
                 super.mergeFrom(other);
                 return this;
             }
         }
 
-        public Builder mergeFrom(violet.gateway.common.proto_gen.im.MessageGetByConversationRequest other) {
-            if (other == violet.gateway.common.proto_gen.im.MessageGetByConversationRequest.getDefaultInstance())
+        public Builder mergeFrom(violet.gateway.common.proto_gen.im.GetMessageByConversationRequest other) {
+            if (other == violet.gateway.common.proto_gen.im.GetMessageByConversationRequest.getDefaultInstance())
                 return this;
+            if (other.getUserId() != 0L) {
+                setUserId(other.getUserId());
+            }
             if (other.getConShortId() != 0L) {
                 setConShortId(other.getConShortId());
             }
@@ -447,11 +481,11 @@ public final class MessageGetByConversationRequest extends
                 com.google.protobuf.CodedInputStream input,
                 com.google.protobuf.ExtensionRegistryLite extensionRegistry)
                 throws java.io.IOException {
-            violet.gateway.common.proto_gen.im.MessageGetByConversationRequest parsedMessage = null;
+            violet.gateway.common.proto_gen.im.GetMessageByConversationRequest parsedMessage = null;
             try {
                 parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
             } catch (com.google.protobuf.InvalidProtocolBufferException e) {
-                parsedMessage = (violet.gateway.common.proto_gen.im.MessageGetByConversationRequest) e.getUnfinishedMessage();
+                parsedMessage = (violet.gateway.common.proto_gen.im.GetMessageByConversationRequest) e.getUnfinishedMessage();
                 throw e.unwrapIOException();
             } finally {
                 if (parsedMessage != null) {
@@ -461,17 +495,46 @@ public final class MessageGetByConversationRequest extends
             return this;
         }
 
+        private long userId_;
+
+        /**
+         * <code>int64 user_id = 1;</code>
+         */
+        public long getUserId() {
+            return userId_;
+        }
+
+        /**
+         * <code>int64 user_id = 1;</code>
+         */
+        public Builder setUserId(long value) {
+
+            userId_ = value;
+            onChanged();
+            return this;
+        }
+
+        /**
+         * <code>int64 user_id = 1;</code>
+         */
+        public Builder clearUserId() {
+
+            userId_ = 0L;
+            onChanged();
+            return this;
+        }
+
         private long conShortId_;
 
         /**
-         * <code>int64 con_short_id = 1;</code>
+         * <code>int64 con_short_id = 2;</code>
          */
         public long getConShortId() {
             return conShortId_;
         }
 
         /**
-         * <code>int64 con_short_id = 1;</code>
+         * <code>int64 con_short_id = 2;</code>
          */
         public Builder setConShortId(long value) {
 
@@ -481,7 +544,7 @@ public final class MessageGetByConversationRequest extends
         }
 
         /**
-         * <code>int64 con_short_id = 1;</code>
+         * <code>int64 con_short_id = 2;</code>
          */
         public Builder clearConShortId() {
 
@@ -493,14 +556,14 @@ public final class MessageGetByConversationRequest extends
         private long conIndex_;
 
         /**
-         * <code>int64 con_index = 2;</code>
+         * <code>int64 con_index = 3;</code>
          */
         public long getConIndex() {
             return conIndex_;
         }
 
         /**
-         * <code>int64 con_index = 2;</code>
+         * <code>int64 con_index = 3;</code>
          */
         public Builder setConIndex(long value) {
 
@@ -510,7 +573,7 @@ public final class MessageGetByConversationRequest extends
         }
 
         /**
-         * <code>int64 con_index = 2;</code>
+         * <code>int64 con_index = 3;</code>
          */
         public Builder clearConIndex() {
 
@@ -522,14 +585,14 @@ public final class MessageGetByConversationRequest extends
         private long limit_;
 
         /**
-         * <code>int64 limit = 3;</code>
+         * <code>int64 limit = 4;</code>
          */
         public long getLimit() {
             return limit_;
         }
 
         /**
-         * <code>int64 limit = 3;</code>
+         * <code>int64 limit = 4;</code>
          */
         public Builder setLimit(long value) {
 
@@ -539,7 +602,7 @@ public final class MessageGetByConversationRequest extends
         }
 
         /**
-         * <code>int64 limit = 3;</code>
+         * <code>int64 limit = 4;</code>
          */
         public Builder clearLimit() {
 
@@ -559,40 +622,40 @@ public final class MessageGetByConversationRequest extends
         }
 
 
-        // @@protoc_insertion_point(builder_scope:im.MessageGetByConversationRequest)
+        // @@protoc_insertion_point(builder_scope:im.GetMessageByConversationRequest)
     }
 
-    // @@protoc_insertion_point(class_scope:im.MessageGetByConversationRequest)
-    private static final violet.gateway.common.proto_gen.im.MessageGetByConversationRequest DEFAULT_INSTANCE;
+    // @@protoc_insertion_point(class_scope:im.GetMessageByConversationRequest)
+    private static final violet.gateway.common.proto_gen.im.GetMessageByConversationRequest DEFAULT_INSTANCE;
 
     static {
-        DEFAULT_INSTANCE = new violet.gateway.common.proto_gen.im.MessageGetByConversationRequest();
+        DEFAULT_INSTANCE = new violet.gateway.common.proto_gen.im.GetMessageByConversationRequest();
     }
 
-    public static violet.gateway.common.proto_gen.im.MessageGetByConversationRequest getDefaultInstance() {
+    public static violet.gateway.common.proto_gen.im.GetMessageByConversationRequest getDefaultInstance() {
         return DEFAULT_INSTANCE;
     }
 
-    private static final com.google.protobuf.Parser<MessageGetByConversationRequest>
-            PARSER = new com.google.protobuf.AbstractParser<MessageGetByConversationRequest>() {
-        public MessageGetByConversationRequest parsePartialFrom(
+    private static final com.google.protobuf.Parser<GetMessageByConversationRequest>
+            PARSER = new com.google.protobuf.AbstractParser<GetMessageByConversationRequest>() {
+        public GetMessageByConversationRequest parsePartialFrom(
                 com.google.protobuf.CodedInputStream input,
                 com.google.protobuf.ExtensionRegistryLite extensionRegistry)
                 throws com.google.protobuf.InvalidProtocolBufferException {
-            return new MessageGetByConversationRequest(input, extensionRegistry);
+            return new GetMessageByConversationRequest(input, extensionRegistry);
         }
     };
 
-    public static com.google.protobuf.Parser<MessageGetByConversationRequest> parser() {
+    public static com.google.protobuf.Parser<GetMessageByConversationRequest> parser() {
         return PARSER;
     }
 
     @java.lang.Override
-    public com.google.protobuf.Parser<MessageGetByConversationRequest> getParserForType() {
+    public com.google.protobuf.Parser<GetMessageByConversationRequest> getParserForType() {
         return PARSER;
     }
 
-    public violet.gateway.common.proto_gen.im.MessageGetByConversationRequest getDefaultInstanceForType() {
+    public violet.gateway.common.proto_gen.im.GetMessageByConversationRequest getDefaultInstanceForType() {
         return DEFAULT_INSTANCE;
     }
 
