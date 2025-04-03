@@ -30,6 +30,7 @@ public class UserServiceImpl implements UserService {
         }
         String token = JwtUtil.createJWT(String.valueOf(loginResponse.getUserId()));
         JSONObject data = new JSONObject();
+        data.put("user_id", loginResponse.getUserId());
         data.put("token", token);
         return data;
     }
@@ -53,10 +54,6 @@ public class UserServiceImpl implements UserService {
     public JSONObject getUserProfile(JSONObject req) throws Exception {
         Long userId = req.getLong("user_id");
         Boolean needFollowInfo = req.getBoolean("need_follow_info");
-        if (userId == null) {
-            CustomAuthenticationToken authentication = (CustomAuthenticationToken) SecurityContextHolder.getContext().getAuthentication();
-            userId = authentication.getUserId();
-        }
         GetUserInfosRequest getUserInfosRequest = GetUserInfosRequest.newBuilder().addUserIds(userId).build();
         GetUserInfosResponse getUserInfosResponse = actionStub.getUserInfos(getUserInfosRequest);
         if (getUserInfosResponse.getBaseResp().getStatusCode() != StatusCode.Success) {

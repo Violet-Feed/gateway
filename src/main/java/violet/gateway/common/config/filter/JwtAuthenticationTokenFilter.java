@@ -36,7 +36,8 @@ public class JwtAuthenticationTokenFilter extends OncePerRequestFilter {
             Claims claims = JwtUtil.parseJWT(token);
             userId = Long.parseLong(claims.getSubject());
         } catch (Exception e) {
-            throw new RuntimeException(e);
+            filterChain.doFilter(request, response);
+            return;
         }
 
         Authentication authentication = new CustomAuthenticationToken(userId, null, Collections.emptyList());

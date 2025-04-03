@@ -11,6 +11,7 @@ import io.netty.channel.socket.nio.NioServerSocketChannel;
 import io.netty.handler.codec.string.StringDecoder;
 import io.netty.handler.codec.string.StringEncoder;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
@@ -28,6 +29,9 @@ public class NettyServer {
     private EventLoopGroup bossGroup;
     // 用于处理已经建立的连接的I/O操作的EventLoopGroup
     private EventLoopGroup workerGroup;
+
+    @Autowired
+    private NettyServerHandler nettyServerHandler;
 
     // 在Bean初始化后自动调用，用于启动Netty服务器
     @PostConstruct
@@ -53,7 +57,7 @@ public class NettyServer {
                                 // 添加字符串编码器
                                 ch.pipeline().addLast(new StringEncoder());
                                 // 添加自定义的处理器NettyServerHandler
-                                ch.pipeline().addLast(new NettyServerHandler());
+                                ch.pipeline().addLast(nettyServerHandler);
                             }
                         })
                         // 设置通道选项，SO_BACKLOG用于设置积压连接队列的大小
