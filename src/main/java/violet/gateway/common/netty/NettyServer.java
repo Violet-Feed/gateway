@@ -8,10 +8,9 @@ import io.netty.channel.EventLoopGroup;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
-import io.netty.handler.codec.string.StringDecoder;
-import io.netty.handler.codec.string.StringEncoder;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
@@ -31,7 +30,7 @@ public class NettyServer {
     private EventLoopGroup workerGroup;
 
     @Autowired
-    private NettyServerHandler nettyServerHandler;
+    private ApplicationContext applicationContext;
 
     // 在Bean初始化后自动调用，用于启动Netty服务器
     @PostConstruct
@@ -52,11 +51,10 @@ public class NettyServer {
                         .childHandler(new ChannelInitializer<SocketChannel>() {
                             @Override
                             public void initChannel(SocketChannel ch) throws Exception {
-                                // 添加字符串解码器
-                                ch.pipeline().addLast(new StringDecoder());
-                                // 添加字符串编码器
-                                ch.pipeline().addLast(new StringEncoder());
-                                // 添加自定义的处理器NettyServerHandler
+                                ch.pipeline().addLast(new CustomDecoder());
+                                ch.pipeline().addLast(new CustomEncoder());
+                                // 从Spring容器中获取新的NettyServerHandler实例
+                                NettyServerHandler nettyServerHandler = applicationContext.getBean(NettyServerHandler.class);
                                 ch.pipeline().addLast(nettyServerHandler);
                             }
                         })

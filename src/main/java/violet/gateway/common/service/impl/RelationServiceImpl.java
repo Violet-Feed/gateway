@@ -60,7 +60,7 @@ public class RelationServiceImpl implements RelationService {
             throw new RpcException(getFollowListResponse.getBaseResp());
         }
         JSONObject data = new JSONObject();
-        if(!getFollowListResponse.getUserIdsList().isEmpty()){
+        if (!getFollowListResponse.getUserIdsList().isEmpty()) {
             GetUserInfosRequest getUserInfosRequest = GetUserInfosRequest.newBuilder().addAllUserIds(getFollowListResponse.getUserIdsList()).build();
             GetUserInfosResponse getUserInfosResponse = actionStub.getUserInfos(getUserInfosRequest);
             if (getUserInfosResponse.getBaseResp().getStatusCode() != StatusCode.Success) {
@@ -68,7 +68,7 @@ public class RelationServiceImpl implements RelationService {
                 throw new RpcException(getUserInfosResponse.getBaseResp());
             }
             data.put("user_infos", getUserInfosResponse.getUserInfosList());
-        }else{
+        } else {
             data.put("user_infos", new ArrayList<>());
         }
         return data;
@@ -84,7 +84,7 @@ public class RelationServiceImpl implements RelationService {
             throw new RpcException(getFollowListResponse.getBaseResp());
         }
         JSONObject data = new JSONObject();
-        if(!getFollowListResponse.getUserIdsList().isEmpty()) {
+        if (!getFollowListResponse.getUserIdsList().isEmpty()) {
             GetUserInfosRequest getUserInfosRequest = GetUserInfosRequest.newBuilder().addAllUserIds(getFollowListResponse.getUserIdsList()).build();
             GetUserInfosResponse getUserInfosResponse = actionStub.getUserInfos(getUserInfosRequest);
             if (getUserInfosResponse.getBaseResp().getStatusCode() != StatusCode.Success) {
@@ -92,7 +92,7 @@ public class RelationServiceImpl implements RelationService {
                 throw new RpcException(getUserInfosResponse.getBaseResp());
             }
             data.put("user_infos", getUserInfosResponse.getUserInfosList());
-        }else{
+        } else {
             data.put("user_infos", new ArrayList<>());
         }
         return data;
@@ -108,7 +108,7 @@ public class RelationServiceImpl implements RelationService {
             throw new RpcException(getFollowListResponse.getBaseResp());
         }
         JSONObject data = new JSONObject();
-        if(!getFollowListResponse.getUserIdsList().isEmpty()) {
+        if (!getFollowListResponse.getUserIdsList().isEmpty()) {
             GetUserInfosRequest getUserInfosRequest = GetUserInfosRequest.newBuilder().addAllUserIds(getFollowListResponse.getUserIdsList()).build();
             GetUserInfosResponse getUserInfosResponse = actionStub.getUserInfos(getUserInfosRequest);
             if (getUserInfosResponse.getBaseResp().getStatusCode() != StatusCode.Success) {
@@ -116,7 +116,7 @@ public class RelationServiceImpl implements RelationService {
                 throw new RpcException(getUserInfosResponse.getBaseResp());
             }
             data.put("user_infos", getUserInfosResponse.getUserInfosList());
-        }else{
+        } else {
             data.put("user_infos", new ArrayList<>());
         }
         return data;

@@ -3,12 +3,10 @@ package violet.gateway.common.service.impl;
 import com.alibaba.fastjson.JSONObject;
 import lombok.extern.slf4j.Slf4j;
 import net.devh.boot.grpc.client.inject.GrpcClient;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import violet.gateway.common.proto_gen.action.*;
 import violet.gateway.common.proto_gen.common.StatusCode;
 import violet.gateway.common.service.UserService;
-import violet.gateway.common.utils.CustomAuthenticationToken;
 import violet.gateway.common.utils.JwtUtil;
 import violet.gateway.common.utils.RpcException;
 
