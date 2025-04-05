@@ -1,6 +1,5 @@
 package violet.gateway.common.netty;
 
-import com.alibaba.fastjson.JSONObject;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
 import lombok.extern.slf4j.Slf4j;
@@ -11,6 +10,8 @@ import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Component;
 import violet.gateway.common.proto_gen.common.BaseResp;
 import violet.gateway.common.proto_gen.common.StatusCode;
+import violet.gateway.common.proto_gen.push.ConnectPacket;
+import violet.gateway.common.proto_gen.push.PacketType;
 import violet.gateway.common.proto_gen.push.PushRequest;
 import violet.gateway.common.proto_gen.push.PushResponse;
 
@@ -60,13 +61,14 @@ public class NettyServerHandler extends SimpleChannelInboundHandler<Packet> {
     @Override
     protected void channelRead0(ChannelHandlerContext ctx, Packet packet) throws Exception {
         log.info("Received from client: " + packet);
-        if (packet.getPacketType() == 1) {
-            this.userId = Long.valueOf(packet.getData());
+        if (packet.getPacketType() == PacketType.Connect_VALUE) {
+            ConnectPacket connectPacket = ConnectPacket.parseFrom(packet.getData());
+            this.userId = connectPacket.getUserId();
             String key = String.format("conn:%s", this.userId);
             String channelId = ctx.channel().id().asShortText();
             redisTemplate.opsForHash().putIfAbsent(key, channelId, String.valueOf(this.userId));
-        } else if (packet.getPacketType() == 2) {
-            ctx.writeAndFlush(new Packet((byte) 2, 0, "pong"));
+        } else if (packet.getPacketType() == PacketType.Heartbeat_VALUE) {
+            ctx.writeAndFlush(new Packet((byte) 2, 0, new byte[0]));
         }
     }
 
@@ -80,22 +82,21 @@ public class NettyServerHandler extends SimpleChannelInboundHandler<Packet> {
 
     public static PushResponse push(PushRequest req) {
         PushResponse.Builder resp = PushResponse.newBuilder();
-        Long userId = req.getReceiverId();
+        Packet packet = new Packet();
+        packet.setPacketType((byte) req.getPacketType().getNumber());
+        if (req.getPacketType() == PacketType.Normal) {
+            packet.setData(req.getNormalPacket().toByteArray());
+        } else if (req.getPacketType() == PacketType.Command) {
+            packet.setData(req.getCommandPacket().toByteArray());
+        }
+        Long userId = req.getUserId();
         String key = String.format("conn:%s", userId);
         Map<Object, Object> conns = redisTemplate.opsForHash().entries(key);
         for (Map.Entry<Object, Object> entry : conns.entrySet()) {
             String channelId = (String) entry.getKey();
             ChannelHandlerContext ctx = channelContextMap.get(channelId);
             if (ctx != null && ctx.channel().isActive()) {
-                JSONObject data = new JSONObject();
-                data.put("msg_body", req.getMsgBody());
-                data.put("user_id", req.getReceiverId());
-                data.put("user_con_index", req.getUserConIndex());
-                data.put("pre_user_con_index", req.getPreUserConIndex());
-                data.put("badge_count", req.getBadgeCount());
-                data.put("user_cmd_index", req.getUserCmdIndex());
-                ctx.writeAndFlush(new Packet((byte) 3, 0, data.toJSONString()));
-                //req.toByteArray()
+                ctx.writeAndFlush(packet);
             } else {
                 redisTemplate.opsForHash().delete(key, channelId);
             }

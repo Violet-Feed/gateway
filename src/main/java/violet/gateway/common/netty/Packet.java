@@ -10,5 +10,5 @@ import lombok.NoArgsConstructor;
 public class Packet {
     private byte packetType;
     private int length;
-    private String data;
+    private byte[] data;
 }

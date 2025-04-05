@@ -68,7 +68,6 @@ public class IMServiceImpl implements IMService {
         GetMessageByConversationResponse getMessageByConversationResponse = imStub.getMessageByConversation(getMessageByConversationRequest);
         if (getMessageByConversationResponse.getBaseResp().getStatusCode() != StatusCode.Success) {
             log.error("[getMessageByConversation] GetMessageByConversation rpc err, err = {}", getMessageByConversationResponse.getBaseResp());
-
             throw new RpcException(getMessageByConversationResponse.getBaseResp());
         }
         JSONObject data = new JSONObject();

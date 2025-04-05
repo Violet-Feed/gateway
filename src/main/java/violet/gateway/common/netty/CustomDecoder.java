@@ -4,7 +4,6 @@ import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.handler.codec.ByteToMessageDecoder;
 
-import java.nio.charset.StandardCharsets;
 import java.util.List;
 
 public class CustomDecoder extends ByteToMessageDecoder {
@@ -35,7 +34,7 @@ public class CustomDecoder extends ByteToMessageDecoder {
         in.readBytes(data);
 
         // 将解析后的数据封装成自定义对象
-        Packet message = new Packet(packetType, length, new String(data, StandardCharsets.UTF_8));
+        Packet message = new Packet(packetType, length, data);
         out.add(message);
     }
 }
