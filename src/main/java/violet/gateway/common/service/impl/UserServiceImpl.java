@@ -3,12 +3,16 @@ package violet.gateway.common.service.impl;
 import com.alibaba.fastjson.JSONObject;
 import lombok.extern.slf4j.Slf4j;
 import net.devh.boot.grpc.client.inject.GrpcClient;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import violet.gateway.common.proto_gen.action.*;
 import violet.gateway.common.proto_gen.common.StatusCode;
 import violet.gateway.common.service.UserService;
+import violet.gateway.common.utils.CustomAuthenticationToken;
 import violet.gateway.common.utils.JwtUtil;
 import violet.gateway.common.utils.RpcException;
+
+import java.util.Objects;
 
 @Slf4j
 @Service
@@ -52,6 +56,7 @@ public class UserServiceImpl implements UserService {
     public JSONObject getUserProfile(JSONObject req) throws Exception {
         Long userId = req.getLong("user_id");
         Boolean needFollowInfo = req.getBoolean("need_follow_info");
+        Boolean needFriendInfo = req.getBoolean("need_friend_info");
         GetUserInfosRequest getUserInfosRequest = GetUserInfosRequest.newBuilder().addUserIds(userId).build();
         GetUserInfosResponse getUserInfosResponse = actionStub.getUserInfos(getUserInfosRequest);
         if (getUserInfosResponse.getBaseResp().getStatusCode() != StatusCode.Success) {
@@ -61,15 +66,38 @@ public class UserServiceImpl implements UserService {
         JSONObject data = new JSONObject();
         data.put("user_info", getUserInfosResponse.getUserInfos(0));
         if (needFollowInfo == Boolean.TRUE) {
-            MGetFollowCountRequest mGetFollowCountRequest = MGetFollowCountRequest.newBuilder().addUserIds(userId).setNeedFollowing(true).setNeedFollower(true).setNeedFriend(true).build();
-            MGetFollowCountResponse mGetFollowCountResponse = actionStub.mGetFollowCount(mGetFollowCountRequest);
+            MGetFollowCountRequest.Builder mGetFollowCountRequest = MGetFollowCountRequest.newBuilder().addUserIds(userId).setNeedFollow(true);
+            if(needFriendInfo == Boolean.TRUE) {
+                mGetFollowCountRequest.setNeedFriend(true);
+            }
+            MGetFollowCountResponse mGetFollowCountResponse = actionStub.mGetFollowCount(mGetFollowCountRequest.build());
             if (mGetFollowCountResponse.getBaseResp().getStatusCode() != StatusCode.Success) {
                 log.error("[getUserProfile] MGetFollowCount rpc err, err = {}", mGetFollowCountResponse.getBaseResp());
                 throw new RpcException(mGetFollowCountResponse.getBaseResp());
             }
-            data.put("friend_count", mGetFollowCountResponse.getFriendCountMap().get(userId));
             data.put("following_count", mGetFollowCountResponse.getFollowingCountMap().get(userId));
             data.put("follower_count", mGetFollowCountResponse.getFollowerCountMap().get(userId));
+            if (needFriendInfo == Boolean.TRUE) {
+                data.put("friend_count", mGetFollowCountResponse.getFriendCountMap().get(userId));
+            }
+            CustomAuthenticationToken authentication = (CustomAuthenticationToken) SecurityContextHolder.getContext().getAuthentication();
+            Long fromUserId = authentication.getUserId();
+            if(!Objects.equals(fromUserId, userId)) {
+                MIsFollowRequest mIsFollowingRequest = MIsFollowRequest.newBuilder().setFromUserId(fromUserId).addToUserIds(userId).build();
+                MIsFollowResponse mIsFollowingResponse = actionStub.mIsFollowing(mIsFollowingRequest);
+                if (mIsFollowingResponse.getBaseResp().getStatusCode() != StatusCode.Success) {
+                    log.error("[getUserProfile] mIsFollowing rpc err, err = {}", mIsFollowingResponse.getBaseResp());
+                    throw new RpcException(mIsFollowingResponse.getBaseResp());
+                }
+                data.put("is_following", mIsFollowingResponse.getIsFollowingMap().get(userId));
+                MIsFollowRequest mIsFollowerRequest = MIsFollowRequest.newBuilder().setFromUserId(fromUserId).addToUserIds(userId).build();
+                MIsFollowResponse mIsFollowerResponse = actionStub.mIsFollower(mIsFollowerRequest);
+                if (mIsFollowerResponse.getBaseResp().getStatusCode() != StatusCode.Success) {
+                    log.error("[getUserProfile] mIsFollower rpc err, err = {}", mIsFollowerResponse.getBaseResp());
+                    throw new RpcException(mIsFollowerResponse.getBaseResp());
+                }
+                data.put("is_follower", mIsFollowerResponse.getIsFollowerMap().get(userId));
+            }
         }
         return data;
     }

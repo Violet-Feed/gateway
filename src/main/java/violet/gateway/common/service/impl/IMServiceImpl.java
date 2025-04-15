@@ -34,26 +34,45 @@ public class IMServiceImpl implements IMService {
             throw new RpcException(sendMessageResponse.getBaseResp());
         }
         JSONObject data = new JSONObject();
+        data.put("msg_id", sendMessageResponse.getMsgId());
         return data;
     }
 
     @Override
-    public JSONObject getMessageByInit(JSONObject req) throws Exception {
+    public JSONObject getMessageByUser(JSONObject req) throws Exception {
         CustomAuthenticationToken authentication = (CustomAuthenticationToken) SecurityContextHolder.getContext().getAuthentication();
         Long userId = authentication.getUserId();
         Long userConIndex = req.getLong("user_con_index");
-        GetMessageByInitRequest getMessageByInitRequest = GetMessageByInitRequest.newBuilder().setUserId(userId).setUserConIndex(userConIndex).build();
-        GetMessageByInitResponse getMessageByInitResponse = imStub.getMessageByInit(getMessageByInitRequest);
+        Long limit = req.getLong("limit");
+        GetMessageByUserRequest getMessageByInitRequest = GetMessageByUserRequest.newBuilder().setUserId(userId).setUserConIndex(userConIndex).setLimit(limit).build();
+        GetMessageByUserResponse getMessageByInitResponse = imStub.getMessageByUser(getMessageByInitRequest);
         if (getMessageByInitResponse.getBaseResp().getStatusCode() != StatusCode.Success) {
-            log.error("[getMessageByInit] GetMessageByInit rpc err, err = {}", getMessageByInitResponse.getBaseResp());
+            log.error("[getMessageByUser] GetMessageByUser rpc err, err = {}", getMessageByInitResponse.getBaseResp());
             throw new RpcException(getMessageByInitResponse.getBaseResp());
         }
         JSONObject data = new JSONObject();
         data.put("cons", getMessageByInitResponse.getConsList());
-        data.put("has_more", getMessageByInitResponse.getHasMore());
-        data.put("next_user_con_index", getMessageByInitResponse.getNextUserConIndex());
         data.put("user_con_index", getMessageByInitResponse.getUserConIndex());
-        data.put("user_cmd_index", getMessageByInitResponse.getUserCmdIndex());
+        data.put("has_more", getMessageByInitResponse.getHasMore());
+        return data;
+    }
+
+    @Override
+    public JSONObject getCommandByUser(JSONObject req) throws Exception {
+        CustomAuthenticationToken authentication = (CustomAuthenticationToken) SecurityContextHolder.getContext().getAuthentication();
+        Long userId = authentication.getUserId();
+        Long userCmdIndex = req.getLong("user_cmd_index");
+        Long limit = req.getLong("limit");
+        GetCommandByUserRequest getCommandByUserRequest = GetCommandByUserRequest.newBuilder().setUserId(userId).setUserCmdIndex(userCmdIndex).setLimit(limit).build();
+        GetCommandByUserResponse getCommandByUserResponse = imStub.getCommandByUser(getCommandByUserRequest);
+        if (getCommandByUserResponse.getBaseResp().getStatusCode() != StatusCode.Success) {
+            log.error("[getCommandByUser] GetCommandByUser rpc err, err = {}", getCommandByUserResponse.getBaseResp());
+            throw new RpcException(getCommandByUserResponse.getBaseResp());
+        }
+        JSONObject data = new JSONObject();
+        data.put("msg_bodies", getCommandByUserResponse.getMsgBodiesList());
+        data.put("user_cmd_index", getCommandByUserResponse.getUserCmdIndex());
+        data.put("has_more", getCommandByUserResponse.getHasMore());
         return data;
     }
 
@@ -89,6 +108,36 @@ public class IMServiceImpl implements IMService {
             throw new RpcException(markReadResponse.getBaseResp());
         }
         JSONObject data = new JSONObject();
+        return data;
+    }
+
+    @Override
+    public JSONObject getMembersReadIndex(JSONObject req) throws Exception {
+        Long conShortId = req.getLong("con_short_id");
+        GetMembersReadIndexRequest getMembersReadIndexRequest = GetMembersReadIndexRequest.newBuilder().setConShortId(conShortId).build();
+        GetMembersReadIndexResponse getMembersReadIndexResponse = imStub.getMembersReadIndex(getMembersReadIndexRequest);
+        if (getMembersReadIndexResponse.getBaseResp().getStatusCode() != StatusCode.Success) {
+            log.error("[getMembersReadIndex] GetMembersReadIndex rpc err, err = {}", getMembersReadIndexResponse.getBaseResp());
+            throw new RpcException(getMembersReadIndexResponse.getBaseResp());
+        }
+        JSONObject data = new JSONObject();
+        data.put("read_index", getMembersReadIndexResponse.getReadIndexMap());
+        return data;
+    }
+
+    @Override
+    public JSONObject getConversationInfo(JSONObject req) throws Exception {
+        CustomAuthenticationToken authentication = (CustomAuthenticationToken) SecurityContextHolder.getContext().getAuthentication();
+        Long userId = authentication.getUserId();
+        Long conShortId = req.getLong("con_short_id");
+        GetConversationInfoRequest getConversationInfoRequest = GetConversationInfoRequest.newBuilder().setUserId(userId).setConShortId(conShortId).build();
+        GetConversationInfoResponse getConversationInfoResponse = imStub.getConversationInfo(getConversationInfoRequest);
+        if (getConversationInfoResponse.getBaseResp().getStatusCode() != StatusCode.Success) {
+            log.error("[getConversationInfo] GetConversationInfo rpc err, err = {}", getConversationInfoResponse.getBaseResp());
+            throw new RpcException(getConversationInfoResponse.getBaseResp());
+        }
+        JSONObject data = new JSONObject();
+        data.put("con_info", getConversationInfoResponse.getConInfo());
         return data;
     }
 }

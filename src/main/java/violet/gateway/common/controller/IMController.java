@@ -41,11 +41,11 @@ public class IMController {
         return resp;
     }
 
-    @PostMapping("/get_message_by_init")
-    public JSONObject getMessageByInit(@RequestBody JSONObject req) {
+    @PostMapping("/get_message_by_user")
+    public JSONObject getMessageByUser(@RequestBody JSONObject req) {
         JSONObject resp = new JSONObject();
         try {
-            JSONObject data = imService.getMessageByInit(req);
+            JSONObject data = imService.getMessageByUser(req);
             resp.put("code", StatusCode.Success_VALUE);
             resp.put("message", StatusCode.Success);
             resp.put("data", data);
@@ -55,11 +55,34 @@ public class IMController {
         } catch (NullPointerException e) {
             resp.put("code", StatusCode.Param_Error_VALUE);
             resp.put("message", StatusCode.Param_Error);
-            log.error("[getMessageByInit] err, err = {}", e.toString());
+            log.error("[getMessageByUser] err, err = {}", e.toString());
         } catch (Exception e) {
             resp.put("code", StatusCode.Unknown_Error_VALUE);
             resp.put("message", StatusCode.Unknown_Error);
-            log.error("[getMessageByInit] err, err = {}", e.toString());
+            log.error("[getMessageByUser] err, err = {}", e.toString());
+        }
+        return resp;
+    }
+
+    @PostMapping("/get_command_by_user")
+    public JSONObject getCommandByUser(@RequestBody JSONObject req) {
+        JSONObject resp = new JSONObject();
+        try {
+            JSONObject data = imService.getCommandByUser(req);
+            resp.put("code", StatusCode.Success_VALUE);
+            resp.put("message", StatusCode.Success);
+            resp.put("data", data);
+        } catch (RpcException e) {
+            resp.put("code", e.getStatus().getStatusCodeValue());
+            resp.put("message", e.getStatus().getStatusCode());
+        } catch (NullPointerException e) {
+            resp.put("code", StatusCode.Param_Error_VALUE);
+            resp.put("message", StatusCode.Param_Error);
+            log.error("[getCommandByUser] err, err = {}", e.toString());
+        } catch (Exception e) {
+            resp.put("code", StatusCode.Unknown_Error_VALUE);
+            resp.put("message", StatusCode.Unknown_Error);
+            log.error("[getCommandByUser] err, err = {}", e.toString());
         }
         return resp;
     }
@@ -106,6 +129,52 @@ public class IMController {
             resp.put("code", StatusCode.Unknown_Error_VALUE);
             resp.put("message", StatusCode.Unknown_Error);
             log.error("[markRead] err, err = {}", e.toString());
+        }
+        return resp;
+    }
+
+    @PostMapping("/get_members_read_index")
+    public JSONObject getMembersReadIndex(@RequestBody JSONObject req) {
+        JSONObject resp = new JSONObject();
+        try {
+            JSONObject data = imService.getMembersReadIndex(req);
+            resp.put("code", StatusCode.Success_VALUE);
+            resp.put("message", StatusCode.Success);
+            resp.put("data", data);
+        } catch (RpcException e) {
+            resp.put("code", e.getStatus().getStatusCodeValue());
+            resp.put("message", e.getStatus().getStatusCode());
+        } catch (NullPointerException e) {
+            resp.put("code", StatusCode.Param_Error_VALUE);
+            resp.put("message", StatusCode.Param_Error);
+            log.error("[getMembersReadIndex] err, err = {}", e.toString());
+        } catch (Exception e) {
+            resp.put("code", StatusCode.Unknown_Error_VALUE);
+            resp.put("message", StatusCode.Unknown_Error);
+            log.error("[getMembersReadIndex] err, err = {}", e.toString());
+        }
+        return resp;
+    }
+
+    @PostMapping("/get_conversation_info")
+    public JSONObject getConversationInfo(@RequestBody JSONObject req) {
+        JSONObject resp = new JSONObject();
+        try {
+            JSONObject data = imService.getConversationInfo(req);
+            resp.put("code", StatusCode.Success_VALUE);
+            resp.put("message", StatusCode.Success);
+            resp.put("data", data);
+        } catch (RpcException e) {
+            resp.put("code", e.getStatus().getStatusCodeValue());
+            resp.put("message", e.getStatus().getStatusCode());
+        } catch (NullPointerException e) {
+            resp.put("code", StatusCode.Param_Error_VALUE);
+            resp.put("message", StatusCode.Param_Error);
+            log.error("[getConversationInfo] err, err = {}", e.toString());
+        } catch (Exception e) {
+            resp.put("code", StatusCode.Unknown_Error_VALUE);
+            resp.put("message", StatusCode.Unknown_Error);
+            log.error("[getConversationInfo] err, err = {}", e.toString());
         }
         return resp;
     }
