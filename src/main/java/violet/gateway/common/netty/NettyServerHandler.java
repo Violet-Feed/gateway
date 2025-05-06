@@ -82,6 +82,10 @@ public class NettyServerHandler extends SimpleChannelInboundHandler<Packet> {
 
     public static PushResponse push(PushRequest req) {
         PushResponse.Builder resp = PushResponse.newBuilder();
+        if (redisTemplate == null) {
+            BaseResp baseResp = BaseResp.newBuilder().setStatusCode(StatusCode.Success).build();
+            return resp.setBaseResp(baseResp).build();
+        }
         Packet packet = new Packet();
         packet.setPacketType((byte) req.getPacketType().getNumber());
         if (req.getPacketType() == PacketType.Normal) {

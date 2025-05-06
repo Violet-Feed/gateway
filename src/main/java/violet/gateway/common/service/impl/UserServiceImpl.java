@@ -67,7 +67,7 @@ public class UserServiceImpl implements UserService {
         data.put("user_info", getUserInfosResponse.getUserInfos(0));
         if (needFollowInfo == Boolean.TRUE) {
             MGetFollowCountRequest.Builder mGetFollowCountRequest = MGetFollowCountRequest.newBuilder().addUserIds(userId).setNeedFollow(true);
-            if(needFriendInfo == Boolean.TRUE) {
+            if (needFriendInfo == Boolean.TRUE) {
                 mGetFollowCountRequest.setNeedFriend(true);
             }
             MGetFollowCountResponse mGetFollowCountResponse = actionStub.mGetFollowCount(mGetFollowCountRequest.build());
@@ -82,7 +82,7 @@ public class UserServiceImpl implements UserService {
             }
             CustomAuthenticationToken authentication = (CustomAuthenticationToken) SecurityContextHolder.getContext().getAuthentication();
             Long fromUserId = authentication.getUserId();
-            if(!Objects.equals(fromUserId, userId)) {
+            if (!Objects.equals(fromUserId, userId)) {
                 MIsFollowRequest mIsFollowingRequest = MIsFollowRequest.newBuilder().setFromUserId(fromUserId).addToUserIds(userId).build();
                 MIsFollowResponse mIsFollowingResponse = actionStub.mIsFollowing(mIsFollowingRequest);
                 if (mIsFollowingResponse.getBaseResp().getStatusCode() != StatusCode.Success) {

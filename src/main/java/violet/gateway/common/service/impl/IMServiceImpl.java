@@ -11,6 +11,8 @@ import violet.gateway.common.service.IMService;
 import violet.gateway.common.utils.CustomAuthenticationToken;
 import violet.gateway.common.utils.RpcException;
 
+import java.util.List;
+
 @Slf4j
 @Service
 public class IMServiceImpl implements IMService {
@@ -122,6 +124,23 @@ public class IMServiceImpl implements IMService {
         }
         JSONObject data = new JSONObject();
         data.put("read_index", getMembersReadIndexResponse.getReadIndexMap());
+        return data;
+    }
+
+    @Override
+    public JSONObject createConversation(JSONObject req) throws Exception {
+        CustomAuthenticationToken authentication = (CustomAuthenticationToken) SecurityContextHolder.getContext().getAuthentication();
+        Long userId = authentication.getUserId();
+        Integer conType = req.getInteger("con_type");
+        List<Long> members = req.getJSONArray("members").toJavaList(Long.class);
+        CreateConversationRequest createConversationRequest = CreateConversationRequest.newBuilder().setOwnerId(userId).setConType(conType).addAllMembers(members).build();
+        CreateConversationResponse createConversationResponse = imStub.createConversation(createConversationRequest);
+        if (createConversationResponse.getBaseResp().getStatusCode() != StatusCode.Success) {
+            log.error("[createConversation] CreateConversation rpc err, err = {}", createConversationResponse.getBaseResp());
+            throw new RpcException(createConversationResponse.getBaseResp());
+        }
+        JSONObject data = new JSONObject();
+        data.put("con_core_info", createConversationResponse.getConCoreInfo());
         return data;
     }
 
