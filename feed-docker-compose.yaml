@@ -1,0 +1,215 @@
+version: "3.8"
+
+networks:
+  app_net:
+    driver: bridge
+
+services:
+  # Redis
+  redis:
+    image: redis:5.0.14
+    container_name: feed-redis
+    command: ["redis-server", "--appendonly", "yes"]
+    ports:
+      - "6379:6379"
+    volumes:
+      - ~/dockerD/mnt/redis/data:/data
+    networks: [app_net]
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 3s
+      retries: 5
+
+  # RocketMQ Namesrv
+  rmq-namesrv:
+    image: apache/rocketmq:5.2.0
+    container_name: feed-rmq-namesrv
+    command: ["sh", "mqnamesrv"]
+    ports:
+      - "9876:9876"
+    networks: [app_net]
+    healthcheck:
+      test: ["CMD-SHELL", "nc -z localhost 9876 || exit 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+
+  # RocketMQ Proxy（本地模式）
+  rmq-proxy:
+    image: apache/rocketmq:5.2.0
+    container_name: feed-rmq-proxy
+    depends_on:
+      rmq-namesrv:
+        condition: service_healthy
+    environment:
+      - NAMESRV_ADDR=rmq-namesrv:9876
+    ports:
+      - "8080:8080"
+      - "8081:8081"
+    command: ["sh", "mqproxy", "-n", "rmq-namesrv:9876", "-pm", "LOCAL", "-bc", "/home/rocketmq/rocketmq-5.2.0/conf/broker.conf"]
+    volumes:
+      - ./rocketmq/conf/broker.conf:/home/rocketmq/rocketmq-5.2.0/conf/broker.conf:ro
+      - ~/dockerD/mnt/rocketmq/store:/home/rocketmq/store
+      - ~/dockerD/mnt/rocketmq/logs:/home/rocketmq/logs
+    networks: [app_net]
+    healthcheck:
+      test: ["CMD-SHELL", "nc -z localhost 8081 || nc -z localhost 8080 || exit 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 20
+
+  # Neo4j 3.5.9
+  neo4j:
+    image: neo4j:5.26-community-bullseye
+    container_name: feed-neo4j
+    environment:
+      - NEO4J_AUTH=neo4j/password
+      - NEO4J_dbms_memory_heap_initial__size=512m
+      - NEO4J_dbms_memory_heap_max__size=1g
+    ports:
+      - "7474:7474"
+      - "7687:7687"
+    volumes:
+      - ~/dockerD/mnt/neo4j/data:/data
+      - ~/dockerD/mnt/neo4j/logs:/logs
+      - ~/dockerD/mnt/neo4j/plugins:/plugins
+    networks: [app_net]
+    healthcheck:
+      test: ["CMD-SHELL", "curl -fsS http://localhost:7474 >/dev/null || exit 1"]
+      interval: 15s
+      timeout: 5s
+      retries: 20
+      start_period: 30s
+
+  # Elasticsearch 7.9.2
+  elasticsearch:
+    image: elasticsearch:7.9.2
+    container_name: feed-elasticsearch
+    environment:
+      - discovery.type=single-node
+      - xpack.security.enabled=false
+      - ES_JAVA_OPTS=-Xms1g -Xmx1g
+    ports:
+      - "9200:9200"
+      - "9300:9300"
+    volumes:
+      - ~/dockerD/mnt/es/data:/usr/share/elasticsearch/data
+    networks: [app_net]
+    healthcheck:
+      test: ["CMD-SHELL", "curl -fsS http://localhost:9200 >/dev/null || exit 1"]
+      interval: 15s
+      timeout: 5s
+      retries: 20
+
+  # =============== Kafka + Debezium 替换 Canal 开始 ===============
+
+  kafka:
+    image: apache/kafka:4.0.0
+    hostname: kafka
+    container_name: kafka
+    user: "1000:1000"
+    ports:
+      - "9092:9092"   # 内部PLAINTEXT
+      - "9093:9093"   # Controller
+      - "9094:9094"   # 外部访问
+    environment:
+      KAFKA_NODE_ID: 1
+      KAFKA_PROCESS_ROLES: "broker,controller"
+      KAFKA_CONTROLLER_QUORUM_VOTERS: "1@kafka:9093"
+      KAFKA_LISTENERS: "PLAINTEXT://kafka:9092,CONTROLLER://kafka:9093,OUTSIDE://0.0.0.0:9094"
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: "CONTROLLER:PLAINTEXT,PLAINTEXT:PLAINTEXT,OUTSIDE:PLAINTEXT"
+      KAFKA_CONTROLLER_LISTENER_NAMES: "CONTROLLER"
+      KAFKA_ADVERTISED_LISTENERS: "PLAINTEXT://kafka:9092,OUTSIDE://localhost:9094"
+      KAFKA_INTER_BROKER_LISTENER_NAME: "PLAINTEXT"
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+      KAFKA_GROUP_INITIAL_REBALANCE_DELAY_MS: 0
+      KAFKA_TRANSACTION_STATE_LOG_REPLICATION_FACTOR: 1
+      KAFKA_TRANSACTION_STATE_LOG_MIN_ISR: 1
+      CLUSTER_ID: "SQiCluster"
+      KAFKA_LOG_DIRS: "/tmp/kraft-combined-logs"
+      KAFKA_AUTO_CREATE_TOPICS_ENABLE: "true"
+    networks: [app_net]
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    healthcheck:
+      test: ["CMD-SHELL", "kafka-topics.sh --bootstrap-server localhost:9092 --list"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 30s
+
+  kafka-ui:
+    image: provectuslabs/kafka-ui:latest
+    container_name: kafka-ui
+    ports:
+      - "48810:8080"
+    environment:
+      - KAFKA_CLUSTERS_0_NAME=local
+      - KAFKA_CLUSTERS_0_BOOTSTRAPSERVERS=kafka:9092
+    networks: [app_net]
+    depends_on:
+      - kafka
+
+  # Kafka Connect（装 Debezium；用于注册 MySQL Source / ES Sink / Neo4j Sink）
+  connect:
+    image: debezium/connect:2.7             # 已内置 Debezium 连接器
+    container_name: kafka-connect
+    depends_on:
+      - kafka
+    ports:
+      - "8083:8083"                         # Kafka Connect REST
+    environment:
+      - BOOTSTRAP_SERVERS=kafka:9092
+      - GROUP_ID=connect-cluster
+      - CONFIG_STORAGE_TOPIC=_connect_configs
+      - OFFSET_STORAGE_TOPIC=_connect_offsets
+      - STATUS_STORAGE_TOPIC=_connect_status
+      - KEY_CONVERTER=org.apache.kafka.connect.storage.StringConverter
+      - VALUE_CONVERTER=org.apache.kafka.connect.json.JsonConverter
+      - VALUE_CONVERTER_SCHEMAS_ENABLE=false
+      - KEY_CONVERTER_SCHEMAS_ENABLE=false
+      - ENABLE_APICURIO_CONVERTERS=false
+      - CONNECT_REST_ADVERTISED_HOST_NAME=connect
+      - CONNECT_LOG4J_LOGGERS=org.reflections=ERROR
+      - PLUGIN_PATH=/kafka/connectors
+    volumes:
+      # 放第三方 Sink 插件（例如 Neo4j / Elastic 的 connector 包）
+      - ./kafka/connectors:/kafka/connectors:ro
+    networks: [app_net]
+    healthcheck:
+      test: ["CMD-SHELL", "curl -fsS http://localhost:8083/connectors || exit 1"]
+      interval: 15s
+      timeout: 5s
+      retries: 20
+
+  # =============== Kafka + Debezium 替换 Canal 结束 ===============
+
+  # Milvus Standalone（单容器，内嵌 etcd，本地存储）
+  milvus:
+    image: milvusdb/milvus:v2.6.4
+    container_name: feed-milvus
+    security_opt:
+      - seccomp:unconfined
+    environment:
+      - ETCD_USE_EMBED=true
+      - ETCD_DATA_DIR=/var/lib/milvus/etcd
+      - ETCD_CONFIG_PATH=/milvus/configs/embedEtcd.yaml
+      - COMMON_STORAGETYPE=local
+      - DEPLOY_MODE=STANDALONE
+    command: ["milvus", "run", "standalone"]
+    ports:
+      - "19530:19530"
+      - "9091:9091"
+      - "2379:2379"
+    volumes:
+      - ~/dockerD/mnt/milvus/data:/var/lib/milvus
+      - ./milvus/embedEtcd.yaml:/milvus/configs/embedEtcd.yaml:ro
+      - ./milvus/user.yaml:/milvus/configs/user.yaml:ro
+    networks: [app_net]
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f http://localhost:9091/healthz || exit 1"]
+      interval: 30s
+      start_period: 90s
+      timeout: 20s
+      retries: 3
