@@ -27,13 +27,11 @@ services:
     container_name: feed-kvrocks
     ports:
       - "6666:6666"
-    command: ["kvrocks", "-c", "/usr/local/etc/kvrocks.conf"]
     volumes:
-      - ~/dockerD/mnt/kvrocks/data:/var/lib/kvrocks
-      - ~/dockerD/mnt/kvrocks/conf/kvrocks.conf:/usr/local/etc/kvrocks.conf:ro
+      - ~/dockerD/mnt/kvrocks:/var/lib/kvrocks
     networks: [app_net]
     healthcheck:
-      test: ["CMD-SHELL", "kvrocks-cli -h 127.0.0.1 -p 6666 ping | grep PONG || exit 1"]
+      test: ["CMD-SHELL", "redis-cli -h 127.0.0.1 -p 6666 ping | grep PONG || exit 1"]
       interval: 10s
       timeout: 5s
       retries: 5
@@ -57,8 +55,7 @@ services:
     image: apache/rocketmq:5.2.0
     container_name: feed-rmq-proxy
     depends_on:
-      rmq-namesrv:
-        condition: service_healthy
+      - rmq-namesrv
     environment:
       - NAMESRV_ADDR=rmq-namesrv:9876
     ports:
@@ -123,7 +120,7 @@ services:
   kafka:
     image: apache/kafka:4.0.0
     hostname: kafka
-    container_name: kafka
+    container_name: feed-kafka
     user: "1000:1000"
     ports:
       - "9092:9092"   # 内部 PLAINTEXT
@@ -157,8 +154,8 @@ services:
 
   # Kafka Connect（含 Debezium）
   connect:
-    image: debezium/connect:2.7
-    container_name: kafka-connect
+    image: debezium/connect:2.7.3.Final
+    container_name: feed-kafka-connect
     depends_on:
       - kafka
       - mysql
@@ -202,9 +199,9 @@ services:
       --collation-server=utf8mb4_unicode_ci
     environment:
       - MYSQL_ROOT_PASSWORD=root
-      - MYSQL_USER=replicator
-      - MYSQL_PASSWORD=StrongPassw0rd!
-      - MYSQL_DATABASE=feed_db
+      - MYSQL_USER=debezium
+      - MYSQL_PASSWORD=password
+      - MYSQL_DATABASE=violet
     ports:
       - "3306:3306"
     volumes:
