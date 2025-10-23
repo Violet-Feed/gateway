@@ -32,6 +32,9 @@ mkdir -p \
   "${DATA_ROOT}/neo4j/plugins" \
   "${DATA_ROOT}/es/data" \
   "${DATA_ROOT}/milvus/data" \
+  "${DATA_ROOT}/mysql/data" \
+  "${DATA_ROOT}/kvrocks/data" \
+  "${DATA_ROOT}/kvrocks/conf" \
   "./kafka/connectors" \
   "./rocketmq/conf" \
   "./milvus"
@@ -43,6 +46,8 @@ chmod -R 777 "${DATA_ROOT}/rocketmq"    || true
 chmod -R 777 "${DATA_ROOT}/neo4j"       || true
 chmod -R 777 "${DATA_ROOT}/es"          || true
 chmod -R 777 "${DATA_ROOT}/milvus"      || true
+chmod -R 777 "${DATA_ROOT}/mysql"       || true
+chmod -R 777 "${DATA_ROOT}/kvrocks"     || true
 
 # ===== 准备配置模板 =====
 # RocketMQ broker.conf（如果你用 Proxy 的 -bc，就准备个最小模板，后续可自行覆盖）
@@ -93,6 +98,23 @@ if [[ ! -f "./kafka/connectors/README.txt" ]]; then
 EOF
 fi
 
+# Kvrocks 配置（可按需调整）
+if [[ ! -f "${DATA_ROOT}/kvrocks/conf/kvrocks.conf" ]]; then
+  cat > "${DATA_ROOT}/kvrocks/conf/kvrocks.conf" <<'EOF'
+bind 0.0.0.0
+port 6666
+dir /var/lib/kvrocks
+daemonize no
+logfile ""
+save 900 1
+save 300 10
+save 60 10000
+rocksdb.compression lz4
+maxclients 10000
+EOF
+  echo ">> 已生成 ${DATA_ROOT}/kvrocks/conf/kvrocks.conf"
+fi
+
 # ===== 启动 =====
 echo ">> 启动服务 (project: ${PROJECT_NAME}) ..."
 ${COMPOSE_CMD} -f "${COMPOSE_FILE}" -p "${PROJECT_NAME}" up -d
@@ -121,39 +143,42 @@ wait_healthy() {
 }
 
 # 仅对声明了 healthcheck 的做等待；其余打印提示
-wait_healthy "kafka"        || true
-wait_healthy "kafka-connect"|| true
-wait_healthy "kafka-ui"     || true
-wait_healthy "feed-elasticsearch" || true
-wait_healthy "feed-neo4j"   || true
-wait_healthy "feed-milvus"  || true
-wait_healthy "feed-redis"   || true
-wait_healthy "feed-rmq-namesrv" || true
-wait_healthy "feed-rmq-proxy"   || true
+wait_healthy "kafka"                  || true
+wait_healthy "kafka-connect"          || true
+wait_healthy "feed-elasticsearch"     || true
+wait_healthy "feed-neo4j"             || true
+wait_healthy "feed-milvus"            || true
+wait_healthy "feed-redis"             || true
+wait_healthy "feed-rmq-namesrv"       || true
+wait_healthy "feed-rmq-proxy"         || true
+wait_healthy "feed-mysql"             || true
+wait_healthy "feed-kvrocks"           || true
 
 echo ""
 echo "🚀 Feed 平台启动完成！"
 echo ""
 echo "📌 常用端点："
-echo "- Kafka Broker (inside): kafka:9092"
-echo "- Kafka Broker (outside): localhost:9094"
-echo "- Kafka Connect REST:     http://localhost:8083"
-echo "- Kafka UI:               http://localhost:48810"
-echo "- Elasticsearch:          http://localhost:9200"
-echo "- Neo4j Browser:          http://localhost:7474  (bolt: localhost:7687, neo4j/password)"
-echo "- Redis:                  localhost:6379"
-echo "- RocketMQ Namesrv:       localhost:9876"
-echo "- RocketMQ Proxy:         http://localhost:8080 / 8081"
-echo "- Milvus gRPC:            localhost:19530"
-echo "- Milvus HTTP:            http://localhost:9091/healthz"
+echo "- Kafka Broker (inside):   kafka:9092"
+echo "- Kafka Broker (outside):  localhost:9094"
+echo "- Kafka Connect REST:      http://localhost:8083"
+echo "- Elasticsearch:           http://localhost:9200"
+echo "- Neo4j Browser:           http://localhost:7474  (bolt: localhost:7687, neo4j/password)"
+echo "- MySQL:                   localhost:3306  (root/root, replicator/StrongPassw0rd!)"
+echo "- Redis:                   localhost:6379"
+echo "- Kvrocks:                 localhost:6666"
+echo "- RocketMQ Namesrv:        localhost:9876"
+echo "- RocketMQ Proxy:          http://localhost:8080 / 8081"
+echo "- Milvus gRPC:             localhost:19530"
+echo "- Milvus HTTP:             http://localhost:9091/healthz"
 echo ""
 echo "📦 Kafka Connect 插件目录： ./kafka/connectors  (放 Neo4j/ES Sink 的 jar)"
 echo "   * 注册 connector 示例：curl -X POST http://localhost:8083/connectors -H 'Content-Type: application/json' -d '{...}'"
 echo ""
 echo "✅ 提示：首次运行请检查："
-echo "   - MySQL 已开启 ROW/FULL binlog，并创建了具备 REPLICATION 权限的用户（供 Debezium 使用）"
+echo "   - MySQL 已开启 ROW/FULL binlog（compose 已配置），并确认目标库/表存在"
 echo "   - ES 索引模板（mapping/settings）是否预先创建"
 echo "   - Neo4j 的 Sink Cypher 映射是否符合你的图模型"
+echo "   - Kvrocks 配置在：${DATA_ROOT}/kvrocks/conf/kvrocks.conf"
 echo ""
 
 exit 0

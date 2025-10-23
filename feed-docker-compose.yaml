@@ -21,6 +21,23 @@ services:
       timeout: 3s
       retries: 5
 
+  # Kvrocks（Redis 协议兼容持久化存储）
+  kvrocks:
+    image: apache/kvrocks:2.13.0
+    container_name: feed-kvrocks
+    ports:
+      - "6666:6666"
+    command: ["kvrocks", "-c", "/usr/local/etc/kvrocks.conf"]
+    volumes:
+      - ~/dockerD/mnt/kvrocks/data:/var/lib/kvrocks
+      - ~/dockerD/mnt/kvrocks/conf/kvrocks.conf:/usr/local/etc/kvrocks.conf:ro
+    networks: [app_net]
+    healthcheck:
+      test: ["CMD-SHELL", "kvrocks-cli -h 127.0.0.1 -p 6666 ping | grep PONG || exit 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
   # RocketMQ Namesrv
   rmq-namesrv:
     image: apache/rocketmq:5.2.0
@@ -59,7 +76,7 @@ services:
       timeout: 5s
       retries: 20
 
-  # Neo4j 3.5.9
+  # Neo4j
   neo4j:
     image: neo4j:5.26-community-bullseye
     container_name: feed-neo4j
@@ -102,15 +119,14 @@ services:
       timeout: 5s
       retries: 20
 
-  # =============== Kafka + Debezium 替换 Canal 开始 ===============
-
+  # Kafka（KRaft 单节点）
   kafka:
     image: apache/kafka:4.0.0
     hostname: kafka
     container_name: kafka
     user: "1000:1000"
     ports:
-      - "9092:9092"   # 内部PLAINTEXT
+      - "9092:9092"   # 内部 PLAINTEXT
       - "9093:9093"   # Controller
       - "9094:9094"   # 外部访问
     environment:
@@ -139,26 +155,15 @@ services:
       retries: 3
       start_period: 30s
 
-  kafka-ui:
-    image: provectuslabs/kafka-ui:latest
-    container_name: kafka-ui
-    ports:
-      - "48810:8080"
-    environment:
-      - KAFKA_CLUSTERS_0_NAME=local
-      - KAFKA_CLUSTERS_0_BOOTSTRAPSERVERS=kafka:9092
-    networks: [app_net]
-    depends_on:
-      - kafka
-
-  # Kafka Connect（装 Debezium；用于注册 MySQL Source / ES Sink / Neo4j Sink）
+  # Kafka Connect（含 Debezium）
   connect:
-    image: debezium/connect:2.7             # 已内置 Debezium 连接器
+    image: debezium/connect:2.7
     container_name: kafka-connect
     depends_on:
       - kafka
+      - mysql
     ports:
-      - "8083:8083"                         # Kafka Connect REST
+      - "8083:8083"
     environment:
       - BOOTSTRAP_SERVERS=kafka:9092
       - GROUP_ID=connect-cluster
@@ -169,12 +174,10 @@ services:
       - VALUE_CONVERTER=org.apache.kafka.connect.json.JsonConverter
       - VALUE_CONVERTER_SCHEMAS_ENABLE=false
       - KEY_CONVERTER_SCHEMAS_ENABLE=false
-      - ENABLE_APICURIO_CONVERTERS=false
       - CONNECT_REST_ADVERTISED_HOST_NAME=connect
       - CONNECT_LOG4J_LOGGERS=org.reflections=ERROR
       - PLUGIN_PATH=/kafka/connectors
     volumes:
-      # 放第三方 Sink 插件（例如 Neo4j / Elastic 的 connector 包）
       - ./kafka/connectors:/kafka/connectors:ro
     networks: [app_net]
     healthcheck:
@@ -183,7 +186,35 @@ services:
       timeout: 5s
       retries: 20
 
-  # =============== Kafka + Debezium 替换 Canal 结束 ===============
+  # MySQL（Debezium CDC 源）
+  mysql:
+    image: mysql:8.0.35-bullseye
+    container_name: feed-mysql
+    command:
+      --default-authentication-plugin=mysql_native_password
+      --server-id=1
+      --log-bin=mysql-bin
+      --binlog-format=ROW
+      --binlog-row-image=FULL
+      --gtid-mode=ON
+      --enforce-gtid-consistency=ON
+      --character-set-server=utf8mb4
+      --collation-server=utf8mb4_unicode_ci
+    environment:
+      - MYSQL_ROOT_PASSWORD=root
+      - MYSQL_USER=replicator
+      - MYSQL_PASSWORD=StrongPassw0rd!
+      - MYSQL_DATABASE=feed_db
+    ports:
+      - "3306:3306"
+    volumes:
+      - ~/dockerD/mnt/mysql/data:/var/lib/mysql
+    networks: [app_net]
+    healthcheck:
+      test: ["CMD-SHELL", "mysqladmin ping -h localhost -uroot -proot || exit 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
 
   # Milvus Standalone（单容器，内嵌 etcd，本地存储）
   milvus:
@@ -199,9 +230,9 @@ services:
       - DEPLOY_MODE=STANDALONE
     command: ["milvus", "run", "standalone"]
     ports:
-      - "19530:19530"
-      - "9091:9091"
-      - "2379:2379"
+      - "19530:19530"   # gRPC
+      - "9091:9091"     # /healthz
+      - "2379:2379"     # 内嵌 etcd（可选）
     volumes:
       - ~/dockerD/mnt/milvus/data:/var/lib/milvus
       - ./milvus/embedEtcd.yaml:/milvus/configs/embedEtcd.yaml:ro
