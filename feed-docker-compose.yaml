@@ -1,3 +1,4 @@
+# docker-compose -f feed-docker-compose.yaml up -d xxx
 version: "3.8"
 
 networks:
@@ -36,39 +37,56 @@ services:
       timeout: 5s
       retries: 5
 
-  # RocketMQ Namesrv
+  # RocketMQ namesrv + broker + proxy
   rmq-namesrv:
     image: apache/rocketmq:5.2.0
     container_name: feed-rmq-namesrv
-    command: ["sh", "mqnamesrv"]
+    command: sh mqnamesrv
     ports:
       - "9876:9876"
     networks: [app_net]
     healthcheck:
-      test: ["CMD-SHELL", "nc -z localhost 9876 || exit 1"]
+      test: ["CMD-SHELL", "ps | grep -q NamesrvStartup || exit 1"]
       interval: 10s
       timeout: 5s
       retries: 10
 
-  # RocketMQ Proxy（本地模式）
+  rmq-broker:
+    image: apache/rocketmq:5.2.0
+    container_name: feed-rmq-broker
+    depends_on:
+      - rmq-namesrv
+    environment:
+      - NAMESRV_ADDR=rmq-namesrv:9876
+    command: sh mqbroker
+    ports:
+      - "10911:10911"
+    volumes:
+      - ~/dockerD/mnt/rocketmq/store:/home/rocketmq/store
+      - ~/dockerD/mnt/rocketmq/logs:/home/rocketmq/logs
+    networks: [app_net]
+    healthcheck:
+      test: ["CMD-SHELL", "ps | grep -q BrokerStartup || exit 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 20
+
   rmq-proxy:
     image: apache/rocketmq:5.2.0
     container_name: feed-rmq-proxy
     depends_on:
       - rmq-namesrv
+      - rmq-broker
     environment:
       - NAMESRV_ADDR=rmq-namesrv:9876
+    command: sh mqproxy
     ports:
       - "8080:8080"
       - "8081:8081"
-    command: ["sh", "mqproxy", "-n", "rmq-namesrv:9876", "-pm", "LOCAL", "-bc", "/home/rocketmq/rocketmq-5.2.0/conf/broker.conf"]
-    volumes:
-      - ./rocketmq/conf/broker.conf:/home/rocketmq/rocketmq-5.2.0/conf/broker.conf:ro
-      - ~/dockerD/mnt/rocketmq/store:/home/rocketmq/store
-      - ~/dockerD/mnt/rocketmq/logs:/home/rocketmq/logs
+    restart: on-failure
     networks: [app_net]
     healthcheck:
-      test: ["CMD-SHELL", "nc -z localhost 8081 || nc -z localhost 8080 || exit 1"]
+      test: ["CMD-SHELL", "ps | grep -q ProxyStartup || exit 1"]
       interval: 10s
       timeout: 5s
       retries: 20
@@ -200,7 +218,7 @@ services:
     environment:
       - MYSQL_ROOT_PASSWORD=root
       - MYSQL_USER=debezium
-      - MYSQL_PASSWORD=password
+      - MYSQL_PASSWORD=123456
       - MYSQL_DATABASE=violet
     ports:
       - "3306:3306"
