@@ -18,8 +18,7 @@
 - 启动rocketmq-broker：nohup sh
   ./rocketmq-all-5.3.0-source-release/distribution/target/rocketmq-5.3.0/rocketmq-5.3.0/bin/mqbroker -n localhost:9876 &
 
-rocketmq创建topic：./rocketmq-all-5.3.0-source-release/distribution/target/rocketmq-5.3.0/rocketmq-5.3.0/bin/mqadmin
-updateTopic -n localhost:9876 -b localhost:10911 -t user
+rocketmq创建topic：sh ./mqadmin updateTopic -n rmq-namesrv:9876 -t im_conv -c DefaultCluster
 
 ##### windows:
 
