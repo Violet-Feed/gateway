@@ -10,6 +10,9 @@ grpc:
     im:
       address: 'static://127.0.0.1:3004'
       negotiation-type: plaintext
-    market:
+#    market:
+#      address: 'static://127.0.0.1:3005'
+#      negotiation-type: plaintext
+    creation:
       address: 'static://127.0.0.1:3005'
       negotiation-type: plaintext
