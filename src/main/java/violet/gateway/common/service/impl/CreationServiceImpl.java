@@ -36,6 +36,33 @@ public class CreationServiceImpl implements CreationService {
     }
 
     @Override
+    public JSONObject videoMaterialCallback(JSONObject req) {
+        JSONObject resp = new JSONObject();
+        Object challenge = req.get("challenge");
+        if (challenge != null) {
+            resp.put("challenge", challenge);
+            return resp;
+        }
+        String taskId = req.getString("task_id");
+        String status = req.getString("status");
+        String fileId = req.getString("file_id");
+        JSONObject baseResp = req.getJSONObject("base_resp");
+        if (baseResp != null) {
+            int statusCode = baseResp.getIntValue("status_code");
+            String statusMsg = baseResp.getString("status_msg");
+            VideoMaterialCallbackRequest videoMaterialCallbackRequest = VideoMaterialCallbackRequest.newBuilder().setTaskId(taskId).setStatus(status).setFileId(fileId).setStatusCode(statusCode).setStatusMsg(statusMsg).build();
+            VideoMaterialCallbackResponse videoMaterialCallbackResponse = creationStub.videoMaterialCallback(videoMaterialCallbackRequest);
+            if (videoMaterialCallbackResponse.getBaseResp().getStatusCode() != StatusCode.Success) {
+                log.error("[videoMaterialCallback] VideoMaterialCallback rpc err, err = {}", videoMaterialCallbackResponse.getBaseResp());
+                resp.put("status", "fail");
+                return resp;
+            }
+        }
+        resp.put("status", "success");
+        return resp;
+    }
+
+    @Override
     public JSONObject createCreation(JSONObject req) throws Exception {
         CustomAuthenticationToken authentication = (CustomAuthenticationToken) SecurityContextHolder.getContext().getAuthentication();
         Long userId = authentication.getUserId();

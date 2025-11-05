@@ -41,6 +41,11 @@ public class CreationController {
         return resp;
     }
 
+    @PostMapping("/video_material_callback")
+    public JSONObject videoMaterialCallback(@RequestBody JSONObject req) {
+        return creationService.videoMaterialCallback(req);
+    }
+
     @PostMapping("/create_creation")
     public JSONObject createCreation(@RequestBody JSONObject req) {
         JSONObject resp = new JSONObject();
