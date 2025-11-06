@@ -8,15 +8,15 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import violet.gateway.common.proto_gen.common.StatusCode;
-import violet.gateway.common.service.CreationService;
+import violet.gateway.common.service.AigcService;
 import violet.gateway.common.utils.RpcException;
 
 @Slf4j
 @RestController
-@RequestMapping("/api/creation")
-public class CreationController {
+@RequestMapping("/api/aigc")
+public class AigcController {
     @Autowired
-    private CreationService creationService;
+    private AigcService creationService;
 
     @PostMapping("/create_material")
     public JSONObject createMaterial(@RequestBody JSONObject req) {

@@ -6,16 +6,16 @@ import net.devh.boot.grpc.client.inject.GrpcClient;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import violet.gateway.common.proto_gen.common.StatusCode;
-import violet.gateway.common.proto_gen.creation.*;
-import violet.gateway.common.service.CreationService;
+import violet.gateway.common.proto_gen.aigc.*;
+import violet.gateway.common.service.AigcService;
 import violet.gateway.common.utils.CustomAuthenticationToken;
 import violet.gateway.common.utils.RpcException;
 
 @Slf4j
 @Service
-public class CreationServiceImpl implements CreationService {
-    @GrpcClient("creation")
-    private CreationServiceGrpc.CreationServiceBlockingStub creationStub;
+public class AigcServiceImpl implements AigcService {
+    @GrpcClient("aigc")
+    private AigcServiceGrpc.AigcServiceBlockingStub aigcStub;
 
     @Override
     public JSONObject createMaterial(JSONObject req) throws Exception {
@@ -25,7 +25,7 @@ public class CreationServiceImpl implements CreationService {
         String prompt = req.getString("prompt");
         String sourceUrl = req.getString("source_url");
         CreateMaterialRequest createMaterialRequest = CreateMaterialRequest.newBuilder().setMaterialType(materialType).setUserId(userId).setPrompt(prompt).setSourceUrl(sourceUrl).build();
-        CreateMaterialResponse createMaterialResponse = creationStub.createMaterial(createMaterialRequest);
+        CreateMaterialResponse createMaterialResponse = aigcStub.createMaterial(createMaterialRequest);
         if (createMaterialResponse.getBaseResp().getStatusCode() != StatusCode.Success) {
             log.error("[createMaterial] CreateMaterial rpc err, err = {}", createMaterialResponse.getBaseResp());
             throw new RpcException(createMaterialResponse.getBaseResp());
@@ -51,7 +51,7 @@ public class CreationServiceImpl implements CreationService {
             int statusCode = baseResp.getIntValue("status_code");
             String statusMsg = baseResp.getString("status_msg");
             VideoMaterialCallbackRequest videoMaterialCallbackRequest = VideoMaterialCallbackRequest.newBuilder().setTaskId(taskId).setStatus(status).setFileId(fileId).setStatusCode(statusCode).setStatusMsg(statusMsg).build();
-            VideoMaterialCallbackResponse videoMaterialCallbackResponse = creationStub.videoMaterialCallback(videoMaterialCallbackRequest);
+            VideoMaterialCallbackResponse videoMaterialCallbackResponse = aigcStub.videoMaterialCallback(videoMaterialCallbackRequest);
             if (videoMaterialCallbackResponse.getBaseResp().getStatusCode() != StatusCode.Success) {
                 log.error("[videoMaterialCallback] VideoMaterialCallback rpc err, err = {}", videoMaterialCallbackResponse.getBaseResp());
                 resp.put("status", "fail");
@@ -73,7 +73,7 @@ public class CreationServiceImpl implements CreationService {
         String content = req.getString("content");
         String category = req.getString("category");
         CreateCreationRequest createCreationRequest = CreateCreationRequest.newBuilder().setMaterialId(materialId).setMaterialType(materialType).setMaterialUrl(materialUrl).setUserId(userId).setTitle(title).setContent(content).setCategory(category).build();
-        CreateCreationResponse createCreationResponse = creationStub.createCreation(createCreationRequest);
+        CreateCreationResponse createCreationResponse = aigcStub.createCreation(createCreationRequest);
         if (createCreationResponse.getBaseResp().getStatusCode() != StatusCode.Success) {
             log.error("[createCreation] CreateCreation rpc err, err = {}", createCreationResponse.getBaseResp());
             throw new RpcException(createCreationResponse.getBaseResp());

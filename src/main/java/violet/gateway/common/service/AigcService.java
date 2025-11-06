@@ -2,7 +2,7 @@ package violet.gateway.common.service;
 
 import com.alibaba.fastjson.JSONObject;
 
-public interface CreationService {
+public interface AigcService {
     JSONObject createMaterial(JSONObject req) throws Exception;
 
     JSONObject videoMaterialCallback(JSONObject req);
