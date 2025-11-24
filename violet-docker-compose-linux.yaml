@@ -1,22 +1,21 @@
-# cp /mnt/d/H/Desktop/Violet/gateway/feed-docker-compose.yaml ./
-# docker-compose -f feed-docker-compose.yaml up -d xxx
+# docker-compose -f violet-docker-compose.yaml up -d xxx
 version: "3.8"
 
 networks:
-  app_net:
+  violet_net:
     driver: bridge
 
 services:
   # Redis
   redis:
     image: redis:5.0.14
-    container_name: feed-redis
+    container_name: violet-redis
     command: ["redis-server", "--appendonly", "yes"]
     ports:
       - "6379:6379"
     volumes:
-      - ~/dockerD/mnt/redis/data:/data
-    networks: [app_net]
+      - ~/violet/mnt/redis/data:/data
+    networks: [violet_net]
     healthcheck:
       test: ["CMD", "redis-cli", "ping"]
       interval: 10s
@@ -26,123 +25,23 @@ services:
   # Kvrocks
   kvrocks:
     image: apache/kvrocks:2.13.0
-    container_name: feed-kvrocks
+    container_name: violet-kvrocks
     ports:
       - "6666:6666"
     volumes:
-      - ~/dockerD/mnt/kvrocks:/var/lib/kvrocks
-    networks: [app_net]
+      - ~/violet/mnt/kvrocks:/var/lib/kvrocks
+    networks: [violet_net]
     healthcheck:
       test: ["CMD-SHELL", "redis-cli -h 127.0.0.1 -p 6666 ping | grep PONG || exit 1"]
       interval: 10s
       timeout: 5s
       retries: 5
 
-  # RocketMQ namesrv + broker + proxy
-  rmq-namesrv:
-    image: apache/rocketmq:5.2.0
-    container_name: feed-rmq-namesrv
-    command: sh mqnamesrv
-    ports:
-      - "9876:9876"
-    networks: [app_net]
-    healthcheck:
-      test: ["CMD-SHELL", "ps | grep -q NamesrvStartup || exit 1"]
-      interval: 10s
-      timeout: 5s
-      retries: 10
-
-  rmq-broker:
-    image: apache/rocketmq:5.2.0
-    container_name: feed-rmq-broker
-    depends_on:
-      - rmq-namesrv
-    environment:
-      - NAMESRV_ADDR=rmq-namesrv:9876
-    # 注意：这里的 172.25.99.205 应该是你宿主机的 IP 或者是 rmq-namesrv 的服务名
-    # 为了在 compose 内部更稳定，建议使用服务名。但如果你的应用部署在外部，可能需要宿主机 IP。
-    command: sh mqbroker -n rmq-namesrv:9876 -c /home/rocketmq/rocketmq-5.2.0/conf/broker.conf
-    ports:
-      - "10911:10911"
-    volumes:
-      - ./rocketmq/broker.conf:/home/rocketmq/rocketmq-5.2.0/conf/broker.conf:ro
-      - ~/dockerD/mnt/rocketmq/store:/home/rocketmq/store
-      - ~/dockerD/mnt/rocketmq/logs:/home/rocketmq/logs
-    networks: [app_net]
-    healthcheck:
-      test: ["CMD-SHELL", "ps | grep -q BrokerStartup || exit 1"]
-      interval: 10s
-      timeout: 5s
-      retries: 20
-
-  rmq-proxy:
-    image: apache/rocketmq:5.2.0
-    container_name: feed-rmq-proxy
-    depends_on:
-      - rmq-namesrv
-      - rmq-broker
-    environment:
-      - NAMESRV_ADDR=rmq-namesrv:9876
-    command: sh mqproxy
-    ports:
-      - "8080:8080"
-      - "8081:8081"
-    restart: on-failure
-    networks: [app_net]
-    healthcheck:
-      test: ["CMD-SHELL", "ps | grep -q ProxyStartup || exit 1"]
-      interval: 10s
-      timeout: 5s
-      retries: 20
-
-  # Neo4j
-  neo4j:
-    image: neo4j:5.26-community-bullseye
-    container_name: feed-neo4j
-    environment:
-      - NEO4J_AUTH=neo4j/password
-      - NEO4J_dbms_memory_heap_initial__size=512m
-      - NEO4J_dbms_memory_heap_max__size=1g
-    ports:
-      - "7474:7474"
-      - "7687:7687"
-    volumes:
-      - ~/dockerD/mnt/neo4j/data:/data
-      - ~/dockerD/mnt/neo4j/logs:/logs
-      - ~/dockerD/mnt/neo4j/plugins:/plugins
-    networks: [app_net]
-    healthcheck:
-      test: ["CMD-SHELL", "curl -fsS http://localhost:7474 >/dev/null || exit 1"]
-      interval: 15s
-      timeout: 5s
-      retries: 20
-      start_period: 30s
-
-  # Elasticsearch
-  elasticsearch:
-    image: elasticsearch:7.9.2
-    container_name: feed-elasticsearch
-    environment:
-      - discovery.type=single-node
-      - xpack.security.enabled=false
-      - ES_JAVA_OPTS=-Xms1g -Xmx1g
-    ports:
-      - "9200:9200"
-      - "9300:9300"
-    volumes:
-      - ~/dockerD/mnt/es/data:/usr/share/elasticsearch/data
-    networks: [app_net]
-    healthcheck:
-      test: ["CMD-SHELL", "curl -fsS http://localhost:9200 >/dev/null || exit 1"]
-      interval: 15s
-      timeout: 5s
-      retries: 20
-
   # Kafka
   kafka:
     image: apache/kafka:4.0.0
     hostname: kafka
-    container_name: feed-kafka
+    container_name: violet-kafka
     user: "1000:1000"
     ports:
       - "9092:9092"   # 内部 PLAINTEXT
@@ -164,7 +63,7 @@ services:
       CLUSTER_ID: "SQiCluster"
       KAFKA_LOG_DIRS: "/tmp/kraft-combined-logs"
       KAFKA_AUTO_CREATE_TOPICS_ENABLE: "true"
-    networks: [app_net]
+    networks: [violet_net]
     extra_hosts:
       - "host.docker.internal:host-gateway"
     healthcheck:
@@ -177,7 +76,7 @@ services:
   # Kafka Connect
   connect:
     image: debezium/connect:2.7.3.Final
-    container_name: feed-kafka-connect
+    container_name: violet-kafka-connect
     depends_on:
       - kafka
       - mysql
@@ -197,8 +96,8 @@ services:
       - CONNECT_LOG4J_LOGGERS=org.reflections=ERROR
       - PLUGIN_PATH=/kafka/connectors
     volumes:
-      - ./kafka/connectors:/kafka/connectors:ro
-    networks: [app_net]
+      - ~/violet/mnt/kafka/connectors:/kafka/connectors:ro
+    networks: [violet_net]
     healthcheck:
       test: ["CMD-SHELL", "curl -fsS http://localhost:8083/connectors || exit 1"]
       interval: 15s
@@ -208,7 +107,7 @@ services:
   # MySQL
   mysql:
     image: mysql:8.0.35-bullseye
-    container_name: feed-mysql
+    container_name: violet-mysql
     command:
       --default-authentication-plugin=mysql_native_password
       --server-id=1
@@ -227,8 +126,9 @@ services:
     ports:
       - "3306:3306"
     volumes:
-      - ~/dockerD/mnt/mysql/data:/var/lib/mysql
-    networks: [app_net]
+      - ~/violet/mnt/mysql/data:/var/lib/mysql
+      - ~/violet/mnt/mysql/config/mysql-violet.sql:/var/lib/mysql-violet.sql:ro
+    networks: [violet_net]
     healthcheck:
       test: ["CMD-SHELL", "mysqladmin ping -h localhost -uroot -proot || exit 1"]
       interval: 10s
@@ -238,7 +138,7 @@ services:
   # Milvus
   milvus:
     image: milvusdb/milvus:v2.6.4
-    container_name: feed-milvus
+    container_name: violet-milvus
     security_opt:
       - seccomp:unconfined
     environment:
@@ -253,10 +153,10 @@ services:
       - "9091:9091"     # /healthz
       - "2379:2379"     # 内嵌 etcd（可选）
     volumes:
-      - ~/dockerD/mnt/milvus/data:/var/lib/milvus
-      - ./milvus/embedEtcd.yaml:/milvus/configs/embedEtcd.yaml:ro
-      - ./milvus/user.yaml:/milvus/configs/user.yaml:ro
-    networks: [app_net]
+      - ~/violet/mnt/milvus/data:/var/lib/milvus
+      - ~/violet/mnt/milvus/config/embedEtcd.yaml:/milvus/configs/embedEtcd.yaml:ro
+      - ~/violet/mnt/milvus/config/user.yaml:/milvus/configs/user.yaml:ro
+    networks: [violet_net]
     healthcheck:
       test: ["CMD-SHELL", "curl -f http://localhost:9091/healthz || exit 1"]
       interval: 30s
@@ -267,7 +167,7 @@ services:
   # Nebula Graph - Metad Service
   metad0:
     image: docker.io/vesoft/nebula-metad:v3.8.0
-    container_name: nebula-metad0
+    container_name: violet-nebula-metad0
     environment:
       USER: root
     command:
@@ -291,10 +191,10 @@ services:
       - 19559:19559
       - 19560
     volumes:
-      - ~/dockerD/mnt/nebula/data/meta0:/data/meta
-      - ~/dockerD/mnt/nebula/logs/meta0:/logs
+      - ~/violet/mnt/nebula/data/meta0:/data/meta
+      - ~/violet/mnt/nebula/logs/meta0:/logs
     networks:
-      - app_net
+      - violet_net
     restart: on-failure
     cap_add:
       - SYS_PTRACE
@@ -302,7 +202,7 @@ services:
   # Nebula Graph - Storaged Service
   storaged0:
     image: docker.io/vesoft/nebula-storaged:v3.8.0
-    container_name: nebula-storaged0
+    container_name: violet-nebula-storaged0
     environment:
       USER: root
       TZ:   "${TZ}"
@@ -329,10 +229,10 @@ services:
       - 19779:19779
       - 19780
     volumes:
-      - ~/dockerD/mnt/nebula/data/storage0:/data/storage
-      - ~/dockerD/mnt/nebula/logs/storage0:/logs
+      - ~/violet/mnt/nebula/data/storage0:/data/storage
+      - ~/violet/mnt/nebula/logs/storage0:/logs
     networks:
-      - app_net
+      - violet_net
     restart: on-failure
     cap_add:
       - SYS_PTRACE
@@ -340,7 +240,7 @@ services:
   # Nebula Graph - Graphd Service
   graphd:
     image: docker.io/vesoft/nebula-graphd:v3.8.0
-    container_name: nebula-graphd
+    container_name: violet-nebula-graphd
     environment:
       USER: root
       TZ:   "${TZ}"
@@ -366,9 +266,9 @@ services:
       - 19669:19669
       - 19670
     volumes:
-      - ~/dockerD/mnt/nebula/logs/graph:/logs
+      - ~/violet/mnt/nebula/logs/graph:/logs
     networks:
-      - app_net
+      - violet_net
     restart: on-failure
     cap_add:
       - SYS_PTRACE
@@ -379,7 +279,7 @@ services:
     # If you like to call console via docker, run:
     # docker run --rm -ti --network host vesoft/nebula-console:nightly -addr 127.0.0.1 -port 9669 -u root -p nebula
     image: docker.io/vesoft/nebula-console:nightly
-    container_name: nebula-storage-activator
+    container_name: violet-nebula-activator
     entrypoint: ""
     environment:
       ACTIVATOR_RETRY: ${ACTIVATOR_RETRY:-30}
@@ -414,18 +314,18 @@ services:
     depends_on:
       - graphd
     networks:
-      - app_net
+      - violet_net
 
   # Nebula Graph Studio - Web UI
   nebula-studio:
     image: vesoft/nebula-graph-studio:v3.10.0
-    container_name: nebula-studio
+    container_name: violet-nebula-studio
     environment:
       USER: root
     ports:
       - 7001:7001
     networks:
-      - app_net
+      - violet_net
     depends_on:
       - graphd
     restart: on-failure
