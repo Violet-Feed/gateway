@@ -11,14 +11,14 @@ services:
   redis:
     image: redis:5.0.14
     container_name: feed-redis
-    command: ["redis-server", "--appendonly", "yes"]
+    command: [ "redis-server", "--appendonly", "yes" ]
     ports:
       - "6379:6379"
     volumes:
       - ~/dockerD/mnt/redis/data:/data
-    networks: [app_net]
+    networks: [ app_net ]
     healthcheck:
-      test: ["CMD", "redis-cli", "ping"]
+      test: [ "CMD", "redis-cli", "ping" ]
       interval: 10s
       timeout: 3s
       retries: 5
@@ -31,9 +31,9 @@ services:
       - "6666:6666"
     volumes:
       - ~/dockerD/mnt/kvrocks:/var/lib/kvrocks
-    networks: [app_net]
+    networks: [ app_net ]
     healthcheck:
-      test: ["CMD-SHELL", "redis-cli -h 127.0.0.1 -p 6666 ping | grep PONG || exit 1"]
+      test: [ "CMD-SHELL", "redis-cli -h 127.0.0.1 -p 6666 ping | grep PONG || exit 1" ]
       interval: 10s
       timeout: 5s
       retries: 5
@@ -45,9 +45,9 @@ services:
     command: sh mqnamesrv
     ports:
       - "9876:9876"
-    networks: [app_net]
+    networks: [ app_net ]
     healthcheck:
-      test: ["CMD-SHELL", "ps | grep -q NamesrvStartup || exit 1"]
+      test: [ "CMD-SHELL", "ps | grep -q NamesrvStartup || exit 1" ]
       interval: 10s
       timeout: 5s
       retries: 10
@@ -68,9 +68,9 @@ services:
       - ./rocketmq/broker.conf:/home/rocketmq/rocketmq-5.2.0/conf/broker.conf:ro
       - ~/dockerD/mnt/rocketmq/store:/home/rocketmq/store
       - ~/dockerD/mnt/rocketmq/logs:/home/rocketmq/logs
-    networks: [app_net]
+    networks: [ app_net ]
     healthcheck:
-      test: ["CMD-SHELL", "ps | grep -q BrokerStartup || exit 1"]
+      test: [ "CMD-SHELL", "ps | grep -q BrokerStartup || exit 1" ]
       interval: 10s
       timeout: 5s
       retries: 20
@@ -88,9 +88,9 @@ services:
       - "8080:8080"
       - "8081:8081"
     restart: on-failure
-    networks: [app_net]
+    networks: [ app_net ]
     healthcheck:
-      test: ["CMD-SHELL", "ps | grep -q ProxyStartup || exit 1"]
+      test: [ "CMD-SHELL", "ps | grep -q ProxyStartup || exit 1" ]
       interval: 10s
       timeout: 5s
       retries: 20
@@ -110,9 +110,9 @@ services:
       - ~/dockerD/mnt/neo4j/data:/data
       - ~/dockerD/mnt/neo4j/logs:/logs
       - ~/dockerD/mnt/neo4j/plugins:/plugins
-    networks: [app_net]
+    networks: [ app_net ]
     healthcheck:
-      test: ["CMD-SHELL", "curl -fsS http://localhost:7474 >/dev/null || exit 1"]
+      test: [ "CMD-SHELL", "curl -fsS http://localhost:7474 >/dev/null || exit 1" ]
       interval: 15s
       timeout: 5s
       retries: 20
@@ -131,9 +131,9 @@ services:
       - "9300:9300"
     volumes:
       - ~/dockerD/mnt/es/data:/usr/share/elasticsearch/data
-    networks: [app_net]
+    networks: [ app_net ]
     healthcheck:
-      test: ["CMD-SHELL", "curl -fsS http://localhost:9200 >/dev/null || exit 1"]
+      test: [ "CMD-SHELL", "curl -fsS http://localhost:9200 >/dev/null || exit 1" ]
       interval: 15s
       timeout: 5s
       retries: 20
@@ -164,11 +164,11 @@ services:
       CLUSTER_ID: "SQiCluster"
       KAFKA_LOG_DIRS: "/tmp/kraft-combined-logs"
       KAFKA_AUTO_CREATE_TOPICS_ENABLE: "true"
-    networks: [app_net]
+    networks: [ app_net ]
     extra_hosts:
       - "host.docker.internal:host-gateway"
     healthcheck:
-      test: ["CMD-SHELL", "kafka-topics.sh --bootstrap-server localhost:9092 --list"]
+      test: [ "CMD-SHELL", "kafka-topics.sh --bootstrap-server localhost:9092 --list" ]
       interval: 30s
       timeout: 10s
       retries: 3
@@ -198,9 +198,9 @@ services:
       - PLUGIN_PATH=/kafka/connectors
     volumes:
       - ./kafka/connectors:/kafka/connectors:ro
-    networks: [app_net]
+    networks: [ app_net ]
     healthcheck:
-      test: ["CMD-SHELL", "curl -fsS http://localhost:8083/connectors || exit 1"]
+      test: [ "CMD-SHELL", "curl -fsS http://localhost:8083/connectors || exit 1" ]
       interval: 15s
       timeout: 5s
       retries: 20
@@ -228,9 +228,9 @@ services:
       - "3306:3306"
     volumes:
       - ~/dockerD/mnt/mysql/data:/var/lib/mysql
-    networks: [app_net]
+    networks: [ app_net ]
     healthcheck:
-      test: ["CMD-SHELL", "mysqladmin ping -h localhost -uroot -proot || exit 1"]
+      test: [ "CMD-SHELL", "mysqladmin ping -h localhost -uroot -proot || exit 1" ]
       interval: 10s
       timeout: 5s
       retries: 10
@@ -247,7 +247,7 @@ services:
       - ETCD_CONFIG_PATH=/milvus/configs/embedEtcd.yaml
       - COMMON_STORAGETYPE=local
       - DEPLOY_MODE=STANDALONE
-    command: ["milvus", "run", "standalone"]
+    command: [ "milvus", "run", "standalone" ]
     ports:
       - "19530:19530"   # gRPC
       - "9091:9091"     # /healthz
@@ -256,9 +256,9 @@ services:
       - ~/dockerD/mnt/milvus/data:/var/lib/milvus
       - ./milvus/embedEtcd.yaml:/milvus/configs/embedEtcd.yaml:ro
       - ./milvus/user.yaml:/milvus/configs/user.yaml:ro
-    networks: [app_net]
+    networks: [ app_net ]
     healthcheck:
-      test: ["CMD-SHELL", "curl -f http://localhost:9091/healthz || exit 1"]
+      test: [ "CMD-SHELL", "curl -f http://localhost:9091/healthz || exit 1" ]
       interval: 30s
       start_period: 90s
       timeout: 20s
@@ -281,7 +281,7 @@ services:
       - --v=0
       - --minloglevel=0
     healthcheck:
-      test: ["CMD", "curl", "-sf", "http://metad0:19559/status"]
+      test: [ "CMD", "curl", "-sf", "http://metad0:19559/status" ]
       interval: 30s
       timeout: 10s
       retries: 3
@@ -305,7 +305,7 @@ services:
     container_name: nebula-storaged0
     environment:
       USER: root
-      TZ:   "${TZ}"
+      TZ: "${TZ}"
     command:
       - --meta_server_addrs=metad0:9559
       - --local_ip=storaged0
@@ -319,7 +319,7 @@ services:
     depends_on:
       - metad0
     healthcheck:
-      test: ["CMD", "curl", "-sf", "http://storaged0:19779/status"]
+      test: [ "CMD", "curl", "-sf", "http://storaged0:19779/status" ]
       interval: 30s
       timeout: 10s
       retries: 3
@@ -343,7 +343,7 @@ services:
     container_name: nebula-graphd
     environment:
       USER: root
-      TZ:   "${TZ}"
+      TZ: "${TZ}"
     command:
       - --meta_server_addrs=metad0:9559
       - --port=9669
@@ -356,7 +356,7 @@ services:
     depends_on:
       - storaged0
     healthcheck:
-      test: ["CMD", "curl", "-sf", "http://graphd:19669/status"]
+      test: [ "CMD", "curl", "-sf", "http://graphd:19669/status" ]
       interval: 30s
       timeout: 10s
       retries: 3
@@ -415,6 +415,17 @@ services:
       - graphd
     networks:
       - app_net
+
+  nebula-console:
+    image: docker.io/vesoft/nebula-console:v3.8.0
+    container_name: nebula-console
+    entrypoint: ""
+    command: [ "tail", "-f", "/dev/null" ]
+    depends_on:
+      - graphd
+    networks:
+      - app_net
+    restart: on-failure
 
   # Nebula Graph Studio - Web UI
   nebula-studio:

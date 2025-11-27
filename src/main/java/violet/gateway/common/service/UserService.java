@@ -10,4 +10,6 @@ public interface UserService {
     JSONObject getUserProfile(JSONObject req) throws Exception;
 
     JSONObject searchUsers(JSONObject req) throws Exception;
+
+    JSONObject reportUserAction(JSONObject req) throws Exception;
 }

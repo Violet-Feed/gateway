@@ -12,7 +12,9 @@ import violet.gateway.common.utils.CustomAuthenticationToken;
 import violet.gateway.common.utils.JwtUtil;
 import violet.gateway.common.utils.RpcException;
 
+import java.util.List;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Service
@@ -113,6 +115,30 @@ public class UserServiceImpl implements UserService {
         }
         JSONObject data = new JSONObject();
         data.put("user_infos", searchUsersResponse.getUserInfosList());
+        return data;
+    }
+
+    @Override
+    public JSONObject reportUserAction(JSONObject req) throws Exception {
+        CustomAuthenticationToken authentication = (CustomAuthenticationToken) SecurityContextHolder.getContext().getAuthentication();
+        Long userId = authentication.getUserId();
+        List<JSONObject> actions = req.getJSONArray("actions").toJavaList(JSONObject.class);
+        String actionTypeList = actions.stream()
+                .map(action -> action.getInteger("action_type").toString())
+                .collect(Collectors.joining(","));
+        String creationIdList = actions.stream()
+                .map(action -> action.getLong("creation_id").toString())
+                .collect(Collectors.joining(","));
+        String timestampList = actions.stream()
+                .map(action -> action.getLong("timestamp").toString())
+                .collect(Collectors.joining(","));
+        ReportUserActionRequest reportUserActionRequest = ReportUserActionRequest.newBuilder().setUserId(userId).setActionTypeList(actionTypeList).setCreationIdList(creationIdList).setTimestampList(timestampList).build();
+        ReportUserActionResponse reportUserActionResponse = actionStub.reportUserAction(reportUserActionRequest);
+        if (reportUserActionResponse.getBaseResp().getStatusCode() != StatusCode.Success) {
+            log.error("[reportUserAction] ReportUserAction rpc err, err = {}", reportUserActionResponse.getBaseResp());
+            throw new RpcException(reportUserActionResponse.getBaseResp());
+        }
+        JSONObject data = new JSONObject();
         return data;
     }
 }
