@@ -146,8 +146,7 @@ public class AigcServiceImpl implements AigcService {
 
     @Override
     public JSONObject getCreationsByUser(JSONObject req) throws Exception {
-        CustomAuthenticationToken authentication = (CustomAuthenticationToken) SecurityContextHolder.getContext().getAuthentication();
-        Long userId = authentication.getUserId();
+        Long userId = req.getLong("user_id");
         Integer page = req.getInteger("page");
         GetCreationsByUserRequest getCreationsByUserRequest = GetCreationsByUserRequest.newBuilder().setUserId(userId).setPage(page).build();
         GetCreationsByUserResponse getCreationsByUserResponse = aigcStub.getCreationsByUser(getCreationsByUserRequest);
@@ -157,6 +156,22 @@ public class AigcServiceImpl implements AigcService {
         }
         JSONObject data = new JSONObject();
         data.put("creations", getCreationsByUserResponse.getCreationsList());
+        return data;
+    }
+
+    @Override
+    public JSONObject getCreationsByFriend(JSONObject req) throws Exception {
+        CustomAuthenticationToken authentication = (CustomAuthenticationToken) SecurityContextHolder.getContext().getAuthentication();
+        Long userId = authentication.getUserId();
+        Integer page = req.getInteger("page");
+        GetCreationsByFriendRequest getCreationsByFriendRequest = GetCreationsByFriendRequest.newBuilder().setUserId(userId).setPage(page).build();
+        GetCreationsByFriendResponse getCreationsByFriendResponse = aigcStub.getCreationsByFriend(getCreationsByFriendRequest);
+        if (getCreationsByFriendResponse.getBaseResp().getStatusCode() != StatusCode.Success) {
+            log.error("[getCreationsByFriend] GetCreationsByFriend rpc err, err = {}", getCreationsByFriendResponse.getBaseResp());
+            throw new RpcException(getCreationsByFriendResponse.getBaseResp());
+        }
+        JSONObject data = new JSONObject();
+        data.put("creations", getCreationsByFriendResponse.getCreationsList());
         return data;
     }
 

@@ -19,6 +19,8 @@ public interface AigcService {
 
     JSONObject getCreationsByUser(JSONObject req) throws Exception;
 
+    JSONObject getCreationsByFriend(JSONObject req) throws Exception;
+
     JSONObject getCreationsByRec(JSONObject req) throws Exception;
 
     JSONObject getCreationsBySearch(JSONObject req) throws Exception;
