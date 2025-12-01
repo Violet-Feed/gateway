@@ -107,7 +107,8 @@ public class UserServiceImpl implements UserService {
     @Override
     public JSONObject searchUsers(JSONObject req) throws Exception {
         String keyword = req.getString("keyword");
-        SearchUsersRequest searchUserRequest = SearchUsersRequest.newBuilder().setKeyword(keyword).build();
+        Integer page = req.getInteger("page");
+        SearchUsersRequest searchUserRequest = SearchUsersRequest.newBuilder().setKeyword(keyword).setPage(page).build();
         SearchUsersResponse searchUsersResponse = actionStub.searchUsers(searchUserRequest);
         if (searchUsersResponse.getBaseResp().getStatusCode() != StatusCode.Success) {
             log.error("[searchUsers] SearchUsers rpc err, err = {}", searchUsersResponse.getBaseResp());

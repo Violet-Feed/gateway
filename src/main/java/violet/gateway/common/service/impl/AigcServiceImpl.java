@@ -5,17 +5,26 @@ import lombok.extern.slf4j.Slf4j;
 import net.devh.boot.grpc.client.inject.GrpcClient;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
+import violet.gateway.common.pojo.CreationHomeVO;
+import violet.gateway.common.proto_gen.action.*;
 import violet.gateway.common.proto_gen.aigc.*;
 import violet.gateway.common.proto_gen.common.StatusCode;
 import violet.gateway.common.service.AigcService;
 import violet.gateway.common.utils.CustomAuthenticationToken;
 import violet.gateway.common.utils.RpcException;
 
+import java.util.Collections;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
+
 @Slf4j
 @Service
 public class AigcServiceImpl implements AigcService {
     @GrpcClient("aigc")
     private AigcServiceGrpc.AigcServiceBlockingStub aigcStub;
+    @GrpcClient("action")
+    private ActionServiceGrpc.ActionServiceBlockingStub actionStub;
 
     @Override
     public JSONObject createMaterial(JSONObject req) throws Exception {
@@ -154,9 +163,37 @@ public class AigcServiceImpl implements AigcService {
             log.error("[getCreationsByUser] GetCreationsByUser rpc err, err = {}", getCreationsByUserResponse.getBaseResp());
             throw new RpcException(getCreationsByUserResponse.getBaseResp());
         }
-        JSONObject data = new JSONObject();
-        data.put("creations", getCreationsByUserResponse.getCreationsList());
-        return data;
+        try {
+            List<CreationHomeVO> creationHomeVOList = fillHomeInfo(userId, getCreationsByUserResponse.getCreationsList());
+            JSONObject data = new JSONObject();
+            data.put("creations", creationHomeVOList);
+            return data;
+        } catch (RpcException e) {
+            log.error("[getCreationsByUser] fillHomeInfo rpc err, err = {}", e.getMessage());
+            throw e;
+        }
+    }
+
+    @Override
+    public JSONObject getCreationsByDigg(JSONObject req) throws Exception {
+        Long userId = req.getLong("user_id");
+        ;
+        Integer page = req.getInteger("page");
+        GetCreationsByDiggRequest getCreationsByDiggRequest = GetCreationsByDiggRequest.newBuilder().setUserId(userId).setPage(page).build();
+        GetCreationsByDiggResponse getCreationsByDiggResponse = aigcStub.getCreationsByDigg(getCreationsByDiggRequest);
+        if (getCreationsByDiggResponse.getBaseResp().getStatusCode() != StatusCode.Success) {
+            log.error("[getCreationsByDigg] GetCreationsByDigg rpc err, err = {}", getCreationsByDiggResponse.getBaseResp());
+            throw new RpcException(getCreationsByDiggResponse.getBaseResp());
+        }
+        try {
+            List<CreationHomeVO> creationHomeVOList = fillHomeInfo(userId, getCreationsByDiggResponse.getCreationsList());
+            JSONObject data = new JSONObject();
+            data.put("creations", creationHomeVOList);
+            return data;
+        } catch (RpcException e) {
+            log.error("[getCreationsByDigg] fillHomeInfo rpc err, err = {}", e.getMessage());
+            throw e;
+        }
     }
 
     @Override
@@ -170,9 +207,15 @@ public class AigcServiceImpl implements AigcService {
             log.error("[getCreationsByFriend] GetCreationsByFriend rpc err, err = {}", getCreationsByFriendResponse.getBaseResp());
             throw new RpcException(getCreationsByFriendResponse.getBaseResp());
         }
-        JSONObject data = new JSONObject();
-        data.put("creations", getCreationsByFriendResponse.getCreationsList());
-        return data;
+        try {
+            List<CreationHomeVO> creationHomeVOList = fillHomeInfo(userId, getCreationsByFriendResponse.getCreationsList());
+            JSONObject data = new JSONObject();
+            data.put("creations", creationHomeVOList);
+            return data;
+        } catch (RpcException e) {
+            log.error("[getCreationsByFriend] fillHomeInfo rpc err, err = {}", e.getMessage());
+            throw e;
+        }
     }
 
     @Override
@@ -186,9 +229,15 @@ public class AigcServiceImpl implements AigcService {
             log.error("[getCreationsByRec] GetCreationsByRec rpc err, err = {}", getCreationsByRecResponse.getBaseResp());
             throw new RpcException(getCreationsByRecResponse.getBaseResp());
         }
-        JSONObject data = new JSONObject();
-        data.put("creations", getCreationsByRecResponse.getCreationsList());
-        return data;
+        try {
+            List<CreationHomeVO> creationHomeVOList = fillHomeInfo(userId, getCreationsByRecResponse.getCreationsList());
+            JSONObject data = new JSONObject();
+            data.put("creations", creationHomeVOList);
+            return data;
+        } catch (RpcException e) {
+            log.error("[getCreationsByRec] fillHomeInfo rpc err, err = {}", e.getMessage());
+            throw e;
+        }
     }
 
     @Override
@@ -203,8 +252,61 @@ public class AigcServiceImpl implements AigcService {
             log.error("[getCreationsBySearch] GetCreationsBySearch rpc err, err = {}", getCreationsBySearchResponse.getBaseResp());
             throw new RpcException(getCreationsBySearchResponse.getBaseResp());
         }
-        JSONObject data = new JSONObject();
-        data.put("creations", getCreationsBySearchResponse.getCreationsList());
-        return data;
+        try {
+            List<CreationHomeVO> creationHomeVOList = fillHomeInfo(userId, getCreationsBySearchResponse.getCreationsList());
+            JSONObject data = new JSONObject();
+            data.put("creations", creationHomeVOList);
+            return data;
+        } catch (RpcException e) {
+            log.error("[getCreationsBySearch] fillHomeInfo rpc err, err = {}", e.getMessage());
+            throw e;
+        }
+    }
+
+    private List<CreationHomeVO> fillHomeInfo(Long userId, List<Creation> creationList) throws RpcException {
+        if (creationList.isEmpty()) {
+            return Collections.emptyList();
+        }
+        List<Long> creationIds = creationList.stream().map(Creation::getCreationId).collect(Collectors.toList());
+        List<Long> userIds = creationList.stream().map(Creation::getUserId).distinct().collect(Collectors.toList());
+        GetUserInfosRequest getUserInfosRequest = GetUserInfosRequest.newBuilder().addAllUserIds(userIds).build();
+        GetUserInfosResponse getUserInfosResponse = actionStub.getUserInfos(getUserInfosRequest);
+        if (getUserInfosResponse.getBaseResp().getStatusCode() != StatusCode.Success) {
+            log.error("[fillHomeInfo] GetUserInfos rpc err, err = {}", getUserInfosResponse.getBaseResp());
+            throw new RpcException(getUserInfosResponse.getBaseResp());
+        }
+        List<UserInfo> userList = getUserInfosResponse.getUserInfosList();
+        Map<Long, UserInfo> userInfoMap = userList.stream().collect(Collectors.toMap(UserInfo::getUserId, userInfo -> userInfo));
+        MGetDiggCountByEntityRequest mGetDiggCountByEntityRequest = MGetDiggCountByEntityRequest.newBuilder().setEntityType("creation").addAllEntityIds(creationIds).build();
+        MGetDiggCountByEntityResponse mGetDiggCountByEntityResponse = actionStub.mGetDiggCountByEntity(mGetDiggCountByEntityRequest);
+        if (mGetDiggCountByEntityResponse.getBaseResp().getStatusCode() != StatusCode.Success) {
+            log.error("[fillHomeInfo] MGetDiggCountByEntity rpc err, err = {}", mGetDiggCountByEntityResponse.getBaseResp());
+            throw new RpcException(mGetDiggCountByEntityResponse.getBaseResp());
+        }
+        Map<Long, Long> diggCountMap = mGetDiggCountByEntityResponse.getEntityDiggCountMap();
+        MIsDiggRequest mIsDiggRequest = MIsDiggRequest.newBuilder().setUserId(userId).setEntityType("creation").addAllEntityIds(creationIds).build();
+        MIsDiggResponse mIsDiggResponse = actionStub.mIsDigg(mIsDiggRequest);
+        if (mIsDiggResponse.getBaseResp().getStatusCode() != StatusCode.Success) {
+            log.error("[fillHomeInfo] MIsDigg rpc err, err = {}", mIsDiggResponse.getBaseResp());
+            throw new RpcException(mIsDiggResponse.getBaseResp());
+        }
+        Map<Long, Boolean> isDiggMap = mIsDiggResponse.getIsDiggMap();
+        return creationList.stream().map(creation -> {
+            CreationHomeVO vo = new CreationHomeVO();
+            UserInfo userInfo = userInfoMap.get(creation.getUserId());
+            Long diggCount = diggCountMap.getOrDefault(creation.getCreationId(), 0L);
+            Boolean isDigg = isDiggMap.getOrDefault(creation.getCreationId(), false);
+            vo.setCreationId(creation.getCreationId());
+            vo.setMaterialType(creation.getMaterialType());
+            vo.setCoverUrl(creation.getCoverUrl());
+            vo.setTitle(creation.getTitle());
+            vo.setCreateTime(creation.getCreateTime());
+            vo.setUserId(creation.getUserId());
+            vo.setUsername(userInfo.getUsername());
+            vo.setAvatar(userInfo.getAvatar());
+            vo.setDiggCount(diggCount);
+            vo.setIsDigg(isDigg);
+            return vo;
+        }).collect(Collectors.toList());
     }
 }
