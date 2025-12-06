@@ -237,7 +237,7 @@ services:
 
   # Milvus
   milvus:
-    image: milvusdb/milvus:v2.6.4
+    image: milvusdb/milvus:v2.6.6
     container_name: feed-milvus
     security_opt:
       - seccomp:unconfined

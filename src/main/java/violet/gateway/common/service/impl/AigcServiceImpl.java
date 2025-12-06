@@ -222,8 +222,7 @@ public class AigcServiceImpl implements AigcService {
     public JSONObject getCreationsByRec(JSONObject req) throws Exception {
         CustomAuthenticationToken authentication = (CustomAuthenticationToken) SecurityContextHolder.getContext().getAuthentication();
         Long userId = authentication.getUserId();
-        Integer page = req.getInteger("page");
-        GetCreationsByRecRequest getCreationsByRecRequest = GetCreationsByRecRequest.newBuilder().setUserId(userId).setPage(page).build();
+        GetCreationsByRecRequest getCreationsByRecRequest = GetCreationsByRecRequest.newBuilder().setUserId(userId).build();
         GetCreationsByRecResponse getCreationsByRecResponse = aigcStub.getCreationsByRec(getCreationsByRecRequest);
         if (getCreationsByRecResponse.getBaseResp().getStatusCode() != StatusCode.Success) {
             log.error("[getCreationsByRec] GetCreationsByRec rpc err, err = {}", getCreationsByRecResponse.getBaseResp());
