@@ -15,6 +15,8 @@ public interface ActionService {
 
     JSONObject getReplyList(JSONObject req) throws Exception;
 
+    JSONObject getCommentCount(JSONObject req) throws Exception;
+
     JSONObject diggComment(JSONObject req) throws Exception;
 
     JSONObject cancelDiggComment(JSONObject req) throws Exception;
