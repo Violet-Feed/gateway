@@ -13,3 +13,10 @@ grpc:
     aigc:
       address: 'static://127.0.0.1:3005'
       negotiation-type: plaintext
+aliyun:
+  oss:
+    endpoint: https://oss-cn-beijing.aliyuncs.com
+    region: cn-beijing
+    bucket-name: violet-feed
+    access-key-id: xxx
+    access-key-secret: xxx
