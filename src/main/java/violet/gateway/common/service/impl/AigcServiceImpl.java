@@ -177,7 +177,6 @@ public class AigcServiceImpl implements AigcService {
     @Override
     public JSONObject getCreationsByDigg(JSONObject req) throws Exception {
         Long userId = req.getLong("user_id");
-        ;
         Integer page = req.getInteger("page");
         GetCreationsByDiggRequest getCreationsByDiggRequest = GetCreationsByDiggRequest.newBuilder().setUserId(userId).setPage(page).build();
         GetCreationsByDiggResponse getCreationsByDiggResponse = aigcStub.getCreationsByDigg(getCreationsByDiggRequest);
