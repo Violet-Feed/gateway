@@ -41,11 +41,11 @@ public class NoticeController {
         return resp;
     }
 
-    @PostMapping("/get_notice_merge_list")
-    public JSONObject getNoticeMergeList(@RequestBody JSONObject req) {
+    @PostMapping("/get_notice_agg_list")
+    public JSONObject getNoticeAggList(@RequestBody JSONObject req) {
         JSONObject resp = new JSONObject();
         try {
-            JSONObject data = noticeService.getNoticeMergeList(req);
+            JSONObject data = noticeService.getNoticeAggList(req);
             resp.put("code", StatusCode.Success_VALUE);
             resp.put("message", StatusCode.Success);
             resp.put("data", data);
@@ -55,11 +55,11 @@ public class NoticeController {
         } catch (NullPointerException e) {
             resp.put("code", StatusCode.Param_Error_VALUE);
             resp.put("message", StatusCode.Param_Error);
-            log.error("[getNoticeMergeList] err, err = {}", e.toString());
+            log.error("[getNoticeAggList] err, err = {}", e.toString());
         } catch (Exception e) {
             resp.put("code", StatusCode.Unknown_Error_VALUE);
             resp.put("message", StatusCode.Unknown_Error);
-            log.error("[getNoticeMergeList] err, err = {}", e.toString());
+            log.error("[getNoticeAggList] err, err = {}", e.toString());
         }
         return resp;
     }

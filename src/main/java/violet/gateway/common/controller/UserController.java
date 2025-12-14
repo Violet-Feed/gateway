@@ -110,11 +110,11 @@ public class UserController {
         return resp;
     }
 
-    @PostMapping("/report_user_action")
-    public JSONObject reportUserAction(@RequestBody JSONObject req) {
+    @PostMapping("/report_click")
+    public JSONObject reportClick(@RequestBody JSONObject req) {
         JSONObject resp = new JSONObject();
         try {
-            JSONObject data = userService.reportUserAction(req);
+            JSONObject data = userService.reportClick(req);
             resp.put("code", StatusCode.Success_VALUE);
             resp.put("message", StatusCode.Success);
             resp.put("data", data);
@@ -124,11 +124,11 @@ public class UserController {
         } catch (NullPointerException e) {
             resp.put("code", StatusCode.Param_Error_VALUE);
             resp.put("message", StatusCode.Param_Error);
-            log.error("[searchUsers] err, err = {}", e.toString());
+            log.error("[reportClick] err, err = {}", e.toString());
         } catch (Exception e) {
             resp.put("code", StatusCode.Unknown_Error_VALUE);
             resp.put("message", StatusCode.Unknown_Error);
-            log.error("[reportUserAction] err, err = {}", e.toString());
+            log.error("[reportClick] err, err = {}", e.toString());
         }
         return resp;
     }

@@ -92,10 +92,10 @@ public class NettyServerHandler extends SimpleChannelInboundHandler<Packet> {
             packet.setData(req.getNormalPacket().toByteArray());
         } else if (req.getPacketType() == PacketType.Command) {
             packet.setData(req.getCommandPacket().toByteArray());
-        } else if(req.getPacketType() == PacketType.Material) {
+        } else if (req.getPacketType() == PacketType.Material) {
             packet.setData(req.getMaterialPacket().toByteArray());
-        } else if(req.getPacketType() == PacketType.Action) {
-            packet.setData(req.getActionPacket().toByteArray());
+        } else if (req.getPacketType() == PacketType.Notice) {
+            packet.setData(req.getNoticePacket().toByteArray());
         }
         Long userId = req.getUserId();
         String key = String.format("conn:%s", userId);

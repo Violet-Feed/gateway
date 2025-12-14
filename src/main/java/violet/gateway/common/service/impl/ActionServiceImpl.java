@@ -130,12 +130,12 @@ public class ActionServiceImpl implements ActionService {
             log.error("[getCommentList] GetCommentList rpc err, err = {}", getCommentListResponse.getBaseResp());
             throw new Exception("GetCommentList rpc error");
         }
-        try{
+        try {
             List<CommentVO> commentVOList = fillCommentInfo(userId, getCommentListResponse.getCommentsList());
             JSONObject data = new JSONObject();
             data.put("comments", commentVOList);
             return data;
-        }catch (RpcException e){
+        } catch (RpcException e) {
             log.error("[getCommentList] fillCommentInfo err, err = {}", e.toString());
             throw new Exception("fillCommentInfo error");
         }
@@ -156,12 +156,12 @@ public class ActionServiceImpl implements ActionService {
             log.error("[getReplyList] GetCommentReplyList rpc err, err = {}", getCommentReplyListResponse.getBaseResp());
             throw new Exception("GetCommentReplyList rpc error");
         }
-        try{
+        try {
             List<CommentVO> commentVOList = fillCommentInfo(userId, getCommentReplyListResponse.getCommentsList());
             JSONObject data = new JSONObject();
             data.put("comments", commentVOList);
             return data;
-        }catch (RpcException e){
+        } catch (RpcException e) {
             log.error("[getReplyList] fillCommentInfo err, err = {}", e.toString());
             throw new Exception("fillCommentInfo error");
         }
@@ -244,7 +244,7 @@ public class ActionServiceImpl implements ActionService {
     }
 
     private List<CommentVO> fillCommentInfo(Long userId, List<CommentData> comments) throws RpcException {
-        if(comments.isEmpty()){
+        if (comments.isEmpty()) {
             return Collections.emptyList();
         }
         List<Long> commentIds = comments.stream().map(CommentData::getCommentId).collect(Collectors.toList());
@@ -281,16 +281,16 @@ public class ActionServiceImpl implements ActionService {
             commentVO.setContent(commentData.getContent());
             commentVO.setUserId(commentData.getUserId());
             UserInfo userInfo = userInfosMap.get(commentData.getUserId());
-            commentVO.setUsername(userInfo==null ? "未知用户" : userInfo.getUsername());
-            commentVO.setAvatar(userInfo==null ? "" : userInfo.getAvatar());
+            commentVO.setUsername(userInfo == null ? "未知用户" : userInfo.getUsername());
+            commentVO.setAvatar(userInfo == null ? "" : userInfo.getAvatar());
             commentVO.setDiggCount(commentData.getDiggCount());
             commentVO.setReplyCount(commentData.getReplyCount());
             commentVO.setIsDigg(isDiggMap.getOrDefault(commentData.getCommentId(), false));
             commentVO.setCreateTime(commentData.getCreateTime());
             commentVO.setSibUserId(commentData.getSibUserId());
-            if(commentData.getSibUserId() != 0){
+            if (commentData.getSibUserId() != 0) {
                 UserInfo sibUserInfo = userInfosMap.get(commentData.getSibUserId());
-                commentVO.setSibUsername(sibUserInfo==null ? "未知用户" : sibUserInfo.getUsername());
+                commentVO.setSibUsername(sibUserInfo == null ? "未知用户" : sibUserInfo.getUsername());
             }
             return commentVO;
         }).collect(Collectors.toList());

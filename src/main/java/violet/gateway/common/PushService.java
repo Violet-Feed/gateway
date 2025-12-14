@@ -14,7 +14,7 @@ public class PushService extends PushServiceGrpc.PushServiceImplBase {
 
     @Override
     public void push(PushRequest request, StreamObserver<PushResponse> responseObserver) {
-        try{
+        try {
             responseObserver.onNext(NettyServerHandler.push(request));
             responseObserver.onCompleted();
         } catch (Exception e) {
