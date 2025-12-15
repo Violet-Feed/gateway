@@ -15,7 +15,9 @@ public class NoticeVO {
     private String senderUsername;
     private String senderAvatar;
     private Long refId;
+    private Integer refType;
     private String refCoverUrl;
+    private Long refUserId;
     private Long createTime;
     private Long aggCount;
 }

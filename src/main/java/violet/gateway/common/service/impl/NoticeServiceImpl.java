@@ -20,6 +20,7 @@ import violet.gateway.common.service.NoticeService;
 import violet.gateway.common.utils.CustomAuthenticationToken;
 import violet.gateway.common.utils.RpcException;
 
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -111,6 +112,9 @@ public class NoticeServiceImpl implements NoticeService {
     }
 
     private List<NoticeVO> fillNoticeInfo(Integer group, List<NoticeBody> notices) throws RpcException {
+        if (notices.isEmpty()) {
+            return Collections.emptyList();
+        }
         List<Long> userIds = notices.stream().map(NoticeBody::getSenderId).distinct().collect(Collectors.toList());
         GetUserInfosRequest getUserInfosRequest = GetUserInfosRequest.newBuilder()
                 .addAllUserIds(userIds)
@@ -121,7 +125,7 @@ public class NoticeServiceImpl implements NoticeService {
             throw new RpcException(getUserInfosResponse.getBaseResp());
         }
         Map<Long, UserInfo> userInfosMap = getUserInfosResponse.getUserInfosList().stream().collect(Collectors.toMap(UserInfo::getUserId, userInfo -> userInfo));
-        Map<Long, String> refCoverUrlMap;
+        Map<Long, Creation> refMap;
         if (NoticeGroup.Action_Group_VALUE == group) {
             List<Long> creationIds = notices.stream().map(NoticeBody::getRefId).distinct().collect(Collectors.toList());
             GetCreationByIdsRequest getCreationByIdsRequest = GetCreationByIdsRequest.newBuilder()
@@ -132,16 +136,9 @@ public class NoticeServiceImpl implements NoticeService {
                 log.error("[fillNoticeInfo] GetCreationByIdsResponse rpc err, err = {}", getCreationByIdsResponse.getBaseResp());
                 throw new RpcException(getCreationByIdsResponse.getBaseResp());
             }
-            refCoverUrlMap = getCreationByIdsResponse.getCreationsMap().entrySet().stream()
-                    .collect(Collectors.toMap(
-                            Map.Entry::getKey,
-                            entry -> {
-                                Creation creation = entry.getValue();
-                                return creation.getCoverUrl();
-                            }
-                    ));
+            refMap = getCreationByIdsResponse.getCreationsMap();
         } else {
-            refCoverUrlMap = new HashMap<>();
+            refMap = new HashMap<>();
         }
         return notices.stream().map(noticeBody -> {
             NoticeVO noticeVO = new NoticeVO();
@@ -153,7 +150,12 @@ public class NoticeServiceImpl implements NoticeService {
             noticeVO.setSenderUsername(userInfo == null ? "未知用户" : userInfo.getUsername());
             noticeVO.setSenderAvatar(userInfo == null ? "" : userInfo.getAvatar());
             noticeVO.setRefId(noticeBody.getRefId());
-            noticeVO.setRefCoverUrl(refCoverUrlMap.getOrDefault(noticeBody.getRefId(), ""));
+            Creation creation = refMap.get(noticeBody.getRefId());
+            if (creation != null) {
+                noticeVO.setRefType(creation.getMaterialType());
+                noticeVO.setRefCoverUrl(creation.getCoverUrl());
+                noticeVO.setRefUserId(creation.getUserId());
+            }
             noticeVO.setCreateTime(noticeBody.getCreateTime());
             noticeVO.setAggCount(noticeBody.getAggCount());
             return noticeVO;
@@ -161,6 +163,9 @@ public class NoticeServiceImpl implements NoticeService {
     }
 
     private List<NoticeVO> fillNoticeInfo(List<NoticeAggBody> notices) throws RpcException {
+        if (notices.isEmpty()) {
+            return Collections.emptyList();
+        }
         List<Long> userIds = notices.stream().map(NoticeAggBody::getSenderId).distinct().collect(Collectors.toList());
         GetUserInfosRequest getUserInfosRequest = GetUserInfosRequest.newBuilder()
                 .addAllUserIds(userIds)
