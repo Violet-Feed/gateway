@@ -5,6 +5,7 @@ import lombok.extern.slf4j.Slf4j;
 import net.devh.boot.grpc.client.inject.GrpcClient;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
+import violet.gateway.common.pojo.UserVO;
 import violet.gateway.common.proto_gen.action.*;
 import violet.gateway.common.proto_gen.common.StatusCode;
 import violet.gateway.common.service.UserService;
@@ -12,8 +13,8 @@ import violet.gateway.common.utils.CustomAuthenticationToken;
 import violet.gateway.common.utils.JwtUtil;
 import violet.gateway.common.utils.RpcException;
 
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Service
@@ -67,7 +68,7 @@ public class UserServiceImpl implements UserService {
         JSONObject data = new JSONObject();
         data.put("user_info", getUserInfosResponse.getUserInfos(0));
         if (needFollowInfo == Boolean.TRUE) {
-            MGetFollowCountRequest.Builder mGetFollowCountRequest = MGetFollowCountRequest.newBuilder().addUserIds(userId).setNeedFollow(true);
+            MGetFollowCountRequest.Builder mGetFollowCountRequest = MGetFollowCountRequest.newBuilder().addUserIds(userId).setNeedFollowing(true).setNeedFollower(true);
             if (needFriendInfo == Boolean.TRUE) {
                 mGetFollowCountRequest.setNeedFriend(true);
             }
@@ -105,6 +106,8 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public JSONObject searchUsers(JSONObject req) throws Exception {
+        CustomAuthenticationToken authentication = (CustomAuthenticationToken) SecurityContextHolder.getContext().getAuthentication();
+        Long userId = authentication.getUserId();
         String keyword = req.getString("keyword");
         Integer page = req.getInteger("page");
         SearchUsersRequest searchUserRequest = SearchUsersRequest.newBuilder().setKeyword(keyword).setPage(page).build();
@@ -113,9 +116,15 @@ public class UserServiceImpl implements UserService {
             log.error("[searchUsers] SearchUsers rpc err, err = {}", searchUsersResponse.getBaseResp());
             throw new RpcException(searchUsersResponse.getBaseResp());
         }
-        JSONObject data = new JSONObject();
-        data.put("user_infos", searchUsersResponse.getUserInfosList());
-        return data;
+        try{
+            List<UserVO> userVOList = fillFollowInfo(userId, searchUsersResponse.getUserInfosList());
+            JSONObject data = new JSONObject();
+            data.put("user_infos", userVOList);
+            return data;
+        } catch (Exception e) {
+            log.error("[searchUsers] fillFollowInfo err ", e);
+            throw new Exception("fillFollowInfo error");
+        }
     }
 
     @Override
@@ -131,5 +140,44 @@ public class UserServiceImpl implements UserService {
         }
         JSONObject data = new JSONObject();
         return data;
+    }
+
+    private List<UserVO> fillFollowInfo(Long userId, List<UserInfo> userInfos) throws RpcException {
+        if (userInfos.isEmpty()) {
+            return Collections.emptyList();
+        }
+        List<Long> userIds = userInfos.stream().map(UserInfo::getUserId).collect(Collectors.toList());
+        MGetFollowCountRequest mGetFollowCountRequest = MGetFollowCountRequest.newBuilder().addAllUserIds(userIds).setNeedFollower(true).build();
+        MGetFollowCountResponse mGetFollowCountResponse = actionStub.mGetFollowCount(mGetFollowCountRequest);
+        if (mGetFollowCountResponse.getBaseResp().getStatusCode() != StatusCode.Success) {
+            log.error("[fillUserInfo] MGetFollowCount rpc err, err = {}", mGetFollowCountResponse.getBaseResp());
+            throw new RpcException(mGetFollowCountResponse.getBaseResp());
+        }
+        Map<Long, Long> followerCountMap = mGetFollowCountResponse.getFollowerCountMap();
+        MIsFollowRequest mIsFollowingRequest = MIsFollowRequest.newBuilder().setFromUserId(userId).addAllToUserIds(userIds).build();
+        MIsFollowResponse mIsFollowingResponse = actionStub.mIsFollowing(mIsFollowingRequest);
+        if (mIsFollowingResponse.getBaseResp().getStatusCode() != StatusCode.Success) {
+            log.error("[fillUserInfo] MIsFollowing rpc err, err = {}", mIsFollowingResponse.getBaseResp());
+            throw new RpcException(mIsFollowingResponse.getBaseResp());
+        }
+        Map<Long, Boolean> isFollowingMap = mIsFollowingResponse.getIsFollowingMap();
+        MIsFollowRequest mIsFollowerRequest = MIsFollowRequest.newBuilder().setFromUserId(userId).addAllToUserIds(userIds).build();
+        MIsFollowResponse mIsFollowerResponse = actionStub.mIsFollower(mIsFollowerRequest);
+        if (mIsFollowerResponse.getBaseResp().getStatusCode() != StatusCode.Success) {
+            log.error("[fillUserInfo] MIsFollower rpc err, err = {}", mIsFollowerResponse.getBaseResp());
+            throw new RpcException(mIsFollowerResponse.getBaseResp());
+        }
+        Map<Long, Boolean> isFollowerMap = mIsFollowerResponse.getIsFollowerMap();
+        log.info("isFollowingMap = {}, isFollowerMap = {}", isFollowingMap, isFollowerMap);
+        return userInfos.stream().map(userInfo -> {
+            UserVO userVo = new UserVO();
+            userVo.setUserId(userInfo.getUserId());
+            userVo.setUsername(userInfo.getUsername());
+            userVo.setAvatar(userInfo.getAvatar());
+            userVo.setFollowerCount(followerCountMap.getOrDefault(userInfo.getUserId(), 0L));
+            userVo.setIsFollowing(isFollowingMap.getOrDefault(userInfo.getUserId(), false));
+            userVo.setIsFollower(isFollowerMap.getOrDefault(userInfo.getUserId(), false));
+            return userVo;
+        }).collect(Collectors.toList());
     }
 }
