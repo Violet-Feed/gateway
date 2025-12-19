@@ -5,6 +5,11 @@ import lombok.extern.slf4j.Slf4j;
 import net.devh.boot.grpc.client.inject.GrpcClient;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
+import violet.gateway.common.pojo.MemberVO;
+import violet.gateway.common.proto_gen.action.ActionServiceGrpc;
+import violet.gateway.common.proto_gen.action.GetUserInfosRequest;
+import violet.gateway.common.proto_gen.action.GetUserInfosResponse;
+import violet.gateway.common.proto_gen.action.UserInfo;
 import violet.gateway.common.proto_gen.common.StatusCode;
 import violet.gateway.common.proto_gen.im.*;
 import violet.gateway.common.service.IMService;
@@ -12,12 +17,16 @@ import violet.gateway.common.utils.CustomAuthenticationToken;
 import violet.gateway.common.utils.RpcException;
 
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Service
 public class IMServiceImpl implements IMService {
     @GrpcClient("im")
     private IMServiceGrpc.IMServiceBlockingStub imStub;
+    @GrpcClient("action")
+    private ActionServiceGrpc.ActionServiceBlockingStub actionStub;
 
     @Override
     public JSONObject sendMessage(JSONObject req) throws Exception {
@@ -157,6 +166,68 @@ public class IMServiceImpl implements IMService {
         }
         JSONObject data = new JSONObject();
         data.put("con_info", getConversationInfoResponse.getConInfo());
+        return data;
+    }
+
+    @Override
+    public JSONObject addConversationMembers(JSONObject req) throws Exception {
+        CustomAuthenticationToken authentication = (CustomAuthenticationToken) SecurityContextHolder.getContext().getAuthentication();
+        Long userId = authentication.getUserId();
+        Long conShortId = req.getLong("con_short_id");
+        String conId = req.getString("con_id");
+        List<Long> members = req.getJSONArray("members").toJavaList(Long.class);
+        AddConversationMembersRequest addConversationMembersRequest = AddConversationMembersRequest.newBuilder()
+                .setConShortId(conShortId)
+                .setConId(conId)
+                .addAllMembers(members)
+                .setOperator(userId)
+                .build();
+        AddConversationMembersResponse addConversationMembersResponse = imStub.addConversationMembers(addConversationMembersRequest);
+        if (addConversationMembersResponse.getBaseResp().getStatusCode() != StatusCode.Success) {
+            log.error("[addConversationMembers] AddConversationMembers rpc err, err = {}", addConversationMembersResponse.getBaseResp());
+            throw new RpcException(addConversationMembersResponse.getBaseResp());
+        }
+        JSONObject data = new JSONObject();
+        return data;
+    }
+
+    @Override
+    public JSONObject getConversationMembers(JSONObject req) throws Exception {
+        Long conShortId = req.getLong("con_short_id");
+        GetConversationMembersRequest getConversationMembersRequest = GetConversationMembersRequest.newBuilder()
+                .setConShortId(conShortId)
+                .build();
+        GetConversationMembersResponse getConversationMembersResponse = imStub.getConversationMembers(getConversationMembersRequest);
+        if (getConversationMembersResponse.getBaseResp().getStatusCode() != StatusCode.Success) {
+            log.error("[getConversationMembers] GetConversationMembers rpc err, err = {}", getConversationMembersResponse.getBaseResp());
+            throw new RpcException(getConversationMembersResponse.getBaseResp());
+        }
+        List<Long> userIds = getConversationMembersResponse.getMembersList().stream().map(ConversationUserInfo::getUserId).collect(Collectors.toList());
+        GetUserInfosRequest getUserInfosRequest = GetUserInfosRequest.newBuilder()
+                .addAllUserIds(userIds)
+                .build();
+        GetUserInfosResponse getUserInfosResponse = actionStub.getUserInfos(getUserInfosRequest);
+        if (getUserInfosResponse.getBaseResp().getStatusCode() != StatusCode.Success) {
+            log.error("[getConversationMembers] GetUserInfos rpc err, err = {}", getUserInfosResponse.getBaseResp());
+            throw new RpcException(getUserInfosResponse.getBaseResp());
+        }
+        Map<Long, UserInfo> userInfoMap = getUserInfosResponse.getUserInfosList().stream().collect(Collectors.toMap(UserInfo::getUserId, userInfo -> userInfo));
+        List<MemberVO> memberVOList = getConversationMembersResponse.getMembersList().stream().map(member -> {
+            MemberVO memberVO = new MemberVO();
+            memberVO.setConShortId(member.getConShortId());
+            memberVO.setUserId(member.getUserId());
+            memberVO.setPrivilege(member.getPrivilege());
+            memberVO.setNickname(member.getNickName());
+            memberVO.setCreateTime(member.getCreateTime());
+            memberVO.setStatus(member.getStatus());
+            memberVO.setExtra(member.getExtra());
+            UserInfo userInfo = userInfoMap.get(member.getUserId());
+            memberVO.setUsername(userInfo == null ? "未知用户" : userInfo.getUsername());
+            memberVO.setAvatar(userInfo == null ? "" : userInfo.getAvatar());
+            return memberVO;
+        }).collect(Collectors.toList());
+        JSONObject data = new JSONObject();
+        data.put("members", memberVOList);
         return data;
     }
 }

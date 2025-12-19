@@ -13,7 +13,10 @@ import violet.gateway.common.utils.CustomAuthenticationToken;
 import violet.gateway.common.utils.JwtUtil;
 import violet.gateway.common.utils.RpcException;
 
-import java.util.*;
+import java.util.Collections;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -105,6 +108,20 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public JSONObject getUserInfos(JSONObject req) throws Exception {
+        List<Long> userIds = req.getJSONArray("user_ids").toJavaList(Long.class);
+        GetUserInfosRequest getUserInfosRequest = GetUserInfosRequest.newBuilder().addAllUserIds(userIds).build();
+        GetUserInfosResponse getUserInfosResponse = actionStub.getUserInfos(getUserInfosRequest);
+        if (getUserInfosResponse.getBaseResp().getStatusCode() != StatusCode.Success) {
+            log.error("[getUserInfos] GetUserInfos rpc err, err = {}", getUserInfosResponse.getBaseResp());
+            throw new RpcException(getUserInfosResponse.getBaseResp());
+        }
+        JSONObject data = new JSONObject();
+        data.put("user_infos", getUserInfosResponse.getUserInfosList());
+        return data;
+    }
+
+    @Override
     public JSONObject searchUsers(JSONObject req) throws Exception {
         CustomAuthenticationToken authentication = (CustomAuthenticationToken) SecurityContextHolder.getContext().getAuthentication();
         Long userId = authentication.getUserId();
@@ -116,7 +133,7 @@ public class UserServiceImpl implements UserService {
             log.error("[searchUsers] SearchUsers rpc err, err = {}", searchUsersResponse.getBaseResp());
             throw new RpcException(searchUsersResponse.getBaseResp());
         }
-        try{
+        try {
             List<UserVO> userVOList = fillFollowInfo(userId, searchUsersResponse.getUserInfosList());
             JSONObject data = new JSONObject();
             data.put("user_infos", userVOList);

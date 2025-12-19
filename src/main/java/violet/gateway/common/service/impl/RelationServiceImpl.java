@@ -12,7 +12,10 @@ import violet.gateway.common.service.RelationService;
 import violet.gateway.common.utils.CustomAuthenticationToken;
 import violet.gateway.common.utils.RpcException;
 
-import java.util.*;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -134,7 +137,7 @@ public class RelationServiceImpl implements RelationService {
         Map<Long, UserInfo> userInfosMap = getUserInfosResponse.getUserInfosList().stream().collect(Collectors.toMap(UserInfo::getUserId, userInfo -> userInfo));
         Map<Long, Boolean> isFollowingMap;
         Map<Long, Boolean> isFollowerMap;
-        if(needFollowing) {
+        if (needFollowing) {
             MIsFollowRequest mIsFollowingRequest = MIsFollowRequest.newBuilder().setFromUserId(userId).addAllToUserIds(userIds).build();
             MIsFollowResponse mIsFollowingResponse = actionStub.mIsFollowing(mIsFollowingRequest);
             if (mIsFollowingResponse.getBaseResp().getStatusCode() != StatusCode.Success) {
@@ -145,7 +148,7 @@ public class RelationServiceImpl implements RelationService {
         } else {
             isFollowingMap = new HashMap<>();
         }
-        if(needFollower) {
+        if (needFollower) {
             MIsFollowRequest mIsFollowerRequest = MIsFollowRequest.newBuilder().setFromUserId(userId).addAllToUserIds(userIds).build();
             MIsFollowResponse mIsFollowerResponse = actionStub.mIsFollower(mIsFollowerRequest);
             if (mIsFollowerResponse.getBaseResp().getStatusCode() != StatusCode.Success) {

@@ -87,6 +87,29 @@ public class UserController {
         return resp;
     }
 
+    @PostMapping("/get_user_infos")
+    public JSONObject getUserInfos(@RequestBody JSONObject req) {
+        JSONObject resp = new JSONObject();
+        try {
+            JSONObject data = userService.getUserInfos(req);
+            resp.put("code", StatusCode.Success_VALUE);
+            resp.put("message", StatusCode.Success);
+            resp.put("data", data);
+        } catch (RpcException e) {
+            resp.put("code", e.getStatus().getStatusCodeValue());
+            resp.put("message", e.getStatus().getStatusCode());
+        } catch (NullPointerException e) {
+            resp.put("code", StatusCode.Param_Error_VALUE);
+            resp.put("message", StatusCode.Param_Error);
+            log.error("[getUserInfos] err, err = {}", e.toString());
+        } catch (Exception e) {
+            resp.put("code", StatusCode.Unknown_Error_VALUE);
+            resp.put("message", StatusCode.Unknown_Error);
+            log.error("[getUserInfos] err, err = {}", e.toString());
+        }
+        return resp;
+    }
+
     @PostMapping("/search_users")
     public JSONObject searchUsers(@RequestBody JSONObject req) {
         JSONObject resp = new JSONObject();
