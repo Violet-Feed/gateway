@@ -88,10 +88,8 @@ public class NettyServerHandler extends SimpleChannelInboundHandler<Packet> {
         }
         Packet packet = new Packet();
         packet.setPacketType((byte) req.getPacketType().getNumber());
-        if (req.getPacketType() == PacketType.Normal) {
-            packet.setData(req.getNormalPacket().toByteArray());
-        } else if (req.getPacketType() == PacketType.Command) {
-            packet.setData(req.getCommandPacket().toByteArray());
+        if (req.getPacketType() == PacketType.Message) {
+            packet.setData(req.getMessagePacket().toByteArray());
         } else if (req.getPacketType() == PacketType.Material) {
             packet.setData(req.getMaterialPacket().toByteArray());
         } else if (req.getPacketType() == PacketType.Notice) {

@@ -38,7 +38,7 @@ public class IMServiceImpl implements IMService {
         Long clientMsgId = req.getLong("client_msg_id");
         Integer msgType = req.getInteger("msg_type");
         String msg_content = req.getString("msg_content");
-        SendMessageRequest sendMessageRequest = SendMessageRequest.newBuilder().setUserId(userId).setConShortId(conShortId).setConId(conId).setConType(conType).setClientMsgId(clientMsgId).setMsgType(msgType).setMsgContent(msg_content).build();
+        SendMessageRequest sendMessageRequest = SendMessageRequest.newBuilder().setSenderId(userId).setSenderType(SenderType.User_VALUE).setConShortId(conShortId).setConId(conId).setConType(conType).setClientMsgId(clientMsgId).setMsgType(msgType).setMsgContent(msg_content).build();
         SendMessageResponse sendMessageResponse = imStub.sendMessage(sendMessageRequest);
         if (sendMessageResponse.getBaseResp().getStatusCode() != StatusCode.Success) {
             log.error("[sendMessage] SendMessage rpc err, err = {}", sendMessageResponse.getBaseResp());

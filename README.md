@@ -1,54 +1,16 @@
-##### linux:
+# Violet Gateway
 
-- 启动canal-deployer：~/canal.deployer-1.1.5/bin/startup.sh
+一个面向 Violet 业务的网关服务，提供统一的 HTTP API、内部 gRPC 调用以及基于 Netty 的长连接推送能力。该网关负责鉴权、参数校验、跨服务聚合与下行推送，向外屏蔽下游服务细节。
 
-- 启动canal-adapter：~/canal.adapter-1.1.5/bin/startup.sh
+## 业务架构
 
-- 启动es：~/elasticsearch-7.9.2/bin/elasticsearch
+网关对外暴露 REST 接口，对内通过 gRPC 调用下游服务，并将多服务的数据进行聚合与封装。当前包含的核心业务域如下：
 
-- 启动neo4j：~/neo4j-community-3.5.9/bin/neo4j start
-
-- 启动redis：redis-server
-
-- 启动kvrocks：./kvrocks/build/kvrocks -c ./kvrocks/kvrocks.conf
-
-- 启动rocketmq-nameserver：nohup sh
-  ./rocketmq-all-5.3.0-source-release/distribution/target/rocketmq-5.3.0/rocketmq-5.3.0/bin/mqnamesrv &
-
-- 启动rocketmq-broker：nohup sh
-  ./rocketmq-all-5.3.0-source-release/distribution/target/rocketmq-5.3.0/rocketmq-5.3.0/bin/mqbroker -n localhost:9876 &
-
-rocketmq创建topic：sh ./mqadmin updateTopic -n rmq-namesrv:9876 -t im_conv -c DefaultCluster
-
-##### windows:
-
-start.bat
-
-```bash
-@echo off
-start "redis-server" "D:\Program\Redis-x64-5.0.14.1\redis-server.exe"
-start "mqnamesrv" "D:\Program\rocketmq-all-5.2.0-bin-release\bin\mqnamesrv.cmd"
-start "mqproxy" "D:\Program\rocketmq-all-5.2.0-bin-release\bin\mqproxy.cmd" -n localhost:9876 -bc D:\Program\rocketmq-all-5.2.0-bin-release\conf\broker.conf -pm LOCAL
-start "neo4j" "D:\Program\neo4j-community-3.5.9\bin\neo4j.bat" console
-start "elasticsearch" "D:\Program\elasticsearch-7.9.2\bin\elasticsearch.bat"
-start "canal.deployer" cmd /c "cd /d D:\Program\canal.deployer-1.1.5\bin && startup.bat"
-start "canal.adapter" cmd /c "cd /d D:\Program\canal.adapter-1.1.5\bin && startup.bat"    
-start "mongodb" mongod --dbpath D:\Program\mongodb-win32-x86_64-windows-8.0.8\data\db
-start "milvus" "D:\H\Desktop\Violet\standalone.bat" start
-```
-
-##### 暂时无法解决的良性bug：
-
-- IM服务邀请群成员采用先入库和读索引后写mq的方式可能会导致用户获取到入群之前的消息；先写mq会导致群聊上限错误无法即时反馈
-
-##### TODO:
-
-1. follow更新缓存，follow_count缓存，follow_list分页，抛异常,锁？
-2. createConversation功能
-3. markRead，getMessageByUser接口
-4. 群组信息
-5. AIChat，语音功能
-6. notice功能
-7. digg,comment,favorite功能
-8. 图片OSS
-9. 商城
+- 用户与认证：登录/注册、用户信息查询、用户搜索、JWT 鉴权。
+- 关系与社交：关注/取关、粉丝/关注列表、好友列表。
+- 内容互动：点赞/取消点赞、评论/回复、评论列表与计数、行为上报。
+- AIGC 内容：素材创建/删除、作品创建/删除、用户/好友/推荐内容列表、视频素材回调。
+- IM 与会话：发送消息、按用户/会话拉取消息、已读标记、会话创建与查询、会话成员读取进度。
+- 通知中心：通知列表、聚合通知列表、未读数、标记已读。
+- 通用能力：图片上传（阿里云 OSS）。
+- 推送入口：对内暴露 gRPC Push 服务，统一处理下行推送。

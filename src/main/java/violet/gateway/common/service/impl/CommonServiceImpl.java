@@ -24,6 +24,7 @@ public class CommonServiceImpl implements CommonService {
     @Override
     public JSONObject uploadImage(MultipartFile image, String type, String name) throws Exception {
         String ossPath;
+        //todo:这里似乎要改成雪花算法ID
         switch (type) {
             case "user_avatar":
                 CustomAuthenticationToken authentication = (CustomAuthenticationToken) SecurityContextHolder.getContext().getAuthentication();
