@@ -22,4 +22,8 @@ public interface IMService {
     JSONObject addConversationMembers(JSONObject req) throws Exception;
 
     JSONObject getConversationMembers(JSONObject req) throws Exception;
+
+    JSONObject addConversationAgents(JSONObject req) throws Exception;
+
+    JSONObject getConversationAgents(JSONObject req) throws Exception;
 }

@@ -261,6 +261,55 @@ public class AigcServiceImpl implements AigcService {
         }
     }
 
+    @Override
+    public JSONObject createAgent(JSONObject req) throws Exception {
+        CustomAuthenticationToken authentication = (CustomAuthenticationToken) SecurityContextHolder.getContext().getAuthentication();
+        Long userId = authentication.getUserId();
+        String agentName = req.getString("agent_name");
+        String avatarUri = req.getString("avatar_uri");
+        String description = req.getString("description");
+        String personality = req.getString("personality");
+        CreateAgentRequest createAgentRequest = CreateAgentRequest.newBuilder().setUserId(userId).setAgentName(agentName).setAvatarUri(avatarUri).setDescription(description).setPersonality(personality).build();
+        CreateAgentResponse createAgentResponse = aigcStub.createAgent(createAgentRequest);
+        if (createAgentResponse.getBaseResp().getStatusCode() != StatusCode.Success) {
+            log.error("[createAgent] CreateAgent rpc err, err = {}", createAgentResponse.getBaseResp());
+            throw new RpcException(createAgentResponse.getBaseResp());
+        }
+        JSONObject data = new JSONObject();
+        data.put("agent_id", createAgentResponse.getAgentId());
+        return data;
+    }
+
+    @Override
+    public JSONObject getAgentsByIds(JSONObject req) throws Exception {
+        List<Long> agentIds = req.getJSONArray("agent_ids").toJavaList(Long.class);
+        GetAgentsByIdsRequest getAgentsByIdsRequest = GetAgentsByIdsRequest.newBuilder().addAllAgentIds(agentIds).build();
+        GetAgentsByIdsResponse getAgentsByIdsResponse = aigcStub.getAgentsByIds(getAgentsByIdsRequest);
+        if (getAgentsByIdsResponse.getBaseResp().getStatusCode() != StatusCode.Success) {
+            log.error("[getAgentsByIds] GetAgentsByIds rpc err, err = {}", getAgentsByIdsResponse.getBaseResp());
+            throw new RpcException(getAgentsByIdsResponse.getBaseResp());
+        }
+        JSONObject data = new JSONObject();
+        data.put("agents", getAgentsByIdsResponse.getAgentInfosList());
+        return data;
+    }
+
+    @Override
+    public JSONObject getAgentsByUser(JSONObject req) throws Exception {
+        CustomAuthenticationToken authentication = (CustomAuthenticationToken) SecurityContextHolder.getContext().getAuthentication();
+        Long userId = authentication.getUserId();
+        Integer page = req.getInteger("page");
+        GetAgentsByUserRequest getAgentsByUserRequest = GetAgentsByUserRequest.newBuilder().setUserId(userId).setPage(page).build();
+        GetAgentsByUserResponse getAgentsByUserResponse = aigcStub.getAgentsByUser(getAgentsByUserRequest);
+        if (getAgentsByUserResponse.getBaseResp().getStatusCode() != StatusCode.Success) {
+            log.error("[getAgentsByUser] GetAgentsByUser rpc err, err = {}", getAgentsByUserResponse.getBaseResp());
+            throw new RpcException(getAgentsByUserResponse.getBaseResp());
+        }
+        JSONObject data = new JSONObject();
+        data.put("agents", getAgentsByUserResponse.getAgentInfosList());
+        return data;
+    }
+
     private List<CreationHomeVO> fillHomeInfo(Long userId, List<Creation> creationList) throws RpcException {
         if (creationList.isEmpty()) {
             return Collections.emptyList();

@@ -10,6 +10,9 @@ import violet.gateway.common.proto_gen.action.ActionServiceGrpc;
 import violet.gateway.common.proto_gen.action.GetUserInfosRequest;
 import violet.gateway.common.proto_gen.action.GetUserInfosResponse;
 import violet.gateway.common.proto_gen.action.UserInfo;
+import violet.gateway.common.proto_gen.aigc.AigcServiceGrpc;
+import violet.gateway.common.proto_gen.aigc.GetAgentsByIdsRequest;
+import violet.gateway.common.proto_gen.aigc.GetAgentsByIdsResponse;
 import violet.gateway.common.proto_gen.common.StatusCode;
 import violet.gateway.common.proto_gen.im.*;
 import violet.gateway.common.service.IMService;
@@ -27,6 +30,8 @@ public class IMServiceImpl implements IMService {
     private IMServiceGrpc.IMServiceBlockingStub imStub;
     @GrpcClient("action")
     private ActionServiceGrpc.ActionServiceBlockingStub actionStub;
+    @GrpcClient("aigc")
+    private AigcServiceGrpc.AigcServiceBlockingStub aigcStub;
 
     @Override
     public JSONObject sendMessage(JSONObject req) throws Exception {
@@ -228,6 +233,53 @@ public class IMServiceImpl implements IMService {
         }).collect(Collectors.toList());
         JSONObject data = new JSONObject();
         data.put("members", memberVOList);
+        return data;
+    }
+
+    @Override
+    public JSONObject addConversationAgents(JSONObject req) throws Exception {
+        CustomAuthenticationToken authentication = (CustomAuthenticationToken) SecurityContextHolder.getContext().getAuthentication();
+        Long userId = authentication.getUserId();
+        Long conShortId = req.getLong("con_short_id");
+        String conId = req.getString("con_id");
+        List<Long> agentIds = req.getJSONArray("agent_ids").toJavaList(Long.class);
+        AddConversationAgentsRequest addConversationAgentsRequest = AddConversationAgentsRequest.newBuilder()
+                .setConShortId(conShortId)
+                .setConId(conId)
+                .addAllAgentIds(agentIds)
+                .setOperator(userId)
+                .build();
+        AddConversationAgentsResponse addConversationAgentsResponse = imStub.addConversationAgents(addConversationAgentsRequest);
+        if (addConversationAgentsResponse.getBaseResp().getStatusCode() != StatusCode.Success) {
+            log.error("[addConversationAgents] AddConversationAgents rpc err, err = {}", addConversationAgentsResponse.getBaseResp());
+            throw new RpcException(addConversationAgentsResponse.getBaseResp());
+        }
+        JSONObject data = new JSONObject();
+        return data;
+    }
+
+    @Override
+    public JSONObject getConversationAgents(JSONObject req) throws Exception {
+        Long conShortId = req.getLong("con_short_id");
+        GetConversationAgentsRequest getConversationAgentsRequest = GetConversationAgentsRequest.newBuilder()
+                .setConShortId(conShortId)
+                .build();
+        GetConversationAgentsResponse getConversationAgentsResponse = imStub.getConversationAgents(getConversationAgentsRequest);
+        if (getConversationAgentsResponse.getBaseResp().getStatusCode() != StatusCode.Success) {
+            log.error("[getConversationAgents] GetConversationAgents rpc err, err = {}", getConversationAgentsResponse.getBaseResp());
+            throw new RpcException(getConversationAgentsResponse.getBaseResp());
+        }
+        List<Long> agentIds = getConversationAgentsResponse.getAgentsList().stream().map(ConversationAgentInfo::getAgentId).collect(Collectors.toList());
+        GetAgentsByIdsRequest getAgentsByIdsRequest = GetAgentsByIdsRequest.newBuilder()
+                .addAllAgentIds(agentIds)
+                .build();
+        GetAgentsByIdsResponse getAgentsByIdsResponse = aigcStub.getAgentsByIds(getAgentsByIdsRequest);
+        if (getAgentsByIdsResponse.getBaseResp().getStatusCode() != StatusCode.Success) {
+            log.error("[getConversationAgents] GetAgentsByIds rpc err, err = {}", getAgentsByIdsResponse.getBaseResp());
+            throw new RpcException(getAgentsByIdsResponse.getBaseResp());
+        }
+        JSONObject data = new JSONObject();
+        data.put("agents", getAgentsByIdsResponse.getAgentInfosList());
         return data;
     }
 }

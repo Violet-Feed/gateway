@@ -247,4 +247,50 @@ public class IMController {
         }
         return resp;
     }
+
+    @PostMapping("/add_conversation_agents")
+    public JSONObject addConversationAgents(@RequestBody JSONObject req) {
+        JSONObject resp = new JSONObject();
+        try {
+            JSONObject data = imService.addConversationAgents(req);
+            resp.put("code", StatusCode.Success_VALUE);
+            resp.put("message", StatusCode.Success);
+            resp.put("data", data);
+        } catch (RpcException e) {
+            resp.put("code", e.getStatus().getStatusCodeValue());
+            resp.put("message", e.getStatus().getStatusCode());
+        } catch (NullPointerException e) {
+            resp.put("code", StatusCode.Param_Error_VALUE);
+            resp.put("message", StatusCode.Param_Error);
+            log.error("[addConversationAgents] err, err = {}", e.toString());
+        } catch (Exception e) {
+            resp.put("code", StatusCode.Unknown_Error_VALUE);
+            resp.put("message", StatusCode.Unknown_Error);
+            log.error("[addConversationAgents] err, err = {}", e.toString());
+        }
+        return resp;
+    }
+
+    @PostMapping("/get_conversation_agents")
+    public JSONObject getConversationAgents(@RequestBody JSONObject req) {
+        JSONObject resp = new JSONObject();
+        try {
+            JSONObject data = imService.getConversationAgents(req);
+            resp.put("code", StatusCode.Success_VALUE);
+            resp.put("message", StatusCode.Success);
+            resp.put("data", data);
+        } catch (RpcException e) {
+            resp.put("code", e.getStatus().getStatusCodeValue());
+            resp.put("message", e.getStatus().getStatusCode());
+        } catch (NullPointerException e) {
+            resp.put("code", StatusCode.Param_Error_VALUE);
+            resp.put("message", StatusCode.Param_Error);
+            log.error("[getConversationAgents] err, err = {}", e.toString());
+        } catch (Exception e) {
+            resp.put("code", StatusCode.Unknown_Error_VALUE);
+            resp.put("message", StatusCode.Unknown_Error);
+            log.error("[getConversationAgents] err, err = {}", e.toString());
+        }
+        return resp;
+    }
 }
