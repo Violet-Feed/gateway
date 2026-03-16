@@ -5,6 +5,7 @@ import lombok.extern.slf4j.Slf4j;
 import net.devh.boot.grpc.client.inject.GrpcClient;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
+import violet.gateway.common.pojo.AgentVO;
 import violet.gateway.common.pojo.CreationHomeVO;
 import violet.gateway.common.proto_gen.action.*;
 import violet.gateway.common.proto_gen.aigc.*;
@@ -289,8 +290,32 @@ public class AigcServiceImpl implements AigcService {
             log.error("[getAgentsByIds] GetAgentsByIds rpc err, err = {}", getAgentsByIdsResponse.getBaseResp());
             throw new RpcException(getAgentsByIdsResponse.getBaseResp());
         }
+        List<Long> userIds = getAgentsByIdsResponse.getAgentInfosList().stream().map(AgentInfo::getOwnerId).distinct().collect(Collectors.toList());
+        GetUserInfosRequest getUserInfosRequest = GetUserInfosRequest.newBuilder().addAllUserIds(userIds).build();
+        GetUserInfosResponse getUserInfosResponse = actionStub.getUserInfos(getUserInfosRequest);
+        if (getUserInfosResponse.getBaseResp().getStatusCode() != StatusCode.Success) {
+            log.error("[getAgentsByIds] GetUserInfos rpc err, err = {}", getUserInfosResponse.getBaseResp());
+            throw new RpcException(getUserInfosResponse.getBaseResp());
+        }
+        Map<Long, UserInfo> userInfoMap = getUserInfosResponse.getUserInfosList().stream().collect(Collectors.toMap(UserInfo::getUserId, userInfo -> userInfo));
+        List<AgentVO> agentVOList = getAgentsByIdsResponse.getAgentInfosList().stream().map(agentInfo -> {
+            AgentVO agentVO = new AgentVO();
+            agentVO.setAgentId(agentInfo.getAgentId());
+            agentVO.setAgentName(agentInfo.getAgentName());
+            agentVO.setAvatarUri(agentInfo.getAvatarUri());
+            agentVO.setDescription(agentInfo.getDescription());
+            agentVO.setPersonality(agentInfo.getPersonality());
+            agentVO.setOwnerId(agentInfo.getOwnerId());
+            agentVO.setCreateTime(agentInfo.getCreateTime());
+            agentVO.setStatus(agentInfo.getStatus());
+            agentVO.setExtra(agentInfo.getExtra());
+            UserInfo ownerUserInfo = userInfoMap.get(agentInfo.getOwnerId());
+            agentVO.setOwnerUsername(ownerUserInfo.getUsername());
+            agentVO.setOwnerAvatar(ownerUserInfo.getAvatar());
+            return agentVO;
+        }).collect(Collectors.toList());
         JSONObject data = new JSONObject();
-        data.put("agents", getAgentsByIdsResponse.getAgentInfosList());
+        data.put("agents", agentVOList);
         return data;
     }
 

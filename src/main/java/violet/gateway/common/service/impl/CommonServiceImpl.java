@@ -16,27 +16,28 @@ import java.io.InputStream;
 @Slf4j
 @Service
 public class CommonServiceImpl implements CommonService {
-    private final SnowFlake sourceIdGenerator = new SnowFlake(0, 0);
+    private final SnowFlake avatarIdGenerator = new SnowFlake(0, 0);
     private final String USER_AVATAR_OSS_PATH = "avatar/user/%d.png";
-    private final String CONV_AVATAR_OSS_PATH = "avatar/conversation/%s.png";
+    private final String CONV_AVATAR_OSS_PATH = "avatar/conversation/%d.png";
+    private final String AGENT_AVATAR_OSS_PATH = "avatar/agent/%d.png";
     private final String SOURCE_OSS_PATH = "material/source/%d.png";
 
     @Override
-    public JSONObject uploadImage(MultipartFile image, String type, String name) throws Exception {
+    public JSONObject uploadImage(MultipartFile image, String type) throws Exception {
         String ossPath;
-        //todo:这里似乎要改成雪花算法ID
+        Long avatarId = avatarIdGenerator.nextId();
         switch (type) {
             case "user_avatar":
-                CustomAuthenticationToken authentication = (CustomAuthenticationToken) SecurityContextHolder.getContext().getAuthentication();
-                Long userId = authentication.getUserId();
-                ossPath = String.format(USER_AVATAR_OSS_PATH, userId);
+                ossPath = String.format(USER_AVATAR_OSS_PATH, avatarId);
                 break;
             case "conv_avatar":
-                ossPath = String.format(CONV_AVATAR_OSS_PATH, name);
+                ossPath = String.format(CONV_AVATAR_OSS_PATH, avatarId);
+                break;
+            case "agent_avatar":
+                ossPath = String.format(AGENT_AVATAR_OSS_PATH, avatarId);
                 break;
             case "material_source":
-                Long sourceId = sourceIdGenerator.nextId();
-                ossPath = String.format(SOURCE_OSS_PATH, sourceId);
+                ossPath = String.format(SOURCE_OSS_PATH, avatarId);
                 break;
             default:
                 log.error("Unsupported image type: {}", type);

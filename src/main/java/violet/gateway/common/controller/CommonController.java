@@ -20,10 +20,10 @@ public class CommonController {
     private CommonService commonService;
 
     @PostMapping("/upload_image")
-    public JSONObject uploadImage(@RequestParam("image") MultipartFile image, @RequestParam("type") String type, @RequestParam("name") String name) {
+    public JSONObject uploadImage(@RequestParam("image") MultipartFile image, @RequestParam("type") String type) {
         JSONObject resp = new JSONObject();
         try {
-            JSONObject data = commonService.uploadImage(image, type, name);
+            JSONObject data = commonService.uploadImage(image, type);
             resp.put("code", StatusCode.Success_VALUE);
             resp.put("message", StatusCode.Success);
             resp.put("data", data);
