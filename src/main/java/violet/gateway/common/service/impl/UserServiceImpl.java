@@ -122,6 +122,26 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public JSONObject updateUserInfo(JSONObject req) throws Exception {
+        CustomAuthenticationToken authentication = (CustomAuthenticationToken) SecurityContextHolder.getContext().getAuthentication();
+        Long userId = authentication.getUserId();
+        String type = req.getString("type");
+        String value = req.getString("value");
+        UpdateUserInfoRequest updateUserInfoRequest = UpdateUserInfoRequest.newBuilder()
+                .setUserId(userId)
+                .setType(type)
+                .setValue(value)
+                .build();
+        UpdateUserInfoResponse updateUserInfoResponse = actionStub.updateUserInfo(updateUserInfoRequest);
+        if (updateUserInfoResponse.getBaseResp().getStatusCode() != StatusCode.Success) {
+            log.error("[updateUserInfo] UpdateUserInfo rpc err, err = {}", updateUserInfoResponse.getBaseResp());
+            throw new RpcException(updateUserInfoResponse.getBaseResp());
+        }
+        JSONObject data = new JSONObject();
+        return data;
+    }
+
+    @Override
     public JSONObject searchUsers(JSONObject req) throws Exception {
         CustomAuthenticationToken authentication = (CustomAuthenticationToken) SecurityContextHolder.getContext().getAuthentication();
         Long userId = authentication.getUserId();
@@ -191,6 +211,9 @@ public class UserServiceImpl implements UserService {
             userVo.setUserId(userInfo.getUserId());
             userVo.setUsername(userInfo.getUsername());
             userVo.setAvatar(userInfo.getAvatar());
+            userVo.setCreateTime(userInfo.getCreateTime());
+            userVo.setStatus(userInfo.getStatus());
+            userVo.setExtra(userInfo.getExtra());
             userVo.setFollowerCount(followerCountMap.getOrDefault(userInfo.getUserId(), 0L));
             userVo.setIsFollowing(isFollowingMap.getOrDefault(userInfo.getUserId(), false));
             userVo.setIsFollower(isFollowerMap.getOrDefault(userInfo.getUserId(), false));

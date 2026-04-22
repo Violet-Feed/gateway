@@ -15,6 +15,8 @@ public interface AigcService {
 
     JSONObject deleteCreation(JSONObject req) throws Exception;
 
+    JSONObject updateCreation(JSONObject req) throws Exception;
+
     JSONObject getCreationById(JSONObject req) throws Exception;
 
     JSONObject getCreationsByUser(JSONObject req) throws Exception;
@@ -28,6 +30,10 @@ public interface AigcService {
     JSONObject getCreationsBySearch(JSONObject req) throws Exception;
 
     JSONObject createAgent(JSONObject req) throws Exception;
+
+    JSONObject deleteAgent(JSONObject req) throws Exception;
+
+    JSONObject updateAgent(JSONObject req) throws Exception;
 
     JSONObject getAgentsByIds(JSONObject req) throws Exception;
 

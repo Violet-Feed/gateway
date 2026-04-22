@@ -11,6 +11,9 @@ public class UserVO {
     private Long userId;
     private String username;
     private String avatar;
+    private Long createTime;
+    private Integer status;
+    private String extra;
     private Long followingCount;
     private Long followerCount;
     private Long friendCount;

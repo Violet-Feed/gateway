@@ -139,6 +139,30 @@ public class AigcServiceImpl implements AigcService {
     }
 
     @Override
+    public JSONObject updateCreation(JSONObject req) throws Exception {
+        CustomAuthenticationToken authentication = (CustomAuthenticationToken) SecurityContextHolder.getContext().getAuthentication();
+        Long userId = authentication.getUserId();
+        Long creationId = req.getLong("creation_id");
+        String title = req.getString("title");
+        String content = req.getString("content");
+        String category = req.getString("category");
+        UpdateCreationRequest updateCreationRequest = UpdateCreationRequest.newBuilder()
+                .setCreationId(creationId)
+                .setUserId(userId)
+                .setTitle(title)
+                .setContent(content)
+                .setCategory(category)
+                .build();
+        UpdateCreationResponse updateCreationResponse = aigcStub.updateCreation(updateCreationRequest);
+        if (updateCreationResponse.getBaseResp().getStatusCode() != StatusCode.Success) {
+            log.error("[updateCreation] UpdateCreation rpc err, err = {}", updateCreationResponse.getBaseResp());
+            throw new RpcException(updateCreationResponse.getBaseResp());
+        }
+        JSONObject data = new JSONObject();
+        return data;
+    }
+
+    @Override
     public JSONObject getCreationById(JSONObject req) throws Exception {
         CustomAuthenticationToken authentication = (CustomAuthenticationToken) SecurityContextHolder.getContext().getAuthentication();
         Long userId = authentication.getUserId();
@@ -278,6 +302,50 @@ public class AigcServiceImpl implements AigcService {
         }
         JSONObject data = new JSONObject();
         data.put("agent_id", createAgentResponse.getAgentId());
+        return data;
+    }
+
+    @Override
+    public JSONObject deleteAgent(JSONObject req) throws Exception {
+        CustomAuthenticationToken authentication = (CustomAuthenticationToken) SecurityContextHolder.getContext().getAuthentication();
+        Long userId = authentication.getUserId();
+        Long agentId = req.getLong("agent_id");
+        DeleteAgentRequest deleteAgentRequest = DeleteAgentRequest.newBuilder()
+                .setUserId(userId)
+                .setAgentId(agentId)
+                .build();
+        DeleteAgentResponse deleteAgentResponse = aigcStub.deleteAgent(deleteAgentRequest);
+        if (deleteAgentResponse.getBaseResp().getStatusCode() != StatusCode.Success) {
+            log.error("[deleteAgent] DeleteAgent rpc err, err = {}", deleteAgentResponse.getBaseResp());
+            throw new RpcException(deleteAgentResponse.getBaseResp());
+        }
+        JSONObject data = new JSONObject();
+        return data;
+    }
+
+    @Override
+    public JSONObject updateAgent(JSONObject req) throws Exception {
+        CustomAuthenticationToken authentication = (CustomAuthenticationToken) SecurityContextHolder.getContext().getAuthentication();
+        Long userId = authentication.getUserId();
+        Long agentId = req.getLong("agent_id");
+        String agentName = req.getString("agent_name");
+        String avatarUri = req.getString("avatar_uri");
+        String description = req.getString("description");
+        String personality = req.getString("personality");
+        UpdateAgentRequest updateAgentRequest = UpdateAgentRequest.newBuilder()
+                .setUserId(userId)
+                .setAgentId(agentId)
+                .setAgentName(agentName)
+                .setAvatarUri(avatarUri)
+                .setDescription(description)
+                .setPersonality(personality)
+                .build();
+        UpdateAgentResponse updateAgentResponse = aigcStub.updateAgent(updateAgentRequest);
+        if (updateAgentResponse.getBaseResp().getStatusCode() != StatusCode.Success) {
+            log.error("[updateAgent] UpdateAgent rpc err, err = {}", updateAgentResponse.getBaseResp());
+            throw new RpcException(updateAgentResponse.getBaseResp());
+        }
+        JSONObject data = new JSONObject();
         return data;
     }
 

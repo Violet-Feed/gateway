@@ -165,6 +165,9 @@ public class RelationServiceImpl implements RelationService {
             userVo.setUserId(id);
             userVo.setUsername(userInfo == null ? "未知用户" : userInfo.getUsername());
             userVo.setAvatar(userInfo == null ? "" : userInfo.getAvatar());
+            userVo.setCreateTime(userInfo == null ? 0 : userInfo.getCreateTime());
+            userVo.setStatus(userInfo == null ? 0 : userInfo.getStatus());
+            userVo.setExtra(userInfo == null ? "" : userInfo.getExtra());
             userVo.setIsFollowing(isFollowingMap.getOrDefault(id, true));
             userVo.setIsFollower(isFollowerMap.getOrDefault(id, true));
             return userVo;

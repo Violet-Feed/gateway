@@ -133,6 +133,29 @@ public class IMController {
         return resp;
     }
 
+    @PostMapping("/recall_message")
+    public JSONObject recallMessage(@RequestBody JSONObject req) {
+        JSONObject resp = new JSONObject();
+        try {
+            JSONObject data = imService.recallMessage(req);
+            resp.put("code", StatusCode.Success_VALUE);
+            resp.put("message", StatusCode.Success);
+            resp.put("data", data);
+        } catch (RpcException e) {
+            resp.put("code", e.getStatus().getStatusCodeValue());
+            resp.put("message", e.getStatus().getStatusCode());
+        } catch (NullPointerException e) {
+            resp.put("code", StatusCode.Param_Error_VALUE);
+            resp.put("message", StatusCode.Param_Error);
+            log.error("[recallMessage] err, err = {}", e.toString());
+        } catch (Exception e) {
+            resp.put("code", StatusCode.Unknown_Error_VALUE);
+            resp.put("message", StatusCode.Unknown_Error);
+            log.error("[recallMessage] err, err = {}", e.toString());
+        }
+        return resp;
+    }
+
     @PostMapping("/get_members_read_index")
     public JSONObject getMembersReadIndex(@RequestBody JSONObject req) {
         JSONObject resp = new JSONObject();
@@ -202,6 +225,29 @@ public class IMController {
         return resp;
     }
 
+    @PostMapping("/update_conversation_info")
+    public JSONObject updateConversationInfo(@RequestBody JSONObject req) {
+        JSONObject resp = new JSONObject();
+        try {
+            JSONObject data = imService.updateConversationInfo(req);
+            resp.put("code", StatusCode.Success_VALUE);
+            resp.put("message", StatusCode.Success);
+            resp.put("data", data);
+        } catch (RpcException e) {
+            resp.put("code", e.getStatus().getStatusCodeValue());
+            resp.put("message", e.getStatus().getStatusCode());
+        } catch (NullPointerException e) {
+            resp.put("code", StatusCode.Param_Error_VALUE);
+            resp.put("message", StatusCode.Param_Error);
+            log.error("[updateConversationInfo] err, err = {}", e.toString());
+        } catch (Exception e) {
+            resp.put("code", StatusCode.Unknown_Error_VALUE);
+            resp.put("message", StatusCode.Unknown_Error);
+            log.error("[updateConversationInfo] err, err = {}", e.toString());
+        }
+        return resp;
+    }
+
     @PostMapping("/add_conversation_members")
     public JSONObject addConversationMembers(@RequestBody JSONObject req) {
         JSONObject resp = new JSONObject();
@@ -221,6 +267,29 @@ public class IMController {
             resp.put("code", StatusCode.Unknown_Error_VALUE);
             resp.put("message", StatusCode.Unknown_Error);
             log.error("[addConversationMembers] err, err = {}", e.toString());
+        }
+        return resp;
+    }
+
+    @PostMapping("/remove_conversation_members")
+    public JSONObject removeConversationMembers(@RequestBody JSONObject req) {
+        JSONObject resp = new JSONObject();
+        try {
+            JSONObject data = imService.removeConversationMembers(req);
+            resp.put("code", StatusCode.Success_VALUE);
+            resp.put("message", StatusCode.Success);
+            resp.put("data", data);
+        } catch (RpcException e) {
+            resp.put("code", e.getStatus().getStatusCodeValue());
+            resp.put("message", e.getStatus().getStatusCode());
+        } catch (NullPointerException e) {
+            resp.put("code", StatusCode.Param_Error_VALUE);
+            resp.put("message", StatusCode.Param_Error);
+            log.error("[removeConversationMembers] err, err = {}", e.toString());
+        } catch (Exception e) {
+            resp.put("code", StatusCode.Unknown_Error_VALUE);
+            resp.put("message", StatusCode.Unknown_Error);
+            log.error("[removeConversationMembers] err, err = {}", e.toString());
         }
         return resp;
     }
@@ -267,6 +336,29 @@ public class IMController {
             resp.put("code", StatusCode.Unknown_Error_VALUE);
             resp.put("message", StatusCode.Unknown_Error);
             log.error("[addConversationAgents] err, err = {}", e.toString());
+        }
+        return resp;
+    }
+
+    @PostMapping("/remove_conversation_agents")
+    public JSONObject removeConversationAgents(@RequestBody JSONObject req) {
+        JSONObject resp = new JSONObject();
+        try {
+            JSONObject data = imService.removeConversationAgents(req);
+            resp.put("code", StatusCode.Success_VALUE);
+            resp.put("message", StatusCode.Success);
+            resp.put("data", data);
+        } catch (RpcException e) {
+            resp.put("code", e.getStatus().getStatusCodeValue());
+            resp.put("message", e.getStatus().getStatusCode());
+        } catch (NullPointerException e) {
+            resp.put("code", StatusCode.Param_Error_VALUE);
+            resp.put("message", StatusCode.Param_Error);
+            log.error("[removeConversationAgents] err, err = {}", e.toString());
+        } catch (Exception e) {
+            resp.put("code", StatusCode.Unknown_Error_VALUE);
+            resp.put("message", StatusCode.Unknown_Error);
+            log.error("[removeConversationAgents] err, err = {}", e.toString());
         }
         return resp;
     }

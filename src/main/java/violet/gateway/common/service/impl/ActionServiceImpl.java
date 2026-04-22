@@ -112,6 +112,57 @@ public class ActionServiceImpl implements ActionService {
     }
 
     @Override
+    public JSONObject getActionInfo(JSONObject req) throws Exception {
+        CustomAuthenticationToken authentication = (CustomAuthenticationToken) SecurityContextHolder.getContext().getAuthentication();
+        Long userId = authentication.getUserId();
+        String entityType = req.getString("entity_type");
+        Long entityId = req.getLong("entity_id");
+        JSONObject data = new JSONObject();
+        MGetDiggCountByEntityRequest mGetDiggCountByEntityRequest = MGetDiggCountByEntityRequest.newBuilder()
+                .setEntityType(entityType)
+                .addEntityIds(entityId)
+                .build();
+        MGetDiggCountByEntityResponse mGetDiggCountByEntityResponse = actionStub.mGetDiggCountByEntity(mGetDiggCountByEntityRequest);
+        if (mGetDiggCountByEntityResponse.getBaseResp().getStatusCode() != StatusCode.Success) {
+            log.error("[getActionInfo] MGetDiggCountByEntity rpc err, err = {}", mGetDiggCountByEntityResponse.getBaseResp());
+            throw new RpcException(mGetDiggCountByEntityResponse.getBaseResp());
+        }
+        data.put("digg_count", mGetDiggCountByEntityResponse.getEntityDiggCountMap().get(entityId));
+        MIsDiggRequest mIsDiggRequest = MIsDiggRequest.newBuilder()
+                .setUserId(userId)
+                .setEntityType(entityType)
+                .addEntityIds(entityId)
+                .build();
+        MIsDiggResponse mIsDiggResponse = actionStub.mIsDigg(mIsDiggRequest);
+        if (mIsDiggResponse.getBaseResp().getStatusCode() != StatusCode.Success) {
+            log.error("[getActionInfo] MIsDigg rpc err, err = {}", mIsDiggResponse.getBaseResp());
+            throw new RpcException(mIsDiggResponse.getBaseResp());
+        }
+        data.put("is_digg", mIsDiggResponse.getIsDiggMap().get(entityId));
+        GetCommentCountRequest getCommentCountRequest = GetCommentCountRequest.newBuilder()
+                .setEntityType(entityType)
+                .setEntityId(entityId)
+                .build();
+        GetCommentCountResponse getCommentCountResponse = actionStub.getCommentCount(getCommentCountRequest);
+        if (getCommentCountResponse.getBaseResp().getStatusCode() != StatusCode.Success) {
+            log.error("[getActionInfo] GetCommentCount rpc err, err = {}", getCommentCountResponse.getBaseResp());
+            throw new Exception("GetCommentCount rpc error");
+        }
+        data.put("comment_count", getCommentCountResponse.getCommentCount());
+        GetForwardCountRequest getForwardCountRequest = GetForwardCountRequest.newBuilder()
+                .setEntityType(entityType)
+                .setEntityId(entityId)
+                .build();
+        GetForwardCountResponse getForwardCountResponse = actionStub.getForwardCount(getForwardCountRequest);
+        if (getForwardCountResponse.getBaseResp().getStatusCode() != StatusCode.Success) {
+            log.error("[getActionInfo] GetForwardCount rpc err, err = {}", getForwardCountResponse.getBaseResp());
+            throw new Exception("GetForwardCount rpc error");
+        }
+        data.put("forward_count", getForwardCountResponse.getForwardCount());
+        return data;
+    }
+
+    @Override
     public JSONObject getCommentList(JSONObject req) throws Exception {
         CustomAuthenticationToken authentication = (CustomAuthenticationToken) SecurityContextHolder.getContext().getAuthentication();
         Long userId = authentication.getUserId();
@@ -168,24 +219,6 @@ public class ActionServiceImpl implements ActionService {
     }
 
     @Override
-    public JSONObject getCommentCount(JSONObject req) throws Exception {
-        String entityType = req.getString("entity_type");
-        Long entityId = req.getLong("entity_id");
-        GetCommentCountRequest getCommentCountRequest = GetCommentCountRequest.newBuilder()
-                .setEntityType(entityType)
-                .setEntityId(entityId)
-                .build();
-        GetCommentCountResponse getCommentCountResponse = actionStub.getCommentCount(getCommentCountRequest);
-        if (getCommentCountResponse.getBaseResp().getStatusCode() != StatusCode.Success) {
-            log.error("[getCommentCount] GetCommentCount rpc err, err = {}", getCommentCountResponse.getBaseResp());
-            throw new Exception("GetCommentCount rpc error");
-        }
-        JSONObject data = new JSONObject();
-        data.put("comment_count", getCommentCountResponse.getCommentCount());
-        return data;
-    }
-
-    @Override
     public JSONObject diggComment(JSONObject req) throws Exception {
         CustomAuthenticationToken authentication = (CustomAuthenticationToken) SecurityContextHolder.getContext().getAuthentication();
         Long userId = authentication.getUserId();
@@ -227,12 +260,12 @@ public class ActionServiceImpl implements ActionService {
         Long userId = authentication.getUserId();
         String entityType = req.getString("entity_type");
         Long entityId = req.getLong("entity_id");
-        Long conversationId = req.getLong("conversation_id");
+        Long conShortId = req.getLong("con_short_id");
         ForwardRequest forwardRequest = ForwardRequest.newBuilder()
                 .setUserId(userId)
                 .setEntityType(entityType)
                 .setEntityId(entityId)
-                .setConversationId(conversationId)
+                .setConShortId(conShortId)
                 .build();
         ForwardResponse forwardResponse = actionStub.forward(forwardRequest);
         if (forwardResponse.getBaseResp().getStatusCode() != StatusCode.Success) {

@@ -128,6 +128,26 @@ public class IMServiceImpl implements IMService {
     }
 
     @Override
+    public JSONObject recallMessage(JSONObject req) throws Exception {
+        CustomAuthenticationToken authentication = (CustomAuthenticationToken) SecurityContextHolder.getContext().getAuthentication();
+        Long userId = authentication.getUserId();
+        Long conShortId = req.getLong("con_short_id");
+        Long msgId = req.getLong("msg_id");
+        RecallMessageRequest recallMessageRequest = RecallMessageRequest.newBuilder()
+                .setUserId(userId)
+                .setConShortId(conShortId)
+                .setMsgId(msgId)
+                .build();
+        RecallMessageResponse recallMessageResponse = imStub.recallMessage(recallMessageRequest);
+        if (recallMessageResponse.getBaseResp().getStatusCode() != StatusCode.Success) {
+            log.error("[recallMessage] RecallMessage rpc err, err = {}", recallMessageResponse.getBaseResp());
+            throw new RpcException(recallMessageResponse.getBaseResp());
+        }
+        JSONObject data = new JSONObject();
+        return data;
+    }
+
+    @Override
     public JSONObject getMembersReadIndex(JSONObject req) throws Exception {
         Long conShortId = req.getLong("con_short_id");
         GetMembersReadIndexRequest getMembersReadIndexRequest = GetMembersReadIndexRequest.newBuilder().setConShortId(conShortId).build();
@@ -175,6 +195,28 @@ public class IMServiceImpl implements IMService {
     }
 
     @Override
+    public JSONObject updateConversationInfo(JSONObject req) throws Exception {
+        CustomAuthenticationToken authentication = (CustomAuthenticationToken) SecurityContextHolder.getContext().getAuthentication();
+        Long userId = authentication.getUserId();
+        Long conShortId = req.getLong("con_short_id");
+        String type = req.getString("type");
+        String value = req.getString("value");
+        UpdateConversationInfoRequest updateConversationInfoRequest = UpdateConversationInfoRequest.newBuilder()
+                .setUserId(userId)
+                .setConShortId(conShortId)
+                .setType(type)
+                .setValue(value)
+                .build();
+        UpdateConversationInfoResponse updateConversationInfoResponse = imStub.updateConversationInfo(updateConversationInfoRequest);
+        if (updateConversationInfoResponse.getBaseResp().getStatusCode() != StatusCode.Success) {
+            log.error("[updateConversationInfo] UpdateConversationInfo rpc err, err = {}", updateConversationInfoResponse.getBaseResp());
+            throw new RpcException(updateConversationInfoResponse.getBaseResp());
+        }
+        JSONObject data = new JSONObject();
+        return data;
+    }
+
+    @Override
     public JSONObject addConversationMembers(JSONObject req) throws Exception {
         CustomAuthenticationToken authentication = (CustomAuthenticationToken) SecurityContextHolder.getContext().getAuthentication();
         Long userId = authentication.getUserId();
@@ -191,6 +233,28 @@ public class IMServiceImpl implements IMService {
         if (addConversationMembersResponse.getBaseResp().getStatusCode() != StatusCode.Success) {
             log.error("[addConversationMembers] AddConversationMembers rpc err, err = {}", addConversationMembersResponse.getBaseResp());
             throw new RpcException(addConversationMembersResponse.getBaseResp());
+        }
+        JSONObject data = new JSONObject();
+        return data;
+    }
+
+    @Override
+    public JSONObject removeConversationMembers(JSONObject req) throws Exception {
+        CustomAuthenticationToken authentication = (CustomAuthenticationToken) SecurityContextHolder.getContext().getAuthentication();
+        Long userId = authentication.getUserId();
+        Long conShortId = req.getLong("con_short_id");
+        String conId = req.getString("con_id");
+        List<Long> members = req.getJSONArray("members").toJavaList(Long.class);
+        RemoveConversationMembersRequest removeConversationMembersRequest = RemoveConversationMembersRequest.newBuilder()
+                .setConShortId(conShortId)
+                .setConId(conId)
+                .addAllMembers(members)
+                .setOperator(userId)
+                .build();
+        RemoveConversationMembersResponse removeConversationMembersResponse = imStub.removeConversationMembers(removeConversationMembersRequest);
+        if (removeConversationMembersResponse.getBaseResp().getStatusCode() != StatusCode.Success) {
+            log.error("[removeConversationMembers] RemoveConversationMembers rpc err, err = {}", removeConversationMembersResponse.getBaseResp());
+            throw new RpcException(removeConversationMembersResponse.getBaseResp());
         }
         JSONObject data = new JSONObject();
         return data;
@@ -253,6 +317,28 @@ public class IMServiceImpl implements IMService {
         if (addConversationAgentsResponse.getBaseResp().getStatusCode() != StatusCode.Success) {
             log.error("[addConversationAgents] AddConversationAgents rpc err, err = {}", addConversationAgentsResponse.getBaseResp());
             throw new RpcException(addConversationAgentsResponse.getBaseResp());
+        }
+        JSONObject data = new JSONObject();
+        return data;
+    }
+
+    @Override
+    public JSONObject removeConversationAgents(JSONObject req) throws Exception {
+        CustomAuthenticationToken authentication = (CustomAuthenticationToken) SecurityContextHolder.getContext().getAuthentication();
+        Long userId = authentication.getUserId();
+        Long conShortId = req.getLong("con_short_id");
+        String conId = req.getString("con_id");
+        List<Long> agentIds = req.getJSONArray("agent_ids").toJavaList(Long.class);
+        RemoveConversationAgentsRequest removeConversationAgentsRequest = RemoveConversationAgentsRequest.newBuilder()
+                .setConShortId(conShortId)
+                .setConId(conId)
+                .addAllAgentIds(agentIds)
+                .setOperator(userId)
+                .build();
+        RemoveConversationAgentsResponse removeConversationAgentsResponse = imStub.removeConversationAgents(removeConversationAgentsRequest);
+        if (removeConversationAgentsResponse.getBaseResp().getStatusCode() != StatusCode.Success) {
+            log.error("[removeConversationAgents] RemoveConversationAgents rpc err, err = {}", removeConversationAgentsResponse.getBaseResp());
+            throw new RpcException(removeConversationAgentsResponse.getBaseResp());
         }
         JSONObject data = new JSONObject();
         return data;
