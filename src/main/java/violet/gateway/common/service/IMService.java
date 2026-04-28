@@ -3,6 +3,8 @@ package violet.gateway.common.service;
 import com.alibaba.fastjson.JSONObject;
 
 public interface IMService {
+    JSONObject getInitInfo(JSONObject req) throws Exception;
+
     JSONObject sendMessage(JSONObject req) throws Exception;
 
     JSONObject getMessageByUser(JSONObject req) throws Exception;
@@ -21,17 +23,27 @@ public interface IMService {
 
     JSONObject getConversationInfo(JSONObject req) throws Exception;
 
-    JSONObject updateConversationInfo(JSONObject req) throws Exception;
+    JSONObject updateConversationCore(JSONObject req) throws Exception;
+
+    JSONObject updateConversationSetting(JSONObject req) throws Exception;
+
+    JSONObject updateConversationMember(JSONObject req) throws Exception;
+
+    JSONObject deleteConversation(JSONObject req) throws Exception;
 
     JSONObject addConversationMembers(JSONObject req) throws Exception;
 
-    JSONObject removeConversationMembers(JSONObject req) throws Exception;
+    JSONObject removeConversationMember(JSONObject req) throws Exception;
 
     JSONObject getConversationMembers(JSONObject req) throws Exception;
 
+    JSONObject getConversationMembersByIds(JSONObject req) throws Exception;
+
     JSONObject addConversationAgents(JSONObject req) throws Exception;
 
-    JSONObject removeConversationAgents(JSONObject req) throws Exception;
+    JSONObject removeConversationAgent(JSONObject req) throws Exception;
 
     JSONObject getConversationAgents(JSONObject req) throws Exception;
+
+    JSONObject getConversationAgentsByIds(JSONObject req) throws Exception;
 }

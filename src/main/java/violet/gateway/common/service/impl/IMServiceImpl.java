@@ -10,6 +10,7 @@ import violet.gateway.common.proto_gen.action.ActionServiceGrpc;
 import violet.gateway.common.proto_gen.action.GetUserInfosRequest;
 import violet.gateway.common.proto_gen.action.GetUserInfosResponse;
 import violet.gateway.common.proto_gen.action.UserInfo;
+import violet.gateway.common.proto_gen.aigc.AgentInfo;
 import violet.gateway.common.proto_gen.aigc.AigcServiceGrpc;
 import violet.gateway.common.proto_gen.aigc.GetAgentsByIdsRequest;
 import violet.gateway.common.proto_gen.aigc.GetAgentsByIdsResponse;
@@ -19,6 +20,8 @@ import violet.gateway.common.service.IMService;
 import violet.gateway.common.utils.CustomAuthenticationToken;
 import violet.gateway.common.utils.RpcException;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -32,6 +35,23 @@ public class IMServiceImpl implements IMService {
     private ActionServiceGrpc.ActionServiceBlockingStub actionStub;
     @GrpcClient("aigc")
     private AigcServiceGrpc.AigcServiceBlockingStub aigcStub;
+
+    @Override
+    public JSONObject getInitInfo(JSONObject req) throws Exception {
+        CustomAuthenticationToken authentication = (CustomAuthenticationToken) SecurityContextHolder.getContext().getAuthentication();
+        Long userId = authentication.getUserId();
+        GetInitInfoRequest getInitInfoRequest = GetInitInfoRequest.newBuilder()
+                .setUserId(userId)
+                .build();
+        GetInitInfoResponse getInitInfoResponse = imStub.getInitInfo(getInitInfoRequest);
+        if (getInitInfoResponse.getBaseResp().getStatusCode() != StatusCode.Success) {
+            log.error("[getInitInfo] GetInitInfo rpc err, err = {}", getInitInfoResponse.getBaseResp());
+            throw new RpcException(getInitInfoResponse.getBaseResp());
+        }
+        JSONObject data = new JSONObject();
+        data.put("user_cmd_index", getInitInfoResponse.getUserCmdIndex());
+        return data;
+    }
 
     @Override
     public JSONObject sendMessage(JSONObject req) throws Exception {
@@ -99,7 +119,7 @@ public class IMServiceImpl implements IMService {
         Long conShortId = req.getLong("con_short_id");
         Long conIndex = req.getLong("con_index");
         Long limit = req.getLong("limit");
-        GetMessageByConversationRequest getMessageByConversationRequest = GetMessageByConversationRequest.newBuilder().setUserId(userId).setConShortId(conShortId).setConIndex(conIndex).setLimit(limit).build();
+        GetMessageByConversationRequest getMessageByConversationRequest = GetMessageByConversationRequest.newBuilder().setSenderId(userId).setSenderType(SenderType.User_VALUE).setConShortId(conShortId).setConIndex(conIndex).setLimit(limit).build();
         GetMessageByConversationResponse getMessageByConversationResponse = imStub.getMessageByConversation(getMessageByConversationRequest);
         if (getMessageByConversationResponse.getBaseResp().getStatusCode() != StatusCode.Success) {
             log.error("[getMessageByConversation] GetMessageByConversation rpc err, err = {}", getMessageByConversationResponse.getBaseResp());
@@ -195,22 +215,84 @@ public class IMServiceImpl implements IMService {
     }
 
     @Override
-    public JSONObject updateConversationInfo(JSONObject req) throws Exception {
+    public JSONObject updateConversationCore(JSONObject req) throws Exception {
         CustomAuthenticationToken authentication = (CustomAuthenticationToken) SecurityContextHolder.getContext().getAuthentication();
         Long userId = authentication.getUserId();
         Long conShortId = req.getLong("con_short_id");
         String type = req.getString("type");
         String value = req.getString("value");
-        UpdateConversationInfoRequest updateConversationInfoRequest = UpdateConversationInfoRequest.newBuilder()
+        UpdateConversationCoreRequest updateConversationCoreRequest = UpdateConversationCoreRequest.newBuilder()
                 .setUserId(userId)
                 .setConShortId(conShortId)
                 .setType(type)
                 .setValue(value)
                 .build();
-        UpdateConversationInfoResponse updateConversationInfoResponse = imStub.updateConversationInfo(updateConversationInfoRequest);
-        if (updateConversationInfoResponse.getBaseResp().getStatusCode() != StatusCode.Success) {
-            log.error("[updateConversationInfo] UpdateConversationInfo rpc err, err = {}", updateConversationInfoResponse.getBaseResp());
-            throw new RpcException(updateConversationInfoResponse.getBaseResp());
+        UpdateConversationCoreResponse updateConversationCoreResponse = imStub.updateConversationCore(updateConversationCoreRequest);
+        if (updateConversationCoreResponse.getBaseResp().getStatusCode() != StatusCode.Success) {
+            log.error("[updateConversationCore] UpdateConversationCore rpc err, err = {}", updateConversationCoreResponse.getBaseResp());
+            throw new RpcException(updateConversationCoreResponse.getBaseResp());
+        }
+        JSONObject data = new JSONObject();
+        return data;
+    }
+
+    @Override
+    public JSONObject updateConversationSetting(JSONObject req) throws Exception {
+        CustomAuthenticationToken authentication = (CustomAuthenticationToken) SecurityContextHolder.getContext().getAuthentication();
+        Long userId = authentication.getUserId();
+        Long conShortId = req.getLong("con_short_id");
+        String type = req.getString("type");
+        String value = req.getString("value");
+        UpdateConversationSettingRequest updateConversationSettingRequest = UpdateConversationSettingRequest.newBuilder()
+                .setUserId(userId)
+                .setConShortId(conShortId)
+                .setType(type)
+                .setValue(value)
+                .build();
+        UpdateConversationSettingResponse updateConversationSettingResponse = imStub.updateConversationSetting(updateConversationSettingRequest);
+        if (updateConversationSettingResponse.getBaseResp().getStatusCode() != StatusCode.Success) {
+            log.error("[updateConversationSetting] UpdateConversationSetting rpc err, err = {}", updateConversationSettingResponse.getBaseResp());
+            throw new RpcException(updateConversationSettingResponse.getBaseResp());
+        }
+        JSONObject data = new JSONObject();
+        return data;
+    }
+
+    @Override
+    public JSONObject updateConversationMember(JSONObject req) throws Exception {
+        CustomAuthenticationToken authentication = (CustomAuthenticationToken) SecurityContextHolder.getContext().getAuthentication();
+        Long userId = authentication.getUserId();
+        Long conShortId = req.getLong("con_short_id");
+        String type = req.getString("type");
+        String value = req.getString("value");
+        UpdateConversationMemberRequest updateConversationMemberRequest = UpdateConversationMemberRequest.newBuilder()
+                .setUserId(userId)
+                .setConShortId(conShortId)
+                .setType(type)
+                .setValue(value)
+                .build();
+        UpdateConversationMemberResponse updateConversationMemberResponse = imStub.updateConversationMember(updateConversationMemberRequest);
+        if (updateConversationMemberResponse.getBaseResp().getStatusCode() != StatusCode.Success) {
+            log.error("[updateConversationMember] UpdateConversationMember rpc err, err = {}", updateConversationMemberResponse.getBaseResp());
+            throw new RpcException(updateConversationMemberResponse.getBaseResp());
+        }
+        JSONObject data = new JSONObject();
+        return data;
+    }
+
+    @Override
+    public JSONObject deleteConversation(JSONObject req) throws Exception {
+        CustomAuthenticationToken authentication = (CustomAuthenticationToken) SecurityContextHolder.getContext().getAuthentication();
+        Long userId = authentication.getUserId();
+        Long conShortId = req.getLong("con_short_id");
+        DeleteConversationRequest deleteConversationRequest = DeleteConversationRequest.newBuilder()
+                .setUserId(userId)
+                .setConShortId(conShortId)
+                .build();
+        DeleteConversationResponse deleteConversationResponse = imStub.deleteConversation(deleteConversationRequest);
+        if (deleteConversationResponse.getBaseResp().getStatusCode() != StatusCode.Success) {
+            log.error("[deleteConversation] DeleteConversation rpc err, err = {}", deleteConversationResponse.getBaseResp());
+            throw new RpcException(deleteConversationResponse.getBaseResp());
         }
         JSONObject data = new JSONObject();
         return data;
@@ -221,11 +303,9 @@ public class IMServiceImpl implements IMService {
         CustomAuthenticationToken authentication = (CustomAuthenticationToken) SecurityContextHolder.getContext().getAuthentication();
         Long userId = authentication.getUserId();
         Long conShortId = req.getLong("con_short_id");
-        String conId = req.getString("con_id");
         List<Long> members = req.getJSONArray("members").toJavaList(Long.class);
         AddConversationMembersRequest addConversationMembersRequest = AddConversationMembersRequest.newBuilder()
                 .setConShortId(conShortId)
-                .setConId(conId)
                 .addAllMembers(members)
                 .setOperator(userId)
                 .build();
@@ -239,22 +319,20 @@ public class IMServiceImpl implements IMService {
     }
 
     @Override
-    public JSONObject removeConversationMembers(JSONObject req) throws Exception {
+    public JSONObject removeConversationMember(JSONObject req) throws Exception {
         CustomAuthenticationToken authentication = (CustomAuthenticationToken) SecurityContextHolder.getContext().getAuthentication();
         Long userId = authentication.getUserId();
         Long conShortId = req.getLong("con_short_id");
-        String conId = req.getString("con_id");
-        List<Long> members = req.getJSONArray("members").toJavaList(Long.class);
-        RemoveConversationMembersRequest removeConversationMembersRequest = RemoveConversationMembersRequest.newBuilder()
+        Long member = req.getLong("member");
+        RemoveConversationMemberRequest removeConversationMembersRequest = RemoveConversationMemberRequest.newBuilder()
                 .setConShortId(conShortId)
-                .setConId(conId)
-                .addAllMembers(members)
+                .setMember(member)
                 .setOperator(userId)
                 .build();
-        RemoveConversationMembersResponse removeConversationMembersResponse = imStub.removeConversationMembers(removeConversationMembersRequest);
-        if (removeConversationMembersResponse.getBaseResp().getStatusCode() != StatusCode.Success) {
-            log.error("[removeConversationMembers] RemoveConversationMembers rpc err, err = {}", removeConversationMembersResponse.getBaseResp());
-            throw new RpcException(removeConversationMembersResponse.getBaseResp());
+        RemoveConversationMemberResponse removeConversationMemberResponse = imStub.removeConversationMember(removeConversationMembersRequest);
+        if (removeConversationMemberResponse.getBaseResp().getStatusCode() != StatusCode.Success) {
+            log.error("[removeConversationMember] RemoveConversationMember rpc err, err = {}", removeConversationMemberResponse.getBaseResp());
+            throw new RpcException(removeConversationMemberResponse.getBaseResp());
         }
         JSONObject data = new JSONObject();
         return data;
@@ -301,15 +379,56 @@ public class IMServiceImpl implements IMService {
     }
 
     @Override
+    public JSONObject getConversationMembersByIds(JSONObject req) throws Exception {;
+        Long conShortId = req.getLong("con_short_id");
+        List<Long> memberIds = req.getJSONArray("member_ids").toJavaList(Long.class);
+        GetConversationMembersByIdsRequest getConversationMembersByIdsRequest = GetConversationMembersByIdsRequest.newBuilder()
+                .setConShortId(conShortId)
+                .addAllMemberIds(memberIds)
+                .build();
+        GetConversationMembersByIdsResponse getConversationMembersByIdsResponse = imStub.getConversationMembersByIds(getConversationMembersByIdsRequest);
+        if (getConversationMembersByIdsResponse.getBaseResp().getStatusCode() != StatusCode.Success) {
+            log.error("[getConversationMembersByIds] GetConversationMembersByIds rpc err, err = {}", getConversationMembersByIdsResponse.getBaseResp());
+            throw new RpcException(getConversationMembersByIdsResponse.getBaseResp());
+        }
+        List<Long> userIds = new ArrayList<>(getConversationMembersByIdsResponse.getMembersMap().keySet());
+        GetUserInfosRequest getUserInfosRequest = GetUserInfosRequest.newBuilder()
+                .addAllUserIds(userIds)
+                .build();
+        GetUserInfosResponse getUserInfosResponse = actionStub.getUserInfos(getUserInfosRequest);
+        if (getUserInfosResponse.getBaseResp().getStatusCode() != StatusCode.Success) {
+            log.error("[getConversationMembersByIds] GetUserInfos rpc err, err = {}", getUserInfosResponse.getBaseResp());
+            throw new RpcException(getUserInfosResponse.getBaseResp());
+        }
+        Map<Long, UserInfo> userInfoMap = getUserInfosResponse.getUserInfosList().stream().collect(Collectors.toMap(UserInfo::getUserId, userInfo -> userInfo));
+        Map<Long, MemberVO> memberVOMap = new HashMap<>();
+        getConversationMembersByIdsResponse.getMembersMap().forEach((userId, member) -> {
+            MemberVO memberVO = new MemberVO();
+            memberVO.setConShortId(member.getConShortId());
+            memberVO.setUserId(member.getUserId());
+            memberVO.setPrivilege(member.getPrivilege());
+            memberVO.setNickname(member.getNickName());
+            memberVO.setCreateTime(member.getCreateTime());
+            memberVO.setStatus(member.getStatus());
+            memberVO.setExtra(member.getExtra());
+            UserInfo userInfo = userInfoMap.get(member.getUserId());
+            memberVO.setUsername(userInfo == null ? "未知用户" : userInfo.getUsername());
+            memberVO.setAvatar(userInfo == null ? "" : userInfo.getAvatar());
+            memberVOMap.put(userId, memberVO);
+        });
+        JSONObject data = new JSONObject();
+        data.put("members", memberVOMap);
+        return data;
+    }
+
+    @Override
     public JSONObject addConversationAgents(JSONObject req) throws Exception {
         CustomAuthenticationToken authentication = (CustomAuthenticationToken) SecurityContextHolder.getContext().getAuthentication();
         Long userId = authentication.getUserId();
         Long conShortId = req.getLong("con_short_id");
-        String conId = req.getString("con_id");
         List<Long> agentIds = req.getJSONArray("agent_ids").toJavaList(Long.class);
         AddConversationAgentsRequest addConversationAgentsRequest = AddConversationAgentsRequest.newBuilder()
                 .setConShortId(conShortId)
-                .setConId(conId)
                 .addAllAgentIds(agentIds)
                 .setOperator(userId)
                 .build();
@@ -323,22 +442,20 @@ public class IMServiceImpl implements IMService {
     }
 
     @Override
-    public JSONObject removeConversationAgents(JSONObject req) throws Exception {
+    public JSONObject removeConversationAgent(JSONObject req) throws Exception {
         CustomAuthenticationToken authentication = (CustomAuthenticationToken) SecurityContextHolder.getContext().getAuthentication();
         Long userId = authentication.getUserId();
         Long conShortId = req.getLong("con_short_id");
-        String conId = req.getString("con_id");
-        List<Long> agentIds = req.getJSONArray("agent_ids").toJavaList(Long.class);
-        RemoveConversationAgentsRequest removeConversationAgentsRequest = RemoveConversationAgentsRequest.newBuilder()
+        Long agentId = req.getLong("agent_id");
+        RemoveConversationAgentRequest removeConversationAgentRequest = RemoveConversationAgentRequest.newBuilder()
                 .setConShortId(conShortId)
-                .setConId(conId)
-                .addAllAgentIds(agentIds)
+                .setAgentId(agentId)
                 .setOperator(userId)
                 .build();
-        RemoveConversationAgentsResponse removeConversationAgentsResponse = imStub.removeConversationAgents(removeConversationAgentsRequest);
-        if (removeConversationAgentsResponse.getBaseResp().getStatusCode() != StatusCode.Success) {
-            log.error("[removeConversationAgents] RemoveConversationAgents rpc err, err = {}", removeConversationAgentsResponse.getBaseResp());
-            throw new RpcException(removeConversationAgentsResponse.getBaseResp());
+        RemoveConversationAgentResponse removeConversationAgentResponse = imStub.removeConversationAgent(removeConversationAgentRequest);
+        if (removeConversationAgentResponse.getBaseResp().getStatusCode() != StatusCode.Success) {
+            log.error("[removeConversationAgent] RemoveConversationAgent rpc err, err = {}", removeConversationAgentResponse.getBaseResp());
+            throw new RpcException(removeConversationAgentResponse.getBaseResp());
         }
         JSONObject data = new JSONObject();
         return data;
@@ -366,6 +483,34 @@ public class IMServiceImpl implements IMService {
         }
         JSONObject data = new JSONObject();
         data.put("agents", getAgentsByIdsResponse.getAgentInfosList());
+        return data;
+    }
+
+    @Override
+    public JSONObject getConversationAgentsByIds(JSONObject req) throws Exception {
+        Long conShortId = req.getLong("con_short_id");
+        List<Long> agentIds = req.getJSONArray("agent_ids").toJavaList(Long.class);
+        GetConversationAgentsByIdsRequest getConversationAgentsByIdsRequest = GetConversationAgentsByIdsRequest.newBuilder()
+                .setConShortId(conShortId)
+                .addAllAgentIds(agentIds)
+                .build();
+        GetConversationAgentsByIdsResponse getConversationAgentsByIdsResponse = imStub.getConversationAgentsByIds(getConversationAgentsByIdsRequest);
+        if (getConversationAgentsByIdsResponse.getBaseResp().getStatusCode() != StatusCode.Success) {
+            log.error("[getConversationAgentsByIds] GetConversationAgentsByIds rpc err, err = {}", getConversationAgentsByIdsResponse.getBaseResp());
+            throw new RpcException(getConversationAgentsByIdsResponse.getBaseResp());
+        }
+        List<Long> agentIdList = new ArrayList<>(getConversationAgentsByIdsResponse.getAgentsMap().keySet());
+        GetAgentsByIdsRequest getAgentsByIdsRequest = GetAgentsByIdsRequest.newBuilder()
+                .addAllAgentIds(agentIdList)
+                .build();
+        GetAgentsByIdsResponse getAgentsByIdsResponse = aigcStub.getAgentsByIds(getAgentsByIdsRequest);
+        if (getAgentsByIdsResponse.getBaseResp().getStatusCode() != StatusCode.Success) {
+            log.error("[getConversationAgentsByIds] GetAgentsByIds rpc err, err = {}", getAgentsByIdsResponse.getBaseResp());
+            throw new RpcException(getAgentsByIdsResponse.getBaseResp());
+        }
+        Map<Long, AgentInfo> agentInfoMap = getAgentsByIdsResponse.getAgentInfosList().stream().collect(Collectors.toMap(AgentInfo::getAgentId, agentInfo -> agentInfo));
+        JSONObject data = new JSONObject();
+        data.put("agents", agentInfoMap);
         return data;
     }
 }
