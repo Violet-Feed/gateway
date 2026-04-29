@@ -29,8 +29,6 @@ public interface IMService {
 
     JSONObject updateConversationMember(JSONObject req) throws Exception;
 
-    JSONObject deleteConversation(JSONObject req) throws Exception;
-
     JSONObject addConversationMembers(JSONObject req) throws Exception;
 
     JSONObject removeConversationMember(JSONObject req) throws Exception;

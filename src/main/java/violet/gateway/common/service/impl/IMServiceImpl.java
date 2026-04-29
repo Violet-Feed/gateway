@@ -281,24 +281,6 @@ public class IMServiceImpl implements IMService {
     }
 
     @Override
-    public JSONObject deleteConversation(JSONObject req) throws Exception {
-        CustomAuthenticationToken authentication = (CustomAuthenticationToken) SecurityContextHolder.getContext().getAuthentication();
-        Long userId = authentication.getUserId();
-        Long conShortId = req.getLong("con_short_id");
-        DeleteConversationRequest deleteConversationRequest = DeleteConversationRequest.newBuilder()
-                .setUserId(userId)
-                .setConShortId(conShortId)
-                .build();
-        DeleteConversationResponse deleteConversationResponse = imStub.deleteConversation(deleteConversationRequest);
-        if (deleteConversationResponse.getBaseResp().getStatusCode() != StatusCode.Success) {
-            log.error("[deleteConversation] DeleteConversation rpc err, err = {}", deleteConversationResponse.getBaseResp());
-            throw new RpcException(deleteConversationResponse.getBaseResp());
-        }
-        JSONObject data = new JSONObject();
-        return data;
-    }
-
-    @Override
     public JSONObject addConversationMembers(JSONObject req) throws Exception {
         CustomAuthenticationToken authentication = (CustomAuthenticationToken) SecurityContextHolder.getContext().getAuthentication();
         Long userId = authentication.getUserId();
@@ -391,7 +373,7 @@ public class IMServiceImpl implements IMService {
             log.error("[getConversationMembersByIds] GetConversationMembersByIds rpc err, err = {}", getConversationMembersByIdsResponse.getBaseResp());
             throw new RpcException(getConversationMembersByIdsResponse.getBaseResp());
         }
-        List<Long> userIds = new ArrayList<>(getConversationMembersByIdsResponse.getMembersMap().keySet());
+        List<Long> userIds = getConversationMembersByIdsResponse.getMembersList().stream().map(ConversationUserInfo::getUserId).collect(Collectors.toList());
         GetUserInfosRequest getUserInfosRequest = GetUserInfosRequest.newBuilder()
                 .addAllUserIds(userIds)
                 .build();
@@ -401,8 +383,7 @@ public class IMServiceImpl implements IMService {
             throw new RpcException(getUserInfosResponse.getBaseResp());
         }
         Map<Long, UserInfo> userInfoMap = getUserInfosResponse.getUserInfosList().stream().collect(Collectors.toMap(UserInfo::getUserId, userInfo -> userInfo));
-        Map<Long, MemberVO> memberVOMap = new HashMap<>();
-        getConversationMembersByIdsResponse.getMembersMap().forEach((userId, member) -> {
+        Map<Long, MemberVO> memberVOMap = getConversationMembersByIdsResponse.getMembersList().stream().map(member -> {
             MemberVO memberVO = new MemberVO();
             memberVO.setConShortId(member.getConShortId());
             memberVO.setUserId(member.getUserId());
@@ -414,8 +395,8 @@ public class IMServiceImpl implements IMService {
             UserInfo userInfo = userInfoMap.get(member.getUserId());
             memberVO.setUsername(userInfo == null ? "未知用户" : userInfo.getUsername());
             memberVO.setAvatar(userInfo == null ? "" : userInfo.getAvatar());
-            memberVOMap.put(userId, memberVO);
-        });
+            return memberVO;
+        }).collect(Collectors.toMap(MemberVO::getUserId, memberVO -> memberVO));
         JSONObject data = new JSONObject();
         data.put("members", memberVOMap);
         return data;
@@ -499,7 +480,7 @@ public class IMServiceImpl implements IMService {
             log.error("[getConversationAgentsByIds] GetConversationAgentsByIds rpc err, err = {}", getConversationAgentsByIdsResponse.getBaseResp());
             throw new RpcException(getConversationAgentsByIdsResponse.getBaseResp());
         }
-        List<Long> agentIdList = new ArrayList<>(getConversationAgentsByIdsResponse.getAgentsMap().keySet());
+        List<Long> agentIdList = getConversationAgentsByIdsResponse.getAgentsList().stream().map(ConversationAgentInfo::getAgentId).collect(Collectors.toList());
         GetAgentsByIdsRequest getAgentsByIdsRequest = GetAgentsByIdsRequest.newBuilder()
                 .addAllAgentIds(agentIdList)
                 .build();

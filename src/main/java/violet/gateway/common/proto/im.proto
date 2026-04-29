@@ -42,6 +42,7 @@ enum ConMessageType{
 
 enum UpdateSettingType{
   UpdateSettingType_Not_Use = 0;
+  Modify_Min_Index = 1;
 }
 
 enum UpdateMemberType{
@@ -271,14 +272,6 @@ message UpdateConversationMemberResponse{
   common.BaseResp baseResp = 255;
 }
 
-message DeleteConversationRequest{
-  int64 user_id = 1;
-  int64 con_short_id = 2;
-}
-message DeleteConversationResponse{
-  common.BaseResp baseResp = 255;
-}
-
 message AddConversationMembersRequest{
   int64 con_short_id = 1;
   repeated int64 members = 2;
@@ -310,7 +303,7 @@ message GetConversationMembersByIdsRequest{
   repeated int64 member_ids = 2;
 }
 message GetConversationMembersByIdsResponse{
-  map<int64, ConversationUserInfo> members = 1;
+  repeated ConversationUserInfo members = 1;
   common.BaseResp baseResp = 255;
 }
 
@@ -362,7 +355,7 @@ message GetConversationAgentsByIdsRequest{
   repeated int64 agent_ids = 2;
 }
 message GetConversationAgentsByIdsResponse{
-  map<int64, ConversationAgentInfo> agents = 1;
+  repeated ConversationAgentInfo agents = 1;
   common.BaseResp baseResp = 255;
 }
 
@@ -462,7 +455,6 @@ service IMService{
   rpc UpdateConversationCore(UpdateConversationCoreRequest)returns(UpdateConversationCoreResponse);
   rpc UpdateConversationSetting(UpdateConversationSettingRequest)returns(UpdateConversationSettingResponse);
   rpc UpdateConversationMember(UpdateConversationMemberRequest)returns(UpdateConversationMemberResponse);
-  rpc DeleteConversation(DeleteConversationRequest)returns(DeleteConversationResponse);
   rpc AddConversationMembers(AddConversationMembersRequest)returns(AddConversationMembersResponse);
   rpc RemoveConversationMember(RemoveConversationMemberRequest)returns(RemoveConversationMemberResponse);
   rpc GetConversationMembers(GetConversationMembersRequest)returns(GetConversationMembersResponse);
