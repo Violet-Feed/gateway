@@ -11,6 +11,10 @@ public interface ActionService {
 
     JSONObject createReply(JSONObject req) throws Exception;
 
+    JSONObject deleteComment(JSONObject req) throws Exception;
+
+    JSONObject deleteReply(JSONObject req) throws Exception;
+
     JSONObject getActionInfo(JSONObject req) throws Exception;
 
     JSONObject getCommentList(JSONObject req) throws Exception;

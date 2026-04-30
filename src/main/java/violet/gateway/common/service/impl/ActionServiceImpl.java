@@ -112,6 +112,42 @@ public class ActionServiceImpl implements ActionService {
     }
 
     @Override
+    public JSONObject deleteComment(JSONObject req) throws Exception {
+        CustomAuthenticationToken authentication = (CustomAuthenticationToken) SecurityContextHolder.getContext().getAuthentication();
+        Long userId = authentication.getUserId();
+        Long commentId = req.getLong("comment_id");
+        DeleteCommentRequest deleteCommentRequest = DeleteCommentRequest.newBuilder()
+                .setUserId(userId)
+                .setCommentId(commentId)
+                .build();
+        DeleteCommentResponse deleteCommentResponse = actionStub.deleteComment(deleteCommentRequest);
+        if (deleteCommentResponse.getBaseResp().getStatusCode() != StatusCode.Success) {
+            log.error("[deleteComment] DeleteComment rpc err, err = {}", deleteCommentResponse.getBaseResp());
+            throw new Exception("DeleteComment rpc error");
+        }
+        JSONObject data = new JSONObject();
+        return data;
+    }
+
+    @Override
+    public JSONObject deleteReply(JSONObject req) throws Exception {
+        CustomAuthenticationToken authentication = (CustomAuthenticationToken) SecurityContextHolder.getContext().getAuthentication();
+        Long userId = authentication.getUserId();
+        Long replyId = req.getLong("reply_id");
+        DeleteCommentReplyRequest deleteCommentReplyRequest = DeleteCommentReplyRequest.newBuilder()
+                .setUserId(userId)
+                .setReplyId(replyId)
+                .build();
+        DeleteCommentReplyResponse deleteCommentReplyResponse = actionStub.deleteCommentReply(deleteCommentReplyRequest);
+        if (deleteCommentReplyResponse.getBaseResp().getStatusCode() != StatusCode.Success) {
+            log.error("[deleteReply] DeleteCommentReply rpc err, err = {}", deleteCommentReplyResponse.getBaseResp());
+            throw new Exception("DeleteCommentReply rpc error");
+        }
+        JSONObject data = new JSONObject();
+        return data;
+    }
+
+    @Override
     public JSONObject getActionInfo(JSONObject req) throws Exception {
         CustomAuthenticationToken authentication = (CustomAuthenticationToken) SecurityContextHolder.getContext().getAuthentication();
         Long userId = authentication.getUserId();
@@ -150,8 +186,7 @@ public class ActionServiceImpl implements ActionService {
         }
         data.put("comment_count", getCommentCountResponse.getCommentCount());
         GetForwardCountRequest getForwardCountRequest = GetForwardCountRequest.newBuilder()
-                .setEntityType(entityType)
-                .setEntityId(entityId)
+                .setCreationId(entityId)
                 .build();
         GetForwardCountResponse getForwardCountResponse = actionStub.getForwardCount(getForwardCountRequest);
         if (getForwardCountResponse.getBaseResp().getStatusCode() != StatusCode.Success) {
@@ -261,11 +296,14 @@ public class ActionServiceImpl implements ActionService {
         String entityType = req.getString("entity_type");
         Long entityId = req.getLong("entity_id");
         Long conShortId = req.getLong("con_short_id");
+        String conId = req.getString("con_id");
+        Integer conType = req.getInteger("con_type");
         ForwardRequest forwardRequest = ForwardRequest.newBuilder()
                 .setUserId(userId)
-                .setEntityType(entityType)
-                .setEntityId(entityId)
+                .setCreationId(entityId)
                 .setConShortId(conShortId)
+                .setConId(conId)
+                .setConType(conType)
                 .build();
         ForwardResponse forwardResponse = actionStub.forward(forwardRequest);
         if (forwardResponse.getBaseResp().getStatusCode() != StatusCode.Success) {

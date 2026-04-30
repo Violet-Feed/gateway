@@ -332,6 +332,11 @@ public class IMServiceImpl implements IMService {
             throw new RpcException(getConversationMembersResponse.getBaseResp());
         }
         List<Long> userIds = getConversationMembersResponse.getMembersList().stream().map(ConversationUserInfo::getUserId).collect(Collectors.toList());
+        if (userIds.isEmpty()) {
+            JSONObject data = new JSONObject();
+            data.put("members", new ArrayList<>());
+            return data;
+        }
         GetUserInfosRequest getUserInfosRequest = GetUserInfosRequest.newBuilder()
                 .addAllUserIds(userIds)
                 .build();
@@ -374,6 +379,11 @@ public class IMServiceImpl implements IMService {
             throw new RpcException(getConversationMembersByIdsResponse.getBaseResp());
         }
         List<Long> userIds = getConversationMembersByIdsResponse.getMembersList().stream().map(ConversationUserInfo::getUserId).collect(Collectors.toList());
+        if (userIds.isEmpty()) {
+            JSONObject data = new JSONObject();
+            data.put("members", new ArrayList<>());
+            return data;
+        }
         GetUserInfosRequest getUserInfosRequest = GetUserInfosRequest.newBuilder()
                 .addAllUserIds(userIds)
                 .build();
@@ -454,6 +464,11 @@ public class IMServiceImpl implements IMService {
             throw new RpcException(getConversationAgentsResponse.getBaseResp());
         }
         List<Long> agentIds = getConversationAgentsResponse.getAgentsList().stream().map(ConversationAgentInfo::getAgentId).collect(Collectors.toList());
+        if (agentIds.isEmpty()) {
+            JSONObject data = new JSONObject();
+            data.put("agents", new ArrayList<>());
+            return data;
+        }
         GetAgentsByIdsRequest getAgentsByIdsRequest = GetAgentsByIdsRequest.newBuilder()
                 .addAllAgentIds(agentIds)
                 .build();
@@ -481,6 +496,11 @@ public class IMServiceImpl implements IMService {
             throw new RpcException(getConversationAgentsByIdsResponse.getBaseResp());
         }
         List<Long> agentIdList = getConversationAgentsByIdsResponse.getAgentsList().stream().map(ConversationAgentInfo::getAgentId).collect(Collectors.toList());
+        if (agentIdList.isEmpty()) {
+            JSONObject data = new JSONObject();
+            data.put("agents", new ArrayList<>());
+            return data;
+        }
         GetAgentsByIdsRequest getAgentsByIdsRequest = GetAgentsByIdsRequest.newBuilder()
                 .addAllAgentIds(agentIdList)
                 .build();
