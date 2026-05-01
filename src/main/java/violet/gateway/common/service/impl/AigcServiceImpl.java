@@ -6,6 +6,7 @@ import net.devh.boot.grpc.client.inject.GrpcClient;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import violet.gateway.common.pojo.AgentVO;
+import violet.gateway.common.pojo.CommentVO;
 import violet.gateway.common.pojo.CreationHomeVO;
 import violet.gateway.common.proto_gen.action.*;
 import violet.gateway.common.proto_gen.aigc.*;
@@ -176,6 +177,129 @@ public class AigcServiceImpl implements AigcService {
         JSONObject data = new JSONObject();
         data.put("creation", getCreationByIdResponse.getCreation());
         return data;
+    }
+
+    @Override
+    public JSONObject getCreationByForward(JSONObject req) throws Exception {
+        Long creationId = req.getLong("creation_id");
+        GetCreationByIdRequest getCreationByIdRequest = GetCreationByIdRequest.newBuilder()
+                .setCreationId(creationId)
+                .build();
+        GetCreationByIdResponse getCreationByIdResponse = aigcStub.getCreationById(getCreationByIdRequest);
+        if (getCreationByIdResponse.getBaseResp().getStatusCode() != StatusCode.Success) {
+            log.error("[getCreationByForward] GetCreationById rpc err, err = {}", getCreationByIdResponse.getBaseResp());
+            throw new RpcException(getCreationByIdResponse.getBaseResp());
+        }
+        JSONObject data = new JSONObject();
+        data.put("creation", getCreationByIdResponse.getCreation());
+        Long userId = getCreationByIdResponse.getCreation().getUserId();
+        GetUserInfosRequest getUserInfosRequest = GetUserInfosRequest.newBuilder()
+                .addUserIds(userId)
+                .build();
+        GetUserInfosResponse getUserInfosResponse = actionStub.getUserInfos(getUserInfosRequest);
+        if (getUserInfosResponse.getBaseResp().getStatusCode() != StatusCode.Success) {
+            log.error("[getCreationByForward] GetUserInfos rpc err, err = {}", getUserInfosResponse.getBaseResp());
+            throw new RpcException(getUserInfosResponse.getBaseResp());
+        }
+        data.put("user_info", getUserInfosResponse.getUserInfosList());
+        MGetFollowCountRequest.Builder mGetFollowCountRequest = MGetFollowCountRequest.newBuilder()
+                .addUserIds(userId)
+                .setNeedFollower(true);
+        MGetFollowCountResponse mGetFollowCountResponse = actionStub.mGetFollowCount(mGetFollowCountRequest.build());
+        if (mGetFollowCountResponse.getBaseResp().getStatusCode() != StatusCode.Success) {
+            log.error("[getCreationByForward] MGetFollowCount rpc err, err = {}", mGetFollowCountResponse.getBaseResp());
+            throw new RpcException(mGetFollowCountResponse.getBaseResp());
+        }
+        data.put("follower_count", mGetFollowCountResponse.getFollowerCountMap().get(userId));
+        MGetDiggCountByEntityRequest mGetDiggCountByEntityRequest = MGetDiggCountByEntityRequest.newBuilder()
+                .setEntityType("creation")
+                .addEntityIds(creationId)
+                .build();
+        MGetDiggCountByEntityResponse mGetDiggCountByEntityResponse = actionStub.mGetDiggCountByEntity(mGetDiggCountByEntityRequest);
+        if (mGetDiggCountByEntityResponse.getBaseResp().getStatusCode() != StatusCode.Success) {
+            log.error("[getCreationByForward] MGetDiggCountByEntity rpc err, err = {}", mGetDiggCountByEntityResponse.getBaseResp());
+            throw new RpcException(mGetDiggCountByEntityResponse.getBaseResp());
+        }
+        data.put("digg_count", mGetDiggCountByEntityResponse.getEntityDiggCountMap().get(creationId));
+        GetCommentCountRequest getCommentCountRequest = GetCommentCountRequest.newBuilder()
+                .setEntityType("creation")
+                .setEntityId(creationId)
+                .build();
+        GetCommentCountResponse getCommentCountResponse = actionStub.getCommentCount(getCommentCountRequest);
+        if (getCommentCountResponse.getBaseResp().getStatusCode() != StatusCode.Success) {
+            log.error("[getCreationByForward] GetCommentCount rpc err, err = {}", getCommentCountResponse.getBaseResp());
+            throw new Exception("GetCommentCount rpc error");
+        }
+        data.put("comment_count", getCommentCountResponse.getCommentCount());
+        GetForwardCountRequest getForwardCountRequest = GetForwardCountRequest.newBuilder()
+                .setCreationId(creationId)
+                .build();
+        GetForwardCountResponse getForwardCountResponse = actionStub.getForwardCount(getForwardCountRequest);
+        if (getForwardCountResponse.getBaseResp().getStatusCode() != StatusCode.Success) {
+            log.error("[getCreationByForward] GetForwardCount rpc err, err = {}", getForwardCountResponse.getBaseResp());
+            throw new Exception("GetForwardCount rpc error");
+        }
+        data.put("forward_count", getForwardCountResponse.getForwardCount());
+        GetCommentListRequest getCommentListRequest = GetCommentListRequest.newBuilder()
+                .setEntityType("creation")
+                .setEntityId(creationId)
+                .setPage(1)
+                .setSortType("digg")
+                .build();
+        GetCommentListResponse getCommentListResponse = actionStub.getCommentList(getCommentListRequest);
+        if (getCommentListResponse.getBaseResp().getStatusCode() != StatusCode.Success) {
+            log.error("[getCreationByForward] GetCommentList rpc err, err = {}", getCommentListResponse.getBaseResp());
+            throw new Exception("GetCommentList rpc error");
+        }
+        try {
+            List<CommentVO> commentVOList = fillForwardCommentInfo(getCommentListResponse.getCommentsList());
+            data.put("comments", commentVOList);
+        } catch (RpcException e) {
+            log.error("[getCreationByForward] fillCommentInfo err, err = {}", e.toString());
+            throw new Exception("fillCommentInfo error");
+        }
+        return data;
+    }
+
+    private List<CommentVO> fillForwardCommentInfo(List<CommentData> comments) throws RpcException {
+        if (comments.isEmpty()) {
+            return Collections.emptyList();
+        }
+        List<Long> userIds = comments.stream().map(CommentData::getUserId).collect(Collectors.toList());
+        List<Long> sibUserIds = comments.stream()
+                .map(CommentData::getSibUserId)
+                .filter(sibUserId -> sibUserId != 0)
+                .collect(Collectors.toList());
+        userIds.addAll(sibUserIds);
+        GetUserInfosRequest getUserInfosRequest = GetUserInfosRequest.newBuilder()
+                .addAllUserIds(userIds.stream().distinct().collect(Collectors.toList()))
+                .build();
+        GetUserInfosResponse getUserInfosResponse = actionStub.getUserInfos(getUserInfosRequest);
+        if (getUserInfosResponse.getBaseResp().getStatusCode() != StatusCode.Success) {
+            log.error("[fillForwardCommentInfo] GetUserInfos rpc err, err = {}", getUserInfosResponse.getBaseResp());
+            throw new RpcException(getUserInfosResponse.getBaseResp());
+        }
+        Map<Long, UserInfo> userInfosMap = getUserInfosResponse.getUserInfosList().stream().collect(Collectors.toMap(UserInfo::getUserId, userInfo -> userInfo));
+        return comments.stream().map(commentData -> {
+            CommentVO commentVO = new CommentVO();
+            commentVO.setCommentId(commentData.getCommentId());
+            commentVO.setContentType(commentData.getContentType());
+            commentVO.setContent(commentData.getContent());
+            commentVO.setUserId(commentData.getUserId());
+            UserInfo userInfo = userInfosMap.get(commentData.getUserId());
+            commentVO.setUsername(userInfo == null ? "未知用户" : userInfo.getUsername());
+            commentVO.setAvatar(userInfo == null ? "" : userInfo.getAvatar());
+            commentVO.setDiggCount(commentData.getDiggCount());
+            commentVO.setReplyCount(commentData.getReplyCount());
+            commentVO.setIsDigg(false);
+            commentVO.setCreateTime(commentData.getCreateTime());
+            commentVO.setSibUserId(commentData.getSibUserId());
+            if (commentData.getSibUserId() != 0) {
+                UserInfo sibUserInfo = userInfosMap.get(commentData.getSibUserId());
+                commentVO.setSibUsername(sibUserInfo == null ? "未知用户" : sibUserInfo.getUsername());
+            }
+            return commentVO;
+        }).collect(Collectors.toList());
     }
 
     @Override

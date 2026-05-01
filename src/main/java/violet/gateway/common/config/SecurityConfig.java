@@ -26,8 +26,11 @@ public class SecurityConfig {
                 .and()
                 .authorizeRequests()
                 .antMatchers(
+                        "/violet.html",
+                        "/logo.png",
                         "/api/user/login",
-                        "/api/user/register"
+                        "/api/user/register",
+                        "/api/aigc/get_creation_by_forward"
                 ).permitAll()
                 .antMatchers(HttpMethod.OPTIONS).permitAll()
                 .anyRequest().authenticated()

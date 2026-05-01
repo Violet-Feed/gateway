@@ -1,0 +1,1538 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta
+          name="viewport"
+          content="width=device-width, initial-scale=1.0, viewport-fit=cover"
+  />
+
+  <title>作品详情</title>
+
+  <link rel="icon" href="logo.png" />
+  <link rel="shortcut icon" href="logo.png" />
+  <link rel="apple-touch-icon" href="logo.png" />
+
+  <meta name="description" content="打开 Violet 查看完整内容" />
+  <meta property="og:title" content="作品详情" />
+  <meta property="og:description" content="打开 Violet 查看完整内容" />
+  <meta property="og:type" content="article" />
+  <meta property="og:image" content="logo.png" />
+
+  <style>
+    * {
+      box-sizing: border-box;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    html,
+    body {
+      margin: 0;
+      padding: 0;
+      min-height: 100%;
+      background: #fff;
+      color: #222;
+      font-family:
+              -apple-system,
+              BlinkMacSystemFont,
+              "PingFang SC",
+              "Helvetica Neue",
+              Arial,
+              sans-serif;
+    }
+
+    button {
+      padding: 0;
+      border: none;
+      outline: none;
+      background: none;
+      font-family: inherit;
+    }
+
+    .page {
+      max-width: 520px;
+      min-height: 100vh;
+      margin: 0 auto;
+      background: #fff;
+      padding-bottom: calc(76px + env(safe-area-inset-bottom));
+    }
+
+    .download-bar {
+      position: sticky;
+      top: 0;
+      z-index: 20;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 10px 14px;
+      background: rgba(255, 255, 255, 0.96);
+      border-bottom: 1px solid #eee;
+      backdrop-filter: blur(12px);
+    }
+
+    .download-left {
+      display: flex;
+      align-items: center;
+      min-width: 0;
+      gap: 10px;
+    }
+
+    .app-logo {
+      width: 34px;
+      height: 34px;
+      border-radius: 10px;
+      object-fit: cover;
+      background: #f0f0f0;
+      flex-shrink: 0;
+    }
+
+    .download-title {
+      font-size: 14px;
+      font-weight: 600;
+      color: #222;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .open-app-btn {
+      padding: 7px 13px;
+      border-radius: 999px;
+      color: #fff;
+      font-size: 13px;
+      font-weight: 600;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      flex-shrink: 0;
+    }
+
+    .author-section {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 14px 16px;
+      background: #fff;
+    }
+
+    .author-avatar {
+      width: 42px;
+      height: 42px;
+      border-radius: 50%;
+      object-fit: cover;
+      background: #eee;
+      flex-shrink: 0;
+    }
+
+    .author-info {
+      flex: 1;
+      min-width: 0;
+    }
+
+    .author-name {
+      font-size: 15px;
+      font-weight: 600;
+      color: #222;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .author-desc {
+      margin-top: 3px;
+      font-size: 12px;
+      color: #999;
+    }
+
+    .follow-btn {
+      padding: 7px 14px;
+      border-radius: 999px;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: #fff;
+      font-size: 13px;
+      font-weight: 600;
+      flex-shrink: 0;
+    }
+
+    .media-section {
+      width: 100%;
+      background: #000;
+      overflow: hidden;
+    }
+
+    .media-img,
+    .media-video {
+      display: block;
+      width: 100%;
+      max-height: 640px;
+      background: #000;
+    }
+
+    .media-img {
+      object-fit: cover;
+    }
+
+    .media-video {
+      object-fit: contain;
+    }
+
+    .media-placeholder {
+      width: 100%;
+      height: 320px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: #111;
+      color: #aaa;
+      font-size: 14px;
+    }
+
+    .content-section {
+      padding: 18px 16px 14px;
+      background: #fff;
+    }
+
+    .title {
+      margin: 0;
+      font-size: 20px;
+      font-weight: 700;
+      line-height: 1.42;
+      color: #222;
+    }
+
+    .detail {
+      margin: 10px 0 0;
+      font-size: 15px;
+      line-height: 1.7;
+      color: #444;
+      white-space: pre-wrap;
+      word-break: break-word;
+    }
+
+    .category {
+      display: inline-flex;
+      margin-top: 12px;
+      padding: 5px 10px;
+      border-radius: 999px;
+      background: #f4f4f4;
+      color: #666;
+      font-size: 13px;
+    }
+
+    .meta {
+      display: flex;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-top: 14px;
+      padding-top: 12px;
+      border-top: 1px solid #f2f2f2;
+      color: #999;
+      font-size: 12px;
+    }
+
+    .comments-section {
+      padding: 0 16px 0;
+      background: #fafafa;
+    }
+
+    .comments-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 16px 0;
+      border-bottom: 1px solid #f0f0f0;
+    }
+
+    .comments-title {
+      font-size: 16px;
+      font-weight: 600;
+      color: #333;
+    }
+
+    .comment-list {
+      background: #fff;
+    }
+
+    .comment-item {
+      display: flex;
+      gap: 12px;
+      padding: 12px 0;
+      border-bottom: 1px solid #f5f5f5;
+    }
+
+    .comment-avatar {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      object-fit: cover;
+      background: #eee;
+      flex-shrink: 0;
+    }
+
+    .comment-content-wrapper {
+      flex: 1;
+      min-width: 0;
+    }
+
+    .comment-header-row {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 10px;
+      margin-bottom: 4px;
+    }
+
+    .comment-username {
+      font-size: 14px;
+      font-weight: 500;
+      color: #333;
+      line-height: 22px;
+      min-width: 0;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .comment-like-btn {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      flex-shrink: 0;
+      color: #999;
+    }
+
+    .comment-like-icon {
+      font-size: 18px;
+      line-height: 1;
+      color: #999;
+    }
+
+    .comment-like-btn.liked .comment-like-icon {
+      color: #ff4757;
+    }
+
+    .comment-like-count {
+      font-size: 12px;
+      color: #999;
+    }
+
+    .comment-main-text {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 2px;
+      margin-bottom: 4px;
+    }
+
+    .comment-text {
+      font-size: 14px;
+      color: #333;
+      line-height: 1.5;
+      white-space: pre-wrap;
+      word-break: break-word;
+    }
+
+    .comment-meta-row {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      margin-top: 2px;
+    }
+
+    .comment-time {
+      font-size: 12px;
+      color: #999;
+    }
+
+    .comment-reply-btn {
+      font-size: 13px;
+      color: #666;
+    }
+
+    .comment-replies-toggle {
+      margin-top: 4px;
+    }
+
+    .comment-replies-toggle-text {
+      font-size: 12px;
+      color: #666;
+    }
+
+    .empty-comments {
+      padding: 60px 0;
+      text-align: center;
+      color: #999;
+      font-size: 14px;
+      background: #fff;
+    }
+
+    .bottom-bar {
+      position: fixed;
+      left: 50%;
+      right: auto;
+      bottom: 0;
+      z-index: 40;
+      width: 100%;
+      max-width: 520px;
+      transform: translateX(-50%);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      min-height: 52px;
+      padding: 8px 16px;
+      padding-bottom: calc(8px + env(safe-area-inset-bottom));
+      background: #fff;
+      border-top: 1px solid #f0f0f0;
+      box-shadow: 0 -2px 12px rgba(0, 0, 0, 0.03);
+    }
+
+    .comment-input-wrapper {
+      flex: 1;
+      height: 36px;
+      margin-right: 12px;
+      padding: 0 16px;
+      border-radius: 18px;
+      background: #f5f5f5;
+      display: flex;
+      align-items: center;
+      min-width: 0;
+    }
+
+    .comment-placeholder {
+      font-size: 14px;
+      color: #999;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .action-group {
+      display: flex;
+      align-items: center;
+      gap: 18px;
+      flex-shrink: 0;
+    }
+
+    .action-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 2px;
+      min-width: 24px;
+      color: #666;
+    }
+
+    .action-icon {
+      font-size: 22px;
+      color: #666;
+      line-height: 1;
+    }
+
+    .action-count {
+      font-size: 11px;
+      color: #999;
+      line-height: 1;
+    }
+
+    .share-action-icon {
+      width: 26px;
+      height: 26px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: #fff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 17px;
+      line-height: 1;
+      box-shadow: 0 3px 8px rgba(102, 126, 234, 0.24);
+    }
+
+    .modal-mask,
+    .image-preview-mask {
+      position: fixed;
+      inset: 0;
+      display: none;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .modal-mask {
+      z-index: 100;
+      padding: 24px;
+      background: rgba(0, 0, 0, 0.45);
+    }
+
+    .modal-mask.show {
+      display: flex;
+    }
+
+    .modal {
+      width: 100%;
+      max-width: 320px;
+      padding: 22px 18px 16px;
+      border-radius: 20px;
+      background: #fff;
+      text-align: center;
+    }
+
+    .modal-title {
+      font-size: 18px;
+      font-weight: 700;
+      color: #222;
+    }
+
+    .modal-content {
+      margin-top: 8px;
+      font-size: 14px;
+      line-height: 1.6;
+      color: #666;
+    }
+
+    .modal-actions {
+      display: flex;
+      gap: 10px;
+      margin-top: 18px;
+    }
+
+    .modal-btn {
+      flex: 1;
+      height: 42px;
+      border-radius: 999px;
+      font-size: 14px;
+      font-weight: 600;
+    }
+
+    .modal-cancel {
+      background: #f2f2f2;
+      color: #555;
+    }
+
+    .modal-confirm {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: #fff;
+    }
+
+    .image-preview-mask {
+      z-index: 120;
+      padding: 18px;
+      background: rgba(0, 0, 0, 0.92);
+    }
+
+    .image-preview-mask.show {
+      display: flex;
+    }
+
+    .image-preview-img {
+      max-width: 100%;
+      max-height: 92vh;
+      object-fit: contain;
+      border-radius: 4px;
+    }
+
+    .error-box {
+      padding: 80px 24px;
+      text-align: center;
+      background: #fff;
+    }
+
+    .error-title {
+      font-size: 18px;
+      font-weight: 700;
+      color: #222;
+    }
+
+    .error-desc {
+      margin-top: 8px;
+      font-size: 14px;
+      line-height: 1.6;
+      color: #888;
+    }
+
+    .retry-btn {
+      margin-top: 18px;
+      padding: 10px 20px;
+      border-radius: 999px;
+      color: #fff;
+      font-size: 14px;
+      font-weight: 600;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    }
+  </style>
+</head>
+
+<body>
+<div class="page">
+  <div class="download-bar">
+    <div class="download-left" onclick="openApp()">
+      <img
+              class="app-logo"
+              src="logo.png"
+              alt=""
+      />
+      <div class="download-title">打开 Violet</div>
+    </div>
+    <button class="open-app-btn" onclick="openApp()">打开</button>
+  </div>
+
+  <main id="app">
+    <div class="empty-comments">加载中...</div>
+  </main>
+</div>
+
+<div class="bottom-bar">
+  <div class="comment-input-wrapper" onclick="showDownloadTip()">
+    <span class="comment-placeholder">说点什么...</span>
+  </div>
+
+  <div class="action-group">
+    <button class="action-item" onclick="showDownloadTip()">
+      <span id="bottomLikeIcon" class="action-icon">♡</span>
+      <span id="bottomLikeCount" class="action-count">0</span>
+    </button>
+
+    <button class="action-item" onclick="scrollToCommentsOrTip()">
+      <span class="action-icon">💬</span>
+      <span id="bottomCommentCount" class="action-count">0</span>
+    </button>
+
+    <button class="action-item" onclick="showDownloadTip()">
+      <span class="share-action-icon">↗</span>
+      <span id="bottomShareCount" class="action-count">0</span>
+    </button>
+  </div>
+</div>
+
+<div class="modal-mask" id="downloadModal" onclick="hideDownloadTip()">
+  <div class="modal" onclick="event.stopPropagation()">
+    <div class="modal-title">打开 App 后继续操作</div>
+    <div class="modal-content">
+      打开 Violet 后可以继续评论、点赞、关注和查看更多回复。
+    </div>
+    <div class="modal-actions">
+      <button class="modal-btn modal-cancel" onclick="hideDownloadTip()">先看看</button>
+      <button class="modal-btn modal-confirm" onclick="openApp()">打开</button>
+    </div>
+  </div>
+</div>
+
+<div class="image-preview-mask" id="imagePreviewMask" onclick="closeImagePreview()">
+  <img
+          id="imagePreviewImg"
+          class="image-preview-img"
+          src=""
+          alt=""
+          onclick="closeImagePreview(); event.stopPropagation()"
+  />
+</div>
+
+<script>
+  console.log('violet share page loaded long-id-fallback-v1')
+
+  const CONFIG = {
+    API_BASE: '',
+    FORWARD_DETAIL_API: '/api/aigc/get_creation_by_forward',
+    CREATION_ID_KEY: 'creation_id',
+
+    LOGO_AND_DEFAULT_AVATAR: 'logo.png',
+    DEFAULT_COVER: '',
+
+    SHOW_COMMENTS: true,
+
+    DOWNLOAD_URL: '/download',
+
+    /**
+     * USB 标准基座调试：
+     * APP_SCHEME: 'hbuilder://open'
+     *
+     * 自定义基座 / 正式包：
+     * APP_SCHEME: 'violet://open'
+     */
+    APP_SCHEME: 'hbuilder://open',
+
+    /**
+     * 没找到应用时自动跳下载页。
+     * 如果系统成功打开 App，浏览器会进入后台，不会触发下载跳转。
+     */
+    AUTO_DOWNLOAD_FALLBACK: true,
+
+    OPEN_APP_FALLBACK_DELAY: 1200
+  }
+
+  const state = {
+    creationId: '',
+    detail: null,
+    comments: []
+  }
+
+  init()
+
+  async function init() {
+    const params = new URLSearchParams(window.location.search)
+
+    state.creationId =
+            toIdString(params.get('creationId') || params.get('creation_id') || params.get('id') || '')
+
+    if (!state.creationId) {
+      renderError('缺少作品 ID', '当前分享链接不完整，无法加载作品内容。')
+      return
+    }
+
+    try {
+      await fetchForwardDetail()
+      renderPage()
+      renderBottomBar()
+    } catch (err) {
+      console.error('init failed:', err)
+      renderError('加载失败', '作品内容暂时无法打开，请稍后重试。')
+    }
+  }
+
+  async function fetchForwardDetail() {
+    const body = {}
+    body[CONFIG.CREATION_ID_KEY] = toIdString(state.creationId)
+
+    const data = await postJson(CONFIG.FORWARD_DETAIL_API, body)
+
+    const raw = data || {}
+
+    const creation =
+            pickObject(raw, ['creation']) ||
+            {}
+
+    const userInfoArray =
+            pickArray(raw, ['user_info', 'userInfo', 'user_infos', 'userInfos']) ||
+            []
+
+    const author =
+            Array.isArray(userInfoArray) && userInfoArray.length
+                    ? userInfoArray[0]
+                    : pickObject(raw, ['user_info', 'userInfo']) || {}
+
+    const comments =
+            pickArray(raw, ['comments', 'comment_list', 'commentList']) ||
+            []
+
+    state.detail = normalizeForwardDetail({
+      creation,
+      author,
+      diggCount: pickValue(raw, ['digg_count', 'diggCount']),
+      commentCount: pickValue(raw, ['comment_count', 'commentCount']),
+      forwardCount: pickValue(raw, ['forward_count', 'forwardCount']),
+      followerCount: pickValue(raw, ['follower_count', 'followerCount'])
+    })
+
+    state.comments = comments.map(normalizeComment)
+
+    updateDocumentMeta(state.detail)
+  }
+
+  async function postJson(path, body) {
+    const url = CONFIG.API_BASE + path
+
+    const res = await fetch(url, {
+      method: 'POST',
+      credentials: 'include',
+      headers: {
+        'Content-Type': 'application/json',
+        Accept: 'application/json'
+      },
+      body: JSON.stringify(body || {})
+    })
+
+    if (res.status === 403) {
+      throw new Error('登录过期')
+    }
+
+    if (res.status !== 200) {
+      throw new Error('网络错误：HTTP ' + res.status)
+    }
+
+    const text = await res.text()
+
+    let result
+    try {
+      result = parseJsonKeepLongAsString(text)
+    } catch (err) {
+      console.error('JSON parse failed:', text)
+      throw new Error('服务器返回格式错误')
+    }
+
+    if (result && result.code === 1000) {
+      return result.data
+    }
+
+    throw new Error('服务器错误')
+  }
+
+  function parseJsonKeepLongAsString(text) {
+    /**
+     * 在 JSON.parse 前，把常见 ID 字段的大整数改成字符串。
+     *
+     * 例如：
+     * "user_id":1995151346713493505
+     * "userId":1995151346713493505
+     * "creation_id":1995151346713493505
+     *
+     * 会被转成：
+     * "user_id":"1995151346713493505"
+     */
+    const fixedText = String(text).replace(
+            /"([^"]*(?:id|Id|ID)[^"]*)"\s*:\s*(-?\d{16,})(?=\s*[,}\]])/g,
+            function (_, key, value) {
+              return '"' + key + '":"' + value + '"'
+            }
+    )
+
+    return JSON.parse(fixedText)
+  }
+
+  function normalizeForwardDetail(input) {
+    const raw = input.creation || {}
+    const authorRaw = input.author || {}
+    const author = normalizeAuthor(authorRaw)
+
+    const materialType =
+            raw.material_type ??
+            raw.materialType ??
+            raw.media_type ??
+            raw.mediaType ??
+            raw.type ??
+            ''
+
+    const materialUrl =
+            raw.material_url ||
+            raw.materialUrl ||
+            ''
+
+    const explicitCoverUrl =
+            raw.cover_url ||
+            raw.coverUrl ||
+            raw.coverImage ||
+            raw.image_url ||
+            raw.imageUrl ||
+            raw.cover ||
+            ''
+
+    const explicitVideoUrl =
+            raw.video_url ||
+            raw.videoUrl ||
+            raw.play_url ||
+            raw.playUrl ||
+            ''
+
+    const isVideo =
+            Number(materialType) === 2 ||
+            String(materialType).toLowerCase() === 'video' ||
+            String(raw.media_type || raw.mediaType || '').toLowerCase() === 'video'
+
+    const videoUrl =
+            isVideo
+                    ? (explicitVideoUrl || materialUrl)
+                    : explicitVideoUrl
+
+    const coverUrl =
+            isVideo
+                    ? (explicitCoverUrl || CONFIG.DEFAULT_COVER)
+                    : (materialUrl || explicitCoverUrl || CONFIG.DEFAULT_COVER)
+
+    const userId =
+            toIdString(raw.user_id ?? raw.userId ?? author.userId ?? '')
+
+    return {
+      creationId:
+              toIdString(raw.creation_id ?? raw.creationId ?? raw.id ?? state.creationId),
+
+      userId,
+
+      materialType: toIdString(materialType),
+
+      title:
+              raw.title ||
+              '无标题作品',
+
+      content:
+              raw.content ||
+              raw.detail ||
+              raw.description ||
+              '',
+
+      category:
+              raw.category ||
+              '',
+
+      createTime:
+              raw.create_time ||
+              raw.createTime ||
+              raw.time ||
+              '',
+
+      location:
+              raw.location ||
+              '',
+
+      coverUrl,
+
+      videoUrl,
+
+      isVideo,
+
+      likeCount:
+              toNumber(
+                      input.diggCount ??
+                      raw.like_count ??
+                      raw.likeCount ??
+                      raw.digg_count ??
+                      raw.diggCount ??
+                      raw.likes ??
+                      0
+              ),
+
+      commentCount:
+              toNumber(
+                      input.commentCount ??
+                      raw.comment_count ??
+                      raw.commentCount ??
+                      raw.comments ??
+                      0
+              ),
+
+      shareCount:
+              toNumber(
+                      input.forwardCount ??
+                      raw.share_count ??
+                      raw.shareCount ??
+                      raw.forward_count ??
+                      raw.forwardCount ??
+                      raw.shares ??
+                      0
+              ),
+
+      author: {
+        userId:
+                toIdString(author.userId || userId || ''),
+
+        username:
+                author.username ||
+                raw.username ||
+                '匿名用户',
+
+        avatar:
+                author.avatar ||
+                raw.avatar ||
+                CONFIG.LOGO_AND_DEFAULT_AVATAR,
+
+        followerCount:
+                toNumber(
+                        input.followerCount ??
+                        raw.follower_count ??
+                        raw.followerCount ??
+                        0
+                ),
+
+        isFollowing:
+                !!author.isFollowing
+      }
+    }
+  }
+
+  function normalizeAuthor(raw) {
+    raw = raw || {}
+
+    return {
+      userId:
+              toIdString(raw.user_id ?? raw.userId ?? raw.id ?? ''),
+
+      username:
+              raw.username ||
+              raw.nickname ||
+              raw.name ||
+              '',
+
+      avatar:
+              raw.avatar ||
+              raw.avatar_uri ||
+              raw.avatarUri ||
+              raw.local_avatar_uri ||
+              raw.localAvatarUri ||
+              CONFIG.LOGO_AND_DEFAULT_AVATAR,
+
+      followerCount:
+              raw.follower_count ??
+              raw.followerCount ??
+              raw.followers ??
+              0,
+
+      isFollowing:
+              !!(raw.is_following ?? raw.isFollowing)
+    }
+  }
+
+  function normalizeComment(raw) {
+    raw = raw || {}
+
+    return {
+      commentId:
+              toIdString(raw.comment_id ?? raw.commentId ?? raw.id ?? ''),
+
+      contentType:
+              raw.content_type ??
+              raw.contentType ??
+              1,
+
+      content:
+              raw.content ||
+              raw.text ||
+              '',
+
+      userId:
+              toIdString(raw.user_id ?? raw.userId ?? ''),
+
+      username:
+              raw.username ||
+              raw.nickname ||
+              raw.user_name ||
+              raw.userName ||
+              '匿名用户',
+
+      avatar:
+              raw.avatar ||
+              raw.avatar_uri ||
+              raw.avatarUri ||
+              CONFIG.LOGO_AND_DEFAULT_AVATAR,
+
+      sibUserId:
+              toIdString(raw.sib_user_id ?? raw.sibUserId ?? ''),
+
+      sibUsername:
+              raw.sib_username ||
+              raw.sibUsername ||
+              '',
+
+      createTime:
+              raw.create_time ||
+              raw.createTime ||
+              raw.time ||
+              '',
+
+      replyCount:
+              toNumber(
+                      raw.reply_count ??
+                      raw.replyCount ??
+                      0
+              ),
+
+      diggCount:
+              toNumber(
+                      raw.digg_count ??
+                      raw.diggCount ??
+                      raw.like_count ??
+                      raw.likeCount ??
+                      raw.likes ??
+                      0
+              ),
+
+      isDigg:
+              !!(raw.is_digg ?? raw.isDigg)
+    }
+  }
+
+  function renderPage() {
+    const d = state.detail
+
+    if (!d) {
+      renderError('加载失败', '作品内容为空。')
+      return
+    }
+
+    const mediaHtml = d.isVideo
+            ? renderVideo(d)
+            : renderImage(d)
+
+    const commentsHtml = CONFIG.SHOW_COMMENTS
+            ? renderComments()
+            : ''
+
+    document.getElementById('app').innerHTML = `
+        <section class="author-section">
+          ${renderAvatar(d.author.avatar, 'author-avatar', 'showDownloadTip()')}
+          <div class="author-info" onclick="showDownloadTip()">
+            <div class="author-name">${escapeHtml(d.author.username || '匿名用户')}</div>
+            <div class="author-desc">${formatNumber(d.author.followerCount)} 粉丝</div>
+          </div>
+          <button class="follow-btn" onclick="showDownloadTip()">
+            ${d.author.isFollowing ? '已关注' : '+ 关注'}
+          </button>
+        </section>
+
+        <section class="media-section">
+          ${mediaHtml}
+        </section>
+
+        <section class="content-section">
+          <h1 class="title">${escapeHtml(d.title || '无标题作品')}</h1>
+          ${
+            d.content
+                    ? `<p class="detail">${escapeHtml(d.content)}</p>`
+                    : ''
+    }
+          ${
+            d.category
+                    ? `<div class="category"># ${escapeHtml(getCategoryLabel(d.category))}</div>`
+                    : ''
+    }
+          <div class="meta">
+            ${
+            d.createTime
+                    ? `<span>${escapeHtml(formatRelativeTime(d.createTime))}</span>`
+                    : ''
+    }
+            ${
+            d.location
+                    ? `<span>📍 ${escapeHtml(d.location)}</span>`
+                    : ''
+    }
+          </div>
+        </section>
+
+        ${commentsHtml}
+      `
+  }
+
+  function renderBottomBar() {
+    const d = state.detail || {}
+
+    const likeIcon = document.getElementById('bottomLikeIcon')
+    const likeCount = document.getElementById('bottomLikeCount')
+    const commentCount = document.getElementById('bottomCommentCount')
+    const shareCount = document.getElementById('bottomShareCount')
+
+    if (likeIcon) {
+      likeIcon.textContent = '♡'
+    }
+
+    if (likeCount) {
+      likeCount.textContent = formatNumber(d.likeCount || 0)
+    }
+
+    if (commentCount) {
+      commentCount.textContent = formatNumber(d.commentCount || 0)
+    }
+
+    if (shareCount) {
+      shareCount.textContent = formatNumber(d.shareCount || 0)
+    }
+  }
+
+  function renderImage(d) {
+    if (!d.coverUrl) {
+      return `<div class="media-placeholder">暂无图片</div>`
+    }
+
+    return `
+        <img
+          class="media-img"
+          src="${escapeAttr(d.coverUrl)}"
+          alt=""
+          onclick="openImagePreview('${escapeJsString(d.coverUrl)}')"
+        />
+      `
+  }
+
+  function renderVideo(d) {
+    const src = d.videoUrl || ''
+
+    if (!src) {
+      return `<div class="media-placeholder">暂无视频</div>`
+    }
+
+    const posterAttr = d.coverUrl
+            ? ` poster="${escapeAttr(d.coverUrl)}"`
+            : ''
+
+    return `
+        <video
+          class="media-video"
+          src="${escapeAttr(src)}"
+          ${posterAttr}
+          controls
+          playsinline
+          webkit-playsinline
+          preload="metadata"
+        ></video>
+      `
+  }
+
+  function renderAvatar(src, className, onClick) {
+    const clickAttr = onClick ? ` onclick="${onClick}"` : ''
+
+    return `
+        <img
+          class="${className}"
+          src="${escapeAttr(src || CONFIG.LOGO_AND_DEFAULT_AVATAR)}"
+          onerror="this.onerror=null;this.src='${escapeAttr(CONFIG.LOGO_AND_DEFAULT_AVATAR)}'"
+          alt=""
+          ${clickAttr}
+        />
+      `
+  }
+
+  function renderComments() {
+    const count = Number((state.detail && state.detail.commentCount) || 0)
+
+    if (!state.comments.length) {
+      return `
+          <section class="comments-section" id="commentsSection">
+            <div class="comments-header">
+              <div class="comments-title">评论 ${formatNumber(count)}</div>
+            </div>
+            <div class="comment-list">
+              <div class="empty-comments">暂无评论</div>
+            </div>
+          </section>
+        `
+    }
+
+    const listHtml = state.comments.map((c) => {
+      const likedClass = c.isDigg ? ' liked' : ''
+      const likeIcon = c.isDigg ? '♥️' : '♡'
+      const replyToggle = c.replyCount > 0
+              ? `
+            <div class="comment-replies-toggle" onclick="showDownloadTip()">
+              <span class="comment-replies-toggle-text">
+                展开${formatNumber(c.replyCount)}条回复
+              </span>
+            </div>
+          `
+              : ''
+
+      return `
+          <div class="comment-item">
+            ${renderAvatar(c.avatar, 'comment-avatar', 'showDownloadTip()')}
+
+            <div class="comment-content-wrapper">
+              <div class="comment-header-row">
+                <div class="comment-username" onclick="showDownloadTip()">${escapeHtml(c.username)}</div>
+
+                <button class="comment-like-btn${likedClass}" onclick="showDownloadTip()">
+                  <span class="comment-like-icon">${likeIcon}</span>
+                  <span class="comment-like-count">${formatNumber(c.diggCount)}</span>
+                </button>
+              </div>
+
+              <div class="comment-main-text">
+                <span class="comment-text">${escapeHtml(c.content)}</span>
+              </div>
+
+              <div class="comment-meta-row">
+                <span class="comment-time">${escapeHtml(formatRelativeTime(c.createTime))}</span>
+                <span class="comment-reply-btn" onclick="showDownloadTip()">回复</span>
+              </div>
+
+              ${replyToggle}
+            </div>
+          </div>
+        `
+    }).join('')
+
+    return `
+        <section class="comments-section" id="commentsSection">
+          <div class="comments-header">
+            <div class="comments-title">评论 ${formatNumber(count)}</div>
+          </div>
+
+          <div class="comment-list">
+            ${listHtml}
+          </div>
+        </section>
+      `
+  }
+
+  function renderError(title, desc) {
+    document.getElementById('app').innerHTML = `
+        <div class="error-box">
+          <div class="error-title">${escapeHtml(title)}</div>
+          <div class="error-desc">${escapeHtml(desc)}</div>
+          <button class="retry-btn" onclick="location.reload()">重新加载</button>
+        </div>
+      `
+  }
+
+  function showDownloadTip() {
+    document.getElementById('downloadModal').classList.add('show')
+  }
+
+  function hideDownloadTip() {
+    document.getElementById('downloadModal').classList.remove('show')
+  }
+
+  function goDownload() {
+    window.location.href = CONFIG.DOWNLOAD_URL
+  }
+
+  function openApp() {
+    hideDownloadTip()
+
+    if (!CONFIG.APP_SCHEME) {
+      goDownload()
+      return
+    }
+
+    const d = state.detail || {}
+
+    const schemeUrl =
+            CONFIG.APP_SCHEME +
+            '?creationId=' +
+            encodeURIComponent(toIdString(state.creationId)) +
+            '&userId=' +
+            encodeURIComponent(toIdString(d.userId || '')) +
+            '&materialType=' +
+            encodeURIComponent(toIdString(d.materialType || ''))
+
+    let hasLeftPage = false
+
+    const markLeft = () => {
+      hasLeftPage = true
+    }
+
+    window.addEventListener('pagehide', markLeft, { once: true })
+    window.addEventListener('blur', markLeft, { once: true })
+
+    document.addEventListener(
+            'visibilitychange',
+            () => {
+              if (document.hidden) {
+                hasLeftPage = true
+              }
+            },
+            { once: true }
+    )
+
+    window.location.href = schemeUrl
+
+    setTimeout(() => {
+      if (hasLeftPage) {
+        return
+      }
+
+      if (CONFIG.AUTO_DOWNLOAD_FALLBACK) {
+        goDownload()
+      }
+    }, CONFIG.OPEN_APP_FALLBACK_DELAY)
+  }
+
+  function openImagePreview(src) {
+    const mask = document.getElementById('imagePreviewMask')
+    const img = document.getElementById('imagePreviewImg')
+
+    if (!mask || !img || !src) return
+
+    img.src = src
+    mask.classList.add('show')
+    document.body.style.overflow = 'hidden'
+  }
+
+  function closeImagePreview() {
+    const mask = document.getElementById('imagePreviewMask')
+    const img = document.getElementById('imagePreviewImg')
+
+    if (!mask || !img) return
+
+    mask.classList.remove('show')
+    img.src = ''
+    document.body.style.overflow = ''
+  }
+
+  function scrollToCommentsOrTip() {
+    const section = document.getElementById('commentsSection')
+
+    if (section) {
+      section.scrollIntoView({
+        behavior: 'smooth',
+        block: 'start'
+      })
+      return
+    }
+
+    showDownloadTip()
+  }
+
+  function updateDocumentMeta(d) {
+    document.title = d.title || '作品详情'
+
+    setMeta('name', 'description', d.content || '打开 Violet 查看完整内容')
+    setMeta('property', 'og:title', d.title || '作品详情')
+    setMeta('property', 'og:description', d.content || '打开 Violet 查看完整内容')
+
+    if (d.coverUrl) {
+      setMeta('property', 'og:image', d.coverUrl)
+    }
+  }
+
+  function setMeta(type, name, content) {
+    const selector =
+            type === 'name'
+                    ? `meta[name="${name}"]`
+                    : `meta[property="${name}"]`
+
+    const el = document.querySelector(selector)
+
+    if (el) {
+      el.setAttribute('content', content)
+    }
+  }
+
+  function getCategoryLabel(value) {
+    const map = {
+      life: '生活',
+      society: '社会',
+      tech: '科技',
+      entertainment: '娱乐'
+    }
+
+    return map[value] || value
+  }
+
+  function formatNumber(num) {
+    num = Number(num || 0)
+
+    if (num >= 10000) {
+      return (num / 10000).toFixed(1).replace(/\.0$/, '') + 'w'
+    }
+
+    if (num >= 1000) {
+      return (num / 1000).toFixed(1).replace(/\.0$/, '') + 'k'
+    }
+
+    return String(num)
+  }
+
+  function formatRelativeTime(input) {
+    if (!input) return ''
+
+    let timestamp = Number(input)
+
+    if (!timestamp) {
+      timestamp = new Date(input).getTime()
+    }
+
+    if (!timestamp) return ''
+
+    if (timestamp < 1e12) {
+      timestamp *= 1000
+    }
+
+    const now = Date.now()
+    const diff = now - timestamp
+    const sec = Math.floor(diff / 1000)
+
+    if (sec < 60) return '刚刚'
+    if (sec < 3600) return Math.floor(sec / 60) + '分钟前'
+    if (sec < 86400) return Math.floor(sec / 3600) + '小时前'
+    if (sec < 86400 * 7) return Math.floor(sec / 86400) + '天前'
+
+    const d = new Date(timestamp)
+    const y = d.getFullYear()
+    const m = d.getMonth() + 1
+    const day = d.getDate()
+
+    const nowDate = new Date()
+
+    if (y !== nowDate.getFullYear()) {
+      return y + '年' + m + '月' + day + '日'
+    }
+
+    return m + '月' + day + '日'
+  }
+
+  function toNumber(value) {
+    if (value === undefined || value === null || value === '') {
+      return 0
+    }
+
+    const num = Number(value)
+
+    return Number.isFinite(num) ? num : 0
+  }
+
+  function toIdString(value) {
+    if (value === undefined || value === null) {
+      return ''
+    }
+
+    return String(value)
+  }
+
+  function pickObject(obj, paths) {
+    for (const path of paths) {
+      const value = getByPath(obj, path)
+      if (value && typeof value === 'object' && !Array.isArray(value)) {
+        return value
+      }
+    }
+
+    return null
+  }
+
+  function pickArray(obj, paths) {
+    for (const path of paths) {
+      const value = getByPath(obj, path)
+      if (Array.isArray(value)) {
+        return value
+      }
+    }
+
+    return null
+  }
+
+  function pickValue(obj, paths) {
+    for (const path of paths) {
+      const value = getByPath(obj, path)
+      if (value !== undefined && value !== null && value !== '') {
+        return value
+      }
+    }
+
+    return undefined
+  }
+
+  function getByPath(obj, path) {
+    if (!obj || !path) return undefined
+
+    const keys = path.split('.')
+    let cur = obj
+
+    for (const key of keys) {
+      if (cur == null || typeof cur !== 'object') {
+        return undefined
+      }
+
+      cur = cur[key]
+    }
+
+    return cur
+  }
+
+  function escapeHtml(value) {
+    return String(value == null ? '' : value)
+            .replace(/&/g, '&amp;')
+            .replace(/</g, '&lt;')
+            .replace(/>/g, '&gt;')
+            .replace(/"/g, '&quot;')
+            .replace(/'/g, '&#39;')
+  }
+
+  function escapeAttr(value) {
+    return escapeHtml(value)
+  }
+
+  function escapeJsString(value) {
+    return String(value == null ? '' : value)
+            .replace(/\\/g, '\\\\')
+            .replace(/'/g, "\\'")
+            .replace(/"/g, '\\"')
+            .replace(/\n/g, '\\n')
+            .replace(/\r/g, '\\r')
+  }
+</script>
+</body>
+</html>
