@@ -27,10 +27,13 @@ public class SecurityConfig {
                 .authorizeRequests()
                 .antMatchers(
                         "/violet.html",
+                        "/share.html",
+                        "/download.html",
                         "/logo.png",
                         "/api/user/login",
                         "/api/user/register",
-                        "/api/aigc/get_creation_by_forward"
+                        "/api/aigc/get_creation_by_forward",
+                        "/api/aigc/video_material_callback"
                 ).permitAll()
                 .antMatchers(HttpMethod.OPTIONS).permitAll()
                 .anyRequest().authenticated()
