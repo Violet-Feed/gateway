@@ -132,7 +132,6 @@
                 <version>${spring-boot.version}</version>
                 <configuration>
                     <mainClass>violet.gateway.common.GatewayApplication</mainClass>
-                    <skip>true</skip>
                 </configuration>
                 <executions>
                     <execution>
