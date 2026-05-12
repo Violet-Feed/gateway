@@ -145,8 +145,6 @@ message ForwardMessage {
   int32 material_type = 3;
   string cover_url = 4;
   int64 author_id = 5;
-  string author_name = 6;
-  string author_avatar_url = 7;
 }
 
 message GetInitInfoRequest{

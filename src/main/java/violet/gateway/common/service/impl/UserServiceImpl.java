@@ -168,7 +168,7 @@ public class UserServiceImpl implements UserService {
     public JSONObject reportClick(JSONObject req) throws Exception {
         CustomAuthenticationToken authentication = (CustomAuthenticationToken) SecurityContextHolder.getContext().getAuthentication();
         Long userId = authentication.getUserId();
-        List<Long> creationIds = req.getJSONArray("creationIds").toJavaList(Long.class);
+        List<Long> creationIds = req.getJSONArray("creation_ids").toJavaList(Long.class);
         ReportClickRequest reportClickRequest = ReportClickRequest.newBuilder().setUserId(userId).addAllCreationIds(creationIds).setTimestamp(System.currentTimeMillis()).build();
         ReportClickResponse reportClickResponse = actionStub.reportClick(reportClickRequest);
         if (reportClickResponse.getBaseResp().getStatusCode() != StatusCode.Success) {

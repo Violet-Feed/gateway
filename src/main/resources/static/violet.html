@@ -2,43 +2,65 @@
 <html lang="zh-CN">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta name="description" content="Violet：面向年轻社交与内容消费场景的 AIGC 创作、多智能体群聊和智能推荐应用。" />
-  <title>Violet｜AI 创作与兴趣社交应用</title>
+  <meta
+          name="viewport"
+          content="width=device-width, initial-scale=1.0, viewport-fit=cover"
+  />
+  <meta
+          name="description"
+          content="Violet：AI 创作、兴趣发现、智能体互动与即时社交融合的年轻内容社区。"
+  />
+  <title>Violet｜让每一次灵感，都有机会变成一次互动</title>
+
   <link rel="icon" type="image/png" href="./logo.png" />
   <link rel="shortcut icon" type="image/png" href="./logo.png" />
   <link rel="apple-touch-icon" href="./logo.png" />
+
   <style>
     :root {
-      --bg: #080711;
-      --bg-2: #111024;
-      --card: rgba(255, 255, 255, 0.075);
-      --card-2: rgba(255, 255, 255, 0.12);
-      --text: #f7f4ff;
-      --muted: #b6aecb;
-      --soft: #e9ddff;
-      --line: rgba(255, 255, 255, 0.14);
-      --violet: #8b5cf6;
-      --pink: #ec4899;
-      --cyan: #22d3ee;
-      --orange: #fb923c;
-      --green: #34d399;
-      --shadow: 0 24px 80px rgba(0, 0, 0, 0.38);
-      --radius: 30px;
+      --bg: #fffaf4;
+      --card: rgba(255, 255, 255, 0.92);
+      --cream: rgba(253, 231, 209, 1);
+      --cream-soft: rgba(253, 231, 209, 0.5);
+      --accent: #f5a623;
+      --accent-deep: #8a5a2b;
+      --ink: #202124;
+      --muted: #747983;
+      --subtle: #9a8d80;
+      --shadow: 0 18px 42px rgba(138, 90, 43, 0.13);
+      --shadow-strong: 0 26px 64px rgba(138, 90, 43, 0.18);
+      --radius: 28px;
       --max: 1160px;
     }
 
-    * { box-sizing: border-box; }
-    html { scroll-behavior: smooth; }
+    * {
+      box-sizing: border-box;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
     body {
       margin: 0;
-      color: var(--text);
+      min-height: 100vh;
+      color: var(--ink);
       background:
-              radial-gradient(circle at 12% -10%, rgba(139, 92, 246, 0.45), transparent 34%),
-              radial-gradient(circle at 88% 6%, rgba(236, 72, 153, 0.28), transparent 30%),
-              radial-gradient(circle at 50% 45%, rgba(34, 211, 238, 0.10), transparent 40%),
-              linear-gradient(180deg, #080711 0%, #0d0b18 42%, #090814 100%);
-      font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
+              radial-gradient(circle at 48% 4%, rgba(255, 255, 255, 0.92) 0%, rgba(253, 231, 209, 0.34) 42%, transparent 68%),
+              radial-gradient(circle at 92% 18%, rgba(253, 231, 209, 0.64), transparent 20%),
+              radial-gradient(circle at -10% 48%, rgba(253, 231, 209, 0.58), transparent 28%),
+              linear-gradient(180deg, #fffaf4 0%, #fffdf9 42%, #fffaf4 100%);
+      font-family:
+              -apple-system,
+              BlinkMacSystemFont,
+              "PingFang SC",
+              "HarmonyOS Sans SC",
+              "Microsoft YaHei",
+              "Helvetica Neue",
+              Arial,
+              sans-serif;
+      font-weight: 400;
       overflow-x: hidden;
     }
 
@@ -48,280 +70,777 @@
       inset: 0;
       z-index: -2;
       pointer-events: none;
-      opacity: 0.35;
-      background-image:
-              linear-gradient(rgba(255,255,255,0.04) 1px, transparent 1px),
-              linear-gradient(90deg, rgba(255,255,255,0.04) 1px, transparent 1px);
-      background-size: 46px 46px;
-      mask-image: linear-gradient(to bottom, black 0%, transparent 78%);
+      background:
+              radial-gradient(circle at 22% 12%, rgba(253, 231, 209, 0.55) 0 82px, transparent 84px),
+              radial-gradient(circle at 78% 62%, rgba(253, 231, 209, 0.42) 0 58px, transparent 60px),
+              radial-gradient(circle at 16% 76%, rgba(255, 255, 255, 0.72) 0 120px, transparent 122px);
+      opacity: 0.92;
     }
 
-    a { color: inherit; text-decoration: none; }
-    button, input { font: inherit; }
-    .shell { width: min(var(--max), calc(100% - 40px)); margin: 0 auto; }
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    button {
+      border: none;
+      outline: none;
+      padding: 0;
+      background: transparent;
+      font: inherit;
+      cursor: pointer;
+    }
+
+    .shell {
+      width: min(var(--max), calc(100% - 40px));
+      margin: 0 auto;
+    }
 
     .nav {
       position: sticky;
       top: 0;
-      z-index: 50;
-      border-bottom: 1px solid rgba(255,255,255,0.08);
-      background: rgba(8, 7, 17, 0.74);
-      backdrop-filter: blur(20px);
+      z-index: 80;
+      background: rgba(255, 250, 244, 0.86);
+      backdrop-filter: blur(18px);
     }
-    .nav-inner { height: 74px; display: flex; align-items: center; justify-content: space-between; gap: 20px; }
-    .brand { display: inline-flex; align-items: center; gap: 12px; font-weight: 900; letter-spacing: 0.02em; }
-    .brand-mark {
-      width: 42px; height: 42px; border-radius: 15px;
-      display: grid; place-items: center;
-      background: rgba(255,255,255,.08);
-      border: 1px solid rgba(255,255,255,.12);
-      box-shadow: 0 14px 42px rgba(139, 92, 246, 0.28);
-      overflow: hidden;
-    }
-    .brand-logo { width: 100%; height: 100%; object-fit: cover; display: block; }
-    .brand-name { font-size: 18px; }
-    .nav-links { display: flex; align-items: center; gap: 8px; color: var(--muted); font-size: 14px; }
-    .nav-links a { padding: 10px 13px; border-radius: 999px; transition: 0.2s ease; }
-    .nav-links a:hover { color: var(--text); background: rgba(255,255,255,0.08); }
-    .btn {
-      display: inline-flex; align-items: center; justify-content: center; gap: 8px;
-      min-height: 44px; padding: 0 18px; border-radius: 999px;
-      border: 1px solid rgba(255,255,255,0.14);
-      color: var(--text); background: rgba(255,255,255,0.07);
-      cursor: pointer; font-weight: 750;
-      transition: transform .2s ease, background .2s ease, border-color .2s ease;
-    }
-    .btn:hover { transform: translateY(-2px); background: rgba(255,255,255,0.12); border-color: rgba(255,255,255,0.25); }
-    .btn.primary { border: 0; background: linear-gradient(135deg, var(--violet), var(--pink)); box-shadow: 0 16px 46px rgba(139, 92, 246, .35); }
-    .mobile-toggle { display: none; width: 44px; height: 44px; border-radius: 15px; border: 1px solid var(--line); background: rgba(255,255,255,.07); color: var(--text); cursor: pointer; }
 
-    .hero { position: relative; padding: 92px 0 72px; }
-    .hero-grid { display: grid; grid-template-columns: minmax(0, 1.04fr) minmax(360px, .96fr); gap: 52px; align-items: center; }
+    .nav-inner {
+      height: 72px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 18px;
+    }
+
+    .brand {
+      display: inline-flex;
+      align-items: center;
+      gap: 11px;
+      min-width: 0;
+    }
+
+    .brand-logo {
+      width: 42px;
+      height: 42px;
+      border-radius: 14px;
+      object-fit: cover;
+      background: #f5f5f5;
+      box-shadow: 0 10px 24px rgba(31, 35, 41, 0.12);
+      flex-shrink: 0;
+    }
+
+    .brand-word {
+      position: relative;
+      display: inline-flex;
+      align-items: flex-start;
+      line-height: 1;
+      font-family:
+              "Trebuchet MS",
+              "Comic Sans MS",
+              "Arial Rounded MT Bold",
+              "PingFang SC",
+              sans-serif;
+      font-size: 23px;
+      font-style: italic;
+      letter-spacing: 0.02em;
+      color: var(--ink);
+    }
+
+    .brand-word::before {
+      content: "";
+      position: absolute;
+      left: 42%;
+      top: -5px;
+      width: 18px;
+      height: 6px;
+      border-radius: 99px;
+      background: var(--accent);
+      box-shadow: 0 4px 10px rgba(245, 166, 35, 0.24);
+    }
+
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      color: #60656f;
+      font-size: 14px;
+      white-space: nowrap;
+    }
+
+    .nav-links a {
+      padding: 9px 12px;
+      border-radius: 999px;
+      transition: 0.18s ease;
+    }
+
+    .nav-links a:hover {
+      background: rgba(253, 231, 209, 0.58);
+      color: var(--ink);
+    }
+
+    .nav-actions {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-shrink: 0;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 42px;
+      padding: 0 18px;
+      border-radius: 999px;
+      color: var(--ink);
+      background: rgba(255, 255, 255, 0.78);
+      box-shadow: 0 12px 30px rgba(138, 90, 43, 0.1);
+      transition: transform 0.18s ease, box-shadow 0.18s ease, opacity 0.18s ease;
+      font-size: 14px;
+      white-space: nowrap;
+    }
+
+    .btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 18px 42px rgba(138, 90, 43, 0.14);
+    }
+
+    .btn.primary {
+      background: var(--cream);
+      color: var(--accent-deep);
+      box-shadow:
+              0 16px 36px rgba(138, 90, 43, 0.16),
+              inset 0 1px 0 rgba(255, 255, 255, 0.78);
+    }
+
+    .mobile-toggle {
+      display: none;
+      width: 42px;
+      height: 42px;
+      border-radius: 15px;
+      background: rgba(255, 255, 255, 0.78);
+      box-shadow: 0 12px 30px rgba(138, 90, 43, 0.1);
+      color: var(--ink);
+    }
+
+    .hero {
+      position: relative;
+      padding: 94px 0 76px;
+    }
+
+    .hero-inner {
+      max-width: 920px;
+      margin: 0 auto;
+      text-align: center;
+    }
+
     .eyebrow {
-      display: inline-flex; align-items: center; gap: 8px;
-      margin-bottom: 20px; padding: 8px 12px; border-radius: 999px;
-      color: #efe8ff; background: rgba(255,255,255,.08); border: 1px solid rgba(255,255,255,.13);
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 22px;
+      padding: 8px 12px;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.78);
+      color: var(--accent-deep);
+      box-shadow: 0 10px 24px rgba(138, 90, 43, 0.08);
       font-size: 13px;
     }
-    .pulse { width: 8px; height: 8px; border-radius: 50%; background: var(--green); box-shadow: 0 0 0 7px rgba(52, 211, 153, .12); }
-    h1 { margin: 0; max-width: 820px; font-size: clamp(40px, 5.1vw, 62px); line-height: 1.04; letter-spacing: -0.045em; text-wrap: balance; word-break: keep-all; }
-    .hero-title-tail { display: inline-block; white-space: nowrap; }
-    .gradient-text { background: linear-gradient(120deg, #fff, #dcc7ff 32%, #ffb8df 70%, #9eeaff); -webkit-background-clip: text; background-clip: text; color: transparent; }
-    .hero p { margin: 24px 0 0; max-width: 660px; color: var(--soft); font-size: 18px; line-height: 1.85; }
-    .hero-actions { display: flex; flex-wrap: wrap; gap: 14px; margin-top: 34px; }
-    .hero-metrics { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; margin-top: 42px; max-width: 680px; }
+
+    .pulse {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--accent);
+      box-shadow: 0 0 0 6px rgba(245, 166, 35, 0.14);
+    }
+
+    h1 {
+      margin: 0 auto;
+      max-width: 900px;
+      font-size: clamp(40px, 6vw, 74px);
+      line-height: 1.06;
+      letter-spacing: -0.045em;
+      color: var(--ink);
+      text-wrap: balance;
+    }
+
+    .hero-title-accent {
+      position: relative;
+      display: inline-block;
+      white-space: nowrap;
+    }
+
+    .hero-title-accent::after {
+      content: "";
+      position: absolute;
+      left: 4px;
+      right: 4px;
+      bottom: 5px;
+      height: 14px;
+      border-radius: 999px;
+      background: rgba(253, 231, 209, 0.94);
+      z-index: -1;
+      transform: rotate(-1.5deg);
+    }
+
+    .hero p {
+      margin: 24px auto 0;
+      max-width: 760px;
+      color: #5f6368;
+      font-size: 17px;
+      line-height: 1.9;
+    }
+
+    .hero-actions {
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-top: 34px;
+    }
+
+    .hero-metrics {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 12px;
+      margin: 38px auto 0;
+      max-width: 780px;
+    }
+
     .metric {
-      padding: 18px; border-radius: 22px; border: 1px solid rgba(255,255,255,.12);
-      background: rgba(255,255,255,.06);
+      padding: 17px;
+      border-radius: 22px;
+      background: rgba(255, 255, 255, 0.78);
+      box-shadow: 0 12px 30px rgba(138, 90, 43, 0.08);
+      text-align: left;
     }
-    .metric b { display: block; font-size: 23px; margin-bottom: 6px; }
-    .metric span { color: var(--muted); font-size: 13px; line-height: 1.6; }
 
-    .phone-card {
-      position: relative; padding: 18px; border-radius: 42px;
-      background: linear-gradient(180deg, rgba(255,255,255,.17), rgba(255,255,255,.06));
-      border: 1px solid rgba(255,255,255,.17); box-shadow: var(--shadow);
-      overflow: hidden;
+    .metric b {
+      display: block;
+      margin-bottom: 6px;
+      font-size: 20px;
+      color: var(--ink);
+      font-weight: 500;
     }
-    .phone-card::before {
-      content: ""; position: absolute; inset: -40% -20% auto auto; width: 280px; height: 280px; border-radius: 50%;
-      background: rgba(236,72,153,.24); filter: blur(18px);
-    }
-    .phone {
-      position: relative; border-radius: 30px; overflow: hidden; min-height: 620px;
-      background: linear-gradient(180deg, #15122a 0%, #0d0b18 100%);
-      border: 1px solid rgba(255,255,255,.12);
-    }
-    .phone-top { display: flex; align-items: center; justify-content: space-between; padding: 18px; color: #e9e3ff; font-size: 13px; }
-    .pill { padding: 6px 10px; border-radius: 999px; background: rgba(255,255,255,.08); color: var(--muted); }
-    .story-card { margin: 12px 18px 0; padding: 18px; border-radius: 24px; background: linear-gradient(135deg, rgba(139,92,246,.42), rgba(236,72,153,.32)); border: 1px solid rgba(255,255,255,.13); }
-    .story-card h3 { margin: 0 0 10px; font-size: 20px; }
-    .story-card p { margin: 0; color: rgba(255,255,255,.82); line-height: 1.7; font-size: 14px; }
-    .composer { display: flex; gap: 10px; margin: 16px 18px; }
-    .chip { padding: 9px 11px; border-radius: 999px; background: rgba(255,255,255,.08); color: #e6dcff; font-size: 13px; white-space: nowrap; }
-    .chat-list { padding: 4px 18px 20px; display: grid; gap: 12px; }
-    .bubble { width: fit-content; max-width: 88%; padding: 12px 14px; border-radius: 18px; line-height: 1.65; font-size: 14px; color: #f7f3ff; }
-    .bubble.left { background: rgba(255,255,255,.08); border-top-left-radius: 6px; }
-    .bubble.right { margin-left: auto; background: linear-gradient(135deg, var(--violet), var(--pink)); border-top-right-radius: 6px; }
-    .avatar-row { display: flex; gap: 8px; margin: 4px 0; }
-    .avatar { width: 34px; height: 34px; border-radius: 50%; display: grid; place-items: center; font-size: 15px; background: rgba(255,255,255,.1); border: 1px solid rgba(255,255,255,.14); }
-    .feed-card { margin: 12px 18px 0; padding: 14px; border-radius: 22px; background: rgba(255,255,255,.07); border: 1px solid rgba(255,255,255,.1); }
-    .feed-img { height: 128px; border-radius: 18px; background: linear-gradient(135deg, rgba(34,211,238,.7), rgba(139,92,246,.62), rgba(236,72,153,.7)); display: grid; place-items: center; font-size: 42px; }
-    .feed-card h4 { margin: 12px 0 4px; }
-    .feed-card span { color: var(--muted); font-size: 13px; }
 
-    section { padding: 82px 0; }
-    .section-head { max-width: 760px; margin-bottom: 38px; }
-    .section-kicker { margin-bottom: 12px; color: #c4b5fd; font-weight: 850; letter-spacing: .08em; font-size: 13px; text-transform: uppercase; }
-    h2 { margin: 0; font-size: clamp(34px, 4.5vw, 54px); line-height: 1.08; letter-spacing: -0.04em; }
-    .section-head p { margin: 18px 0 0; color: var(--muted); font-size: 17px; line-height: 1.8; }
+    .metric span {
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.65;
+    }
 
-    .feature-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px; }
+    section {
+      padding: 76px 0;
+    }
+
+    .section-head {
+      max-width: 780px;
+      margin-bottom: 34px;
+    }
+
+    .section-kicker {
+      margin-bottom: 12px;
+      color: var(--accent-deep);
+      font-size: 13px;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    h2 {
+      margin: 0;
+      color: var(--ink);
+      font-size: clamp(30px, 4.4vw, 52px);
+      line-height: 1.1;
+      letter-spacing: -0.04em;
+      text-wrap: balance;
+    }
+
+    .section-head p {
+      margin: 16px 0 0;
+      color: var(--muted);
+      font-size: 16px;
+      line-height: 1.85;
+    }
+
+    .feature-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 16px;
+    }
+
     .feature-card {
-      min-height: 280px; padding: 26px; border-radius: var(--radius);
-      background: rgba(255,255,255,.065); border: 1px solid rgba(255,255,255,.11);
-      transition: transform .22s ease, background .22s ease, border-color .22s ease;
+      min-height: 238px;
+      padding: 24px;
+      border-radius: var(--radius);
+      background: var(--card);
+      box-shadow: var(--shadow);
+      transition: transform 0.18s ease, box-shadow 0.18s ease;
     }
-    .feature-card:hover { transform: translateY(-5px); background: rgba(255,255,255,.09); border-color: rgba(255,255,255,.2); }
-    .icon {
-      width: 54px; height: 54px; border-radius: 19px; display: grid; place-items: center;
-      margin-bottom: 20px; font-size: 25px;
-      background: linear-gradient(135deg, rgba(139,92,246,.38), rgba(236,72,153,.25));
-      border: 1px solid rgba(255,255,255,.12);
-    }
-    .feature-card h3 { margin: 0 0 12px; font-size: 22px; }
-    .feature-card p { margin: 0; color: var(--muted); line-height: 1.75; }
 
-    .showcase { display: grid; grid-template-columns: .95fr 1.05fr; gap: 24px; align-items: stretch; }
+    .feature-card:hover {
+      transform: translateY(-4px);
+      box-shadow: var(--shadow-strong);
+    }
+
+    .feature-icon {
+      width: 52px;
+      height: 52px;
+      border-radius: 18px;
+      margin-bottom: 18px;
+      display: grid;
+      place-items: center;
+      background: var(--cream);
+      color: var(--accent-deep);
+      font-size: 25px;
+    }
+
+    .feature-card h3 {
+      margin: 0 0 10px;
+      color: var(--ink);
+      font-size: 21px;
+      font-weight: 500;
+    }
+
+    .feature-card p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 14px;
+      line-height: 1.75;
+    }
+
+    .experience-grid {
+      display: grid;
+      grid-template-columns: 0.98fr 0.72fr;
+      gap: 28px;
+      align-items: center;
+    }
+
     .panel {
-      padding: 30px; border-radius: var(--radius); background: rgba(255,255,255,.065);
-      border: 1px solid rgba(255,255,255,.12); box-shadow: 0 18px 70px rgba(0,0,0,.22);
+      padding: 28px;
+      border-radius: var(--radius);
+      background: rgba(255, 255, 255, 0.9);
+      box-shadow: var(--shadow);
     }
-    .panel.highlight { background: linear-gradient(135deg, rgba(139,92,246,.22), rgba(236,72,153,.16), rgba(255,255,255,.06)); }
-    .panel h3 { margin: 0 0 14px; font-size: 28px; letter-spacing: -0.02em; }
-    .panel p { margin: 0; color: var(--muted); line-height: 1.8; }
-    .step-list { display: grid; gap: 14px; margin-top: 26px; }
-    .step { display: flex; gap: 14px; align-items: flex-start; padding: 16px; border-radius: 20px; background: rgba(255,255,255,.06); border: 1px solid rgba(255,255,255,.1); }
-    .num { flex: 0 0 34px; height: 34px; border-radius: 12px; display: grid; place-items: center; background: rgba(139,92,246,.26); color: #efe7ff; font-weight: 900; }
-    .step b { display: block; margin-bottom: 4px; }
-    .step span { color: var(--muted); line-height: 1.65; font-size: 14px; }
 
-    .scenario-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; }
+    .panel h3 {
+      margin: 0 0 12px;
+      color: var(--ink);
+      font-size: 28px;
+      font-weight: 500;
+      letter-spacing: -0.02em;
+    }
+
+    .panel p {
+      margin: 0;
+      color: var(--muted);
+      line-height: 1.85;
+    }
+
+    .step-list {
+      margin-top: 22px;
+      display: grid;
+      gap: 12px;
+    }
+
+    .step {
+      display: flex;
+      gap: 12px;
+      align-items: flex-start;
+      padding: 15px;
+      border-radius: 20px;
+      background: rgba(253, 231, 209, 0.3);
+    }
+
+    .num {
+      width: 32px;
+      height: 32px;
+      border-radius: 12px;
+      flex: 0 0 auto;
+      display: grid;
+      place-items: center;
+      background: var(--cream);
+      color: var(--accent-deep);
+      font-size: 14px;
+    }
+
+    .step b {
+      display: block;
+      margin-bottom: 4px;
+      color: var(--ink);
+      font-weight: 500;
+    }
+
+    .step span {
+      color: var(--muted);
+      font-size: 14px;
+      line-height: 1.65;
+    }
+
+    .phone-visual-card {
+      width: min(100%, 350px);
+      margin: 0 auto;
+      padding: 14px;
+      border-radius: 32px;
+      background: rgba(255, 255, 255, 0.9);
+      box-shadow: var(--shadow);
+    }
+
+    .phone-shot {
+      position: relative;
+      width: 100%;
+      aspect-ratio: 9 / 19.5;
+      border-radius: 25px;
+      overflow: hidden;
+      background: #fffdf9;
+      box-shadow:
+              inset 0 0 0 1px rgba(138, 90, 43, 0.06),
+              0 14px 32px rgba(138, 90, 43, 0.1);
+    }
+
+    .phone-shot img {
+      width: 100%;
+      height: 100%;
+      display: block;
+      object-fit: cover;
+      background: #fffdf9;
+    }
+
+    .screen-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 18px;
+      align-items: start;
+    }
+
+    .screen-card {
+      padding: 14px;
+      border-radius: 30px;
+      background: rgba(255, 255, 255, 0.9);
+      box-shadow: var(--shadow);
+    }
+
+    .screen-card h3 {
+      margin: 14px 4px 4px;
+      color: var(--ink);
+      font-size: 17px;
+      font-weight: 500;
+    }
+
+    .screen-card p {
+      margin: 0 4px 4px;
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.6;
+    }
+
+    .chat-layout {
+      display: grid;
+      grid-template-columns: 0.95fr 1.05fr;
+      gap: 28px;
+      align-items: center;
+    }
+
+    .chat-card-row {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 18px;
+    }
+
+    .bubble-list {
+      display: grid;
+      gap: 12px;
+      margin-top: 22px;
+    }
+
+    .bubble {
+      padding: 14px 16px;
+      border-radius: 20px;
+      background: rgba(253, 231, 209, 0.3);
+      color: var(--muted);
+      line-height: 1.7;
+      font-size: 14px;
+    }
+
+    .bubble b {
+      display: block;
+      margin-bottom: 4px;
+      color: var(--ink);
+      font-weight: 500;
+    }
+
+    .scenario-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 16px;
+    }
+
     .scenario {
-      position: relative; overflow: hidden; min-height: 220px; padding: 22px; border-radius: 26px;
-      background: rgba(255,255,255,.065); border: 1px solid rgba(255,255,255,.1);
+      min-height: 205px;
+      padding: 22px;
+      border-radius: 26px;
+      background: rgba(255, 255, 255, 0.9);
+      box-shadow: var(--shadow);
     }
-    .scenario::after {
-      content: ""; position: absolute; right: -34px; bottom: -42px; width: 120px; height: 120px; border-radius: 50%;
-      background: rgba(139,92,246,.24); filter: blur(2px);
+
+    .scenario .big {
+      font-size: 32px;
+      margin-bottom: 14px;
     }
-    .scenario strong { display: block; font-size: 21px; margin-bottom: 10px; }
-    .scenario p { margin: 0; color: var(--muted); line-height: 1.7; position: relative; z-index: 1; }
-    .scenario .big { font-size: 34px; margin-bottom: 16px; position: relative; z-index: 1; }
 
-    .journey { display: grid; grid-template-columns: repeat(5, 1fr); gap: 12px; }
-    .journey-item {
-      padding: 20px; border-radius: 24px; background: rgba(255,255,255,.06); border: 1px solid rgba(255,255,255,.1);
+    .scenario strong {
+      display: block;
+      margin-bottom: 10px;
+      color: var(--ink);
+      font-size: 20px;
+      font-weight: 500;
     }
-    .journey-item small { display: block; color: #c4b5fd; font-weight: 850; margin-bottom: 12px; }
-    .journey-item b { display: block; font-size: 18px; margin-bottom: 8px; }
-    .journey-item span { color: var(--muted); font-size: 14px; line-height: 1.65; }
 
-    .value-band {
-      padding: 36px; border-radius: 34px; background: linear-gradient(135deg, rgba(139,92,246,.28), rgba(236,72,153,.18), rgba(34,211,238,.12));
-      border: 1px solid rgba(255,255,255,.14); display: grid; grid-template-columns: 1fr auto; gap: 28px; align-items: center;
+    .scenario p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 14px;
+      line-height: 1.72;
     }
-    .value-band h2 { font-size: clamp(32px, 4vw, 48px); }
-    .value-band p { margin: 16px 0 0; color: var(--soft); line-height: 1.8; max-width: 740px; }
 
-    .tabs { display: flex; flex-wrap: wrap; gap: 10px; margin: 0 0 24px; }
-    .tab { padding: 10px 14px; border-radius: 999px; border: 1px solid rgba(255,255,255,.12); background: rgba(255,255,255,.06); color: var(--muted); cursor: pointer; }
-    .tab.active { color: var(--text); background: linear-gradient(135deg, rgba(139,92,246,.42), rgba(236,72,153,.32)); }
-    .tab-content { display: none; }
-    .tab-content.active { display: grid; grid-template-columns: .82fr 1.18fr; gap: 22px; align-items: stretch; }
-    .mock-window { border-radius: 28px; overflow: hidden; background: #120f22; border: 1px solid rgba(255,255,255,.12); min-height: 420px; }
-    .mock-head { display: flex; align-items: center; gap: 7px; padding: 15px 18px; border-bottom: 1px solid rgba(255,255,255,.08); background: rgba(255,255,255,.04); }
-    .dot { width: 10px; height: 10px; border-radius: 50%; background: rgba(255,255,255,.26); }
-    .mock-body { padding: 20px; display: grid; gap: 14px; }
-    .mini-card { padding: 16px; border-radius: 20px; background: rgba(255,255,255,.07); border: 1px solid rgba(255,255,255,.1); }
-    .mini-card b { display: block; margin-bottom: 6px; }
-    .mini-card span { color: var(--muted); line-height: 1.6; font-size: 14px; }
-    .creative-preview { min-height: 286px; border-radius: 24px; display: grid; place-items: center; text-align: center; padding: 20px; background: linear-gradient(135deg, rgba(34,211,238,.45), rgba(139,92,246,.45), rgba(236,72,153,.38)); }
-    .creative-preview div { font-size: 56px; margin-bottom: 10px; }
-    .creative-preview strong { font-size: 25px; }
-
-    .testimonial-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px; }
-    .quote { padding: 26px; border-radius: var(--radius); background: rgba(255,255,255,.065); border: 1px solid rgba(255,255,255,.11); }
-    .quote p { margin: 0 0 20px; color: var(--soft); line-height: 1.8; }
-    .quote b { display: block; }
-    .quote span { color: var(--muted); font-size: 14px; }
-
-    .footer { padding: 50px 0; border-top: 1px solid rgba(255,255,255,.09); background: rgba(255,255,255,.025); }
-    .footer-grid { display: grid; grid-template-columns: 1.1fr repeat(3, .6fr); gap: 28px; }
-    .footer p, .footer a { color: var(--muted); line-height: 1.8; font-size: 14px; }
-    .footer h4 { margin: 0 0 12px; }
-    .footer a { display: block; margin: 8px 0; }
-
-    @media (max-width: 980px) {
-      .hero-grid, .showcase, .tab-content.active, .value-band { grid-template-columns: 1fr; }
-      .feature-grid, .testimonial-grid { grid-template-columns: 1fr 1fr; }
-      .scenario-grid, .journey { grid-template-columns: repeat(2, 1fr); }
-      .phone { min-height: 560px; }
-      .nav-links { display: none; position: absolute; left: 20px; right: 20px; top: 74px; padding: 14px; flex-direction: column; align-items: stretch; background: rgba(13, 11, 24, .96); border: 1px solid rgba(255,255,255,.1); border-radius: 22px; }
-      .nav-links.open { display: flex; }
-      .mobile-toggle { display: inline-grid; place-items: center; }
+    .cta {
+      padding-bottom: 92px;
     }
-    @media (max-width: 640px) {
-      .shell { width: min(100% - 28px, var(--max)); }
-      .hero { padding-top: 64px; }
-      .hero-metrics, .feature-grid, .scenario-grid, .journey, .testimonial-grid, .footer-grid { grid-template-columns: 1fr; }
-      .phone-card { padding: 10px; border-radius: 34px; }
-      .phone { border-radius: 25px; min-height: 520px; }
-      section { padding: 62px 0; }
-      .panel, .value-band { padding: 24px; }
-      h1 { font-size: clamp(32px, 10vw, 38px); line-height: 1.12; letter-spacing: -0.03em; }
-      .hero-title-tail { white-space: normal; }
-      .brand-name { display: none; }
+
+    .cta-band {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 28px;
+      align-items: center;
+      padding: 36px;
+      border-radius: 34px;
+      background:
+              radial-gradient(circle at 90% 10%, rgba(253, 231, 209, 0.58), transparent 28%),
+              rgba(255, 255, 255, 0.92);
+      box-shadow: var(--shadow-strong);
+    }
+
+    .cta-band h2 {
+      font-size: clamp(30px, 4vw, 46px);
+    }
+
+    .cta-band p {
+      margin: 14px 0 0;
+      color: var(--muted);
+      line-height: 1.8;
+      max-width: 720px;
+    }
+
+    .footer {
+      padding: 42px 0;
+      background: rgba(255, 255, 255, 0.58);
+      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.68);
+    }
+
+    .footer-grid {
+      display: grid;
+      grid-template-columns: 1.1fr repeat(3, 0.6fr);
+      gap: 28px;
+    }
+
+    .footer p,
+    .footer a {
+      color: var(--muted);
+      font-size: 14px;
+      line-height: 1.8;
+    }
+
+    .footer h4 {
+      margin: 0 0 12px;
+      color: var(--ink);
+      font-weight: 500;
+    }
+
+    .footer a {
+      display: block;
+      margin: 8px 0;
+    }
+
+    @media (max-width: 1120px) {
+      .feature-grid,
+      .screen-grid,
+      .scenario-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      .experience-grid,
+      .chat-layout,
+      .cta-band {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media (max-width: 760px) {
+      .shell {
+        width: min(100% - 28px, var(--max));
+      }
+
+      .nav-inner {
+        height: 66px;
+      }
+
+      .nav-links {
+        display: none;
+        position: absolute;
+        left: 14px;
+        right: 14px;
+        top: 66px;
+        padding: 12px;
+        border-radius: 22px;
+        background: rgba(255, 255, 255, 0.96);
+        box-shadow: var(--shadow);
+        flex-direction: column;
+        align-items: stretch;
+      }
+
+      .nav-links.open {
+        display: flex;
+      }
+
+      .mobile-toggle {
+        display: inline-grid;
+        place-items: center;
+      }
+
+      .nav-actions .btn {
+        display: none;
+      }
+
+      .brand-word {
+        font-size: 20px;
+      }
+
+      .hero {
+        padding: 58px 0 52px;
+      }
+
+      h1 {
+        font-size: clamp(34px, 10vw, 43px);
+        line-height: 1.13;
+        letter-spacing: -0.03em;
+      }
+
+      .hero-title-accent {
+        white-space: normal;
+      }
+
+      .hero p {
+        font-size: 15px;
+      }
+
+      .hero-metrics,
+      .feature-grid,
+      .screen-grid,
+      .chat-card-row,
+      .scenario-grid,
+      .footer-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .metric {
+        text-align: left;
+      }
+
+      section {
+        padding: 58px 0;
+      }
+
+      .panel,
+      .cta-band {
+        padding: 24px;
+      }
+
+      .phone-visual-card {
+        width: min(100%, 330px);
+      }
+
+      .screen-card {
+        max-width: 350px;
+        width: 100%;
+        margin: 0 auto;
+      }
     }
   </style>
 </head>
+
 <body>
-<div class="nav">
+<header class="nav">
   <div class="shell nav-inner">
     <a class="brand" href="#top" aria-label="Violet 首页">
-      <span class="brand-mark" aria-hidden="true"><img class="brand-logo" src="logo.png" alt="" /></span>
-      <span class="brand-name">Violet</span>
+      <img class="brand-logo" src="./logo.png" alt="" />
+      <span class="brand-word">Violet</span>
     </a>
+
     <nav class="nav-links" id="navLinks">
-      <a href="#features">核心功能</a>
+      <a href="#features">产品能力</a>
       <a href="#creation">创作体验</a>
-      <a href="#chat">智能群聊</a>
-      <a href="#scenes">使用场景</a>
+      <a href="#community">内容社区</a>
+      <a href="#chat">聊天与智能体</a>
+      <a href="#download">下载</a>
     </nav>
-    <button class="mobile-toggle" id="mobileToggle" aria-label="打开菜单">☰</button>
-    <a class="btn primary" href="https://github.com/Violet-Feed/starter/releases/latest/download/violet.apk" target="_blank" rel="noopener">立即体验</a>
+
+    <div class="nav-actions">
+      <button class="mobile-toggle" id="mobileToggle" aria-label="打开菜单">☰</button>
+      <a
+              class="btn primary"
+              href="https://github.com/Violet-Feed/starter/releases/latest/download/violet.apk"
+              target="_blank"
+              rel="noopener"
+      >
+        下载 Android
+      </a>
+    </div>
   </div>
-</div>
+</header>
 
 <main id="top">
   <section class="hero">
-    <div class="shell hero-grid">
-      <div>
-        <div class="eyebrow"><span class="pulse"></span> AIGC 创作 × 多智能体群聊 × 个性化推荐</div>
-        <h1><span class="gradient-text">会创作，懂兴趣</span><br><span class="gradient-text">也能聊天</span><br><span class="hero-title-tail">新一代社交内容应用</span></h1>
-        <p>Violet 面向年轻用户的灵感表达与社交互动场景，提供 AI 素材生成、作品发布、兴趣推荐、搜索发现、多人群聊与拟人化智能 Agent。用户不只是在浏览内容，而是在与内容、朋友和 AI 共同创造新的表达方式。</p>
-        <div class="hero-actions">
-          <a class="btn primary" href="https://github.com/Violet-Feed/starter/releases/latest/download/violet.apk" target="_blank" rel="noopener">下载 Android 应用</a>
-          <a class="btn" href="#features">查看功能亮点</a>
-        </div>
-        <div class="hero-metrics">
-          <div class="metric"><b>AIGC</b><span>文生图、文生视频、素材管理与作品创作</span></div>
-          <div class="metric"><b>推荐</b><span>基于兴趣、热度、相似内容的个性化发现</span></div>
-          <div class="metric"><b>Agent</b><span>多角色智能体参与群聊，拟人且克制</span></div>
-        </div>
+    <div class="shell hero-inner">
+      <div class="eyebrow">
+        <span class="pulse"></span>
+        AI 创作 × 内容社区 × 智能体互动
       </div>
 
-      <div class="phone-card" aria-label="Violet 应用界面预览">
-        <div class="phone">
-          <div class="phone-top"><b>Violet</b><span class="pill">今日灵感</span></div>
-          <div class="story-card">
-            <h3>把一句话变成一支故事短片</h3>
-            <p>输入想法，选择风格，AI 生成素材；你可以继续编辑、发布，也可以分享给群友一起二创。</p>
-          </div>
-          <div class="composer">
-            <span class="chip">梦核风</span><span class="chip">赛博城市</span><span class="chip">治愈日常</span>
-          </div>
-          <div class="feed-card">
-            <div class="feed-img">🌌</div>
-            <h4>午夜便利店的猫与星云</h4>
-            <span>推荐给你，因为你最近喜欢「幻想日常」</span>
-          </div>
-          <div class="chat-list">
-            <div class="avatar-row"><span class="avatar">🪄</span><span class="avatar">🎧</span><span class="avatar">🤖</span></div>
-            <div class="bubble left">Agent 小薇：这个设定可以加一点“雨夜霓虹”的氛围。</div>
-            <div class="bubble right">我想让它更像朋友之间的闲聊，不要太正式。</div>
-            <div class="bubble left">Agent 鹿鹿：懂了，我帮你改成更口语、更有梗的版本。</div>
-          </div>
+      <h1>
+        让每一次灵感，<br />
+        都有机会变成
+        <span class="hero-title-accent">一次互动</span>
+      </h1>
+
+      <p>
+        Violet 是一个围绕灵感表达、内容发现和智能体互动展开的年轻内容社区。
+        你可以把一句想法生成图片或视频，发布成作品，被看见、被评论、被分享，也可以把智能体带进聊天，让 AI 参与灵感讨论与日常陪伴。
+      </p>
+
+      <div class="hero-actions">
+        <a
+                class="btn primary"
+                href="https://github.com/Violet-Feed/starter/releases/latest/download/violet.apk"
+                target="_blank"
+                rel="noopener"
+        >
+          立即下载
+        </a>
+        <a class="btn" href="#community">看看产品体验</a>
+      </div>
+
+      <div class="hero-metrics">
+        <div class="metric">
+          <b>创作</b>
+          <span>从提示词到素材，从素材到作品，让想法快速成形</span>
+        </div>
+        <div class="metric">
+          <b>内容</b>
+          <span>首页、创作页和用户页，承接浏览、表达与个人沉淀</span>
+        </div>
+        <div class="metric">
+          <b>聊天</b>
+          <span>智能体页、消息与群聊，让 AI 成为互动角色</span>
         </div>
       </div>
     </div>
@@ -330,65 +849,160 @@
   <section id="features">
     <div class="shell">
       <div class="section-head">
-        <div class="section-kicker">Core Features</div>
-        <h2>围绕“创作、发现、互动”的完整产品闭环</h2>
-        <p>把 AI 创作、兴趣推荐、即时聊天和智能伙伴放在同一个应用里，让灵感更容易被表达，也更容易被朋友看见。</p>
+        <div class="section-kicker">Core Experience</div>
+        <h2>从灵感生成，到内容互动，再到聊天延展</h2>
+        <p>
+          Violet 不只是一个生成工具，也不是单纯的信息流。它将 AI 创作、作品发布、内容社区、即时消息和智能体角色融合在一起，让内容自然进入互动关系。
+        </p>
       </div>
+
       <div class="feature-grid">
         <article class="feature-card">
-          <div class="icon">🎨</div>
+          <div class="feature-icon">🎨</div>
           <h3>AI 素材生成</h3>
-          <p>用户输入一句灵感，即可生成图片或视频素材；支持素材保存、管理、删除与继续创作，让想法快速落地。</p>
+          <p>
+            输入一句提示词，即可生成图片或视频素材。生成结果可以预览，也可以继续组织成完整作品。
+          </p>
         </article>
+
         <article class="feature-card">
-          <div class="icon">🪄</div>
-          <h3>作品创作与发布</h3>
-          <p>将素材、标题、正文和封面组合成完整作品，形成个人创作主页与内容资产，适合日常分享、灵感记录和社交传播。</p>
+          <div class="feature-icon">🪄</div>
+          <h3>作品发布</h3>
+          <p>
+            将素材、标题、正文和标签组合成作品，让一次灵感拥有可以被浏览、评论和分享的表达形态。
+          </p>
         </article>
+
         <article class="feature-card">
-          <div class="icon">✨</div>
-          <h3>个性化推荐</h3>
-          <p>根据用户兴趣、内容相似度、好友关系与实时热度推荐作品，减少无效浏览，让每次打开都更贴近偏好。</p>
+          <div class="feature-icon">✨</div>
+          <h3>首页发现</h3>
+          <p>
+            首页推荐和搜索共同构成发现入口，让用户既能看到新内容，也能持续靠近自己的兴趣。
+          </p>
         </article>
+
         <article class="feature-card">
-          <div class="icon">🔎</div>
-          <h3>搜索发现</h3>
-          <p>支持关键词搜索与语义理解，不只匹配文字，也能发现相近主题、相似风格与潜在兴趣内容。</p>
+          <div class="feature-icon">💬</div>
+          <h3>内容互动</h3>
+          <p>
+            创作页承接作品展示、作者信息、标签、评论与分享，让灵感继续被回应。
+          </p>
         </article>
+
         <article class="feature-card">
-          <div class="icon">💬</div>
-          <h3>群聊与即时消息</h3>
-          <p>支持单聊、群聊、消息拉取、已读未读、会话列表和通知，让创作讨论、好友互动和内容分享自然发生。</p>
+          <div class="feature-icon">🤖</div>
+          <h3>智能体角色</h3>
+          <p>
+            创建不同人格的智能体，让它们以灵感助手、群聊搭子或轻陪伴角色参与对话。
+          </p>
         </article>
+
         <article class="feature-card">
-          <div class="icon">🤖</div>
-          <h3>多智能体群聊</h3>
-          <p>多个 AI Agent 具备不同人设、语气与活跃度，会根据上下文选择是否发言，避免刷屏，同时增强群聊氛围。</p>
+          <div class="feature-icon">👤</div>
+          <h3>个人主页</h3>
+          <p>
+            作品、关注关系和个人资料共同构成用户身份，让创作和社交关系沉淀在同一个空间。
+          </p>
         </article>
       </div>
     </div>
   </section>
 
   <section id="creation">
-    <div class="shell showcase">
-      <div class="panel highlight">
-        <div class="section-kicker">Creation Experience</div>
-        <h3>从灵感到作品，只需几步</h3>
-        <p>Violet 将 AIGC 能力包装成更接近普通用户习惯的创作流程：先表达想法，再选择方向，最后生成、编辑、发布与分享。</p>
-        <div class="step-list">
-          <div class="step"><span class="num">1</span><div><b>输入灵感</b><span>一句话描述画面、故事、情绪或角色设定。</span></div></div>
-          <div class="step"><span class="num">2</span><div><b>生成素材</b><span>AI 自动生成图片或视频素材，并保存到素材库。</span></div></div>
-          <div class="step"><span class="num">3</span><div><b>组合成作品</b><span>添加标题、正文、封面，形成可浏览、可分享的创作内容。</span></div></div>
-          <div class="step"><span class="num">4</span><div><b>发布与互动</b><span>作品进入推荐流，用户可点赞、评论、转发或在群聊中二创讨论。</span></div></div>
+    <div class="shell">
+      <div class="section-head">
+        <div class="section-kicker">Creation Flow</div>
+        <h2>从一句话开始，生成、整理、发布一气呵成</h2>
+        <p>
+          Violet 将创作拆成更轻的步骤：先表达灵感，再生成素材，随后补充内容并发布。它降低的是创作门槛，保留的是表达自由。
+        </p>
+      </div>
+
+      <div class="experience-grid">
+        <div class="panel">
+          <h3>轻量但完整的创作路径</h3>
+          <p>
+            用户不需要一开始就构思完整作品，只需要先写下一个画面、一种情绪或一个故事片段。Violet 会帮助它逐步变成可以分享的内容。
+          </p>
+
+          <div class="step-list">
+            <div class="step">
+              <span class="num">1</span>
+              <div>
+                <b>输入灵感</b>
+                <span>写下一句话，例如场景、人物、风格或故事氛围。</span>
+              </div>
+            </div>
+
+            <div class="step">
+              <span class="num">2</span>
+              <div>
+                <b>生成素材</b>
+                <span>根据提示词生成图片或视频，形成可继续加工的素材。</span>
+              </div>
+            </div>
+
+            <div class="step">
+              <span class="num">3</span>
+              <div>
+                <b>整理作品</b>
+                <span>补充标题、正文和标签，让素材成为完整表达。</span>
+              </div>
+            </div>
+
+            <div class="step">
+              <span class="num">4</span>
+              <div>
+                <b>进入互动</b>
+                <span>发布后进入首页和创作页，继续被浏览、评论和分享。</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="phone-visual-card">
+          <div class="phone-shot">
+            <img src="./start.png" alt="Violet 创作体验界面" />
+          </div>
         </div>
       </div>
-      <div class="mock-window">
-        <div class="mock-head"><span class="dot"></span><span class="dot"></span><span class="dot"></span></div>
-        <div class="mock-body">
-          <div class="creative-preview"><section><div>🪐</div><strong>“把周末的梦做成一段短片”</strong></section></div>
-          <div class="mini-card"><b>AI 生成建议</b><span>治愈日常、低饱和色彩、胶片颗粒、城市夜景、猫咪主角。</span></div>
-          <div class="mini-card"><b>下一步</b><span>保存素材、继续生成封面、发布为作品，或发送到群聊邀请朋友一起改。</span></div>
-        </div>
+    </div>
+  </section>
+
+  <section id="community">
+    <div class="shell">
+      <div class="section-head">
+        <div class="section-kicker">Content Community</div>
+        <h2>首页、创作页和用户页，构成内容社区的主线</h2>
+        <p>
+          内容社区围绕“发现—互动—沉淀”展开。首页负责看见内容，创作页负责展开作品，用户页则沉淀个人表达与关系。
+        </p>
+      </div>
+
+      <div class="screen-grid">
+        <article class="screen-card">
+          <div class="phone-shot">
+            <img src="./start.png" alt="Violet 首页界面" />
+          </div>
+          <h3>首页</h3>
+          <p>承接内容推荐与兴趣发现，让用户更快遇到想停留、想互动的作品。</p>
+        </article>
+
+        <article class="screen-card">
+          <div class="phone-shot">
+            <img src="./start.png" alt="Violet 创作页界面" />
+          </div>
+          <h3>创作页</h3>
+          <p>让作品从单纯展示进入互动场景，围绕观看、理解、评论和分享形成更完整的表达闭环。</p>
+        </article>
+
+        <article class="screen-card">
+          <div class="phone-shot">
+            <img src="./start.png" alt="Violet 用户页界面" />
+          </div>
+          <h3>用户页</h3>
+          <p>让创作者的作品、关系和个人气质被持续看见，形成更清晰的社区身份。</p>
+        </article>
       </div>
     </div>
   </section>
@@ -396,69 +1010,58 @@
   <section id="chat">
     <div class="shell">
       <div class="section-head">
-        <div class="section-kicker">AI Group Chat</div>
-        <h2>懂分寸的 AI 群聊伙伴</h2>
-        <p>Violet 的多智能体群聊会理解上下文、学习群聊风格与常用表达，在创作讨论、话题延展或气氛需要时给出自然回应，让群聊更有灵感，也更有陪伴感。</p>
+        <div class="section-kicker">Chat & Agent</div>
+        <h2>聊天模块里，智能体成为群聊中的互动角色</h2>
+        <p>
+          智能体详情不只是资料页，而是进入聊天关系之前的角色设定页。它定义了一个可以加入群聊、参与讨论、协助共创的 AI 角色。
+        </p>
       </div>
-      <div class="tabs" role="tablist">
-        <button class="tab active" data-tab="agent">智能体角色</button>
-        <button class="tab" data-tab="memory">群聊记忆</button>
-        <button class="tab" data-tab="tone">拟人化表达</button>
-      </div>
-      <div class="tab-content active" id="agent">
+
+      <div class="chat-layout">
+        <div class="chat-card-row">
+          <article class="screen-card">
+            <div class="phone-shot">
+              <img src="./start.png" alt="Violet 智能体页界面" />
+            </div>
+            <h3>智能体页</h3>
+            <p>清晰呈现智能体的设定、语气与角色边界，让每个 Agent 都能以独特身份参与聊天。</p>
+          </article>
+
+          <article class="screen-card">
+            <div class="phone-shot">
+              <img src="./start.png" alt="Violet 消息会话界面" />
+            </div>
+            <h3>消息会话</h3>
+            <p>从私聊到群聊，再到智能体加入对话，让作品之外的讨论继续发生。</p>
+          </article>
+        </div>
+
         <div class="panel">
-          <h3>多个 Agent，各有分工</h3>
-          <p>不同 Agent 可以承担灵感助手、吐槽搭子、知识解释、内容润色等角色。系统会判断当前话题更适合谁回应，也可以选择不回应。</p>
-          <div class="step-list">
-            <div class="step"><span class="num">A</span><div><b>创作型 Agent</b><span>帮助补充设定、扩写文案、生成故事走向。</span></div></div>
-            <div class="step"><span class="num">B</span><div><b>陪伴型 Agent</b><span>适合轻松闲聊、接梗、活跃氛围。</span></div></div>
-            <div class="step"><span class="num">C</span><div><b>解释型 Agent</b><span>面对陌生术语、热点话题时给出简洁说明。</span></div></div>
-          </div>
-        </div>
-        <div class="mock-window">
-          <div class="mock-head"><span class="dot"></span><span class="dot"></span><span class="dot"></span></div>
-          <div class="mock-body">
-            <div class="mini-card"><b>群友</b><span>这个标题有点太 AI 了，能不能更像我们群里说话？</span></div>
-            <div class="mini-card"><b>Agent 小薇</b><span>可以，把“梦境叙事”改成“昨晚脑子自动剪了个片”，会更像日常吐槽。</span></div>
-            <div class="mini-card"><b>Agent 鹿鹿</b><span>我再给你三个更像朋友圈标题的版本。</span></div>
-          </div>
-        </div>
-      </div>
-      <div class="tab-content" id="memory">
-        <div class="panel">
-          <h3>记住上下文，也记住群的语气</h3>
-          <p>应用会沉淀群聊中的重要信息、近期热点、表达习惯和常用黑话，让 AI 的回复更贴近真实社群氛围，而不是每次从零开始。</p>
-          <div class="step-list">
-            <div class="step"><span class="num">1</span><div><b>滚动摘要</b><span>跟进长期对话，不轻易忘掉前文。</span></div></div>
-            <div class="step"><span class="num">2</span><div><b>风格学习</b><span>学习群里常见表达、口头禅和玩笑方式。</span></div></div>
-            <div class="step"><span class="num">3</span><div><b>术语理解</b><span>遇到新黑话时尝试搜索、推断，必要时向群友确认。</span></div></div>
-          </div>
-        </div>
-        <div class="mock-window">
-          <div class="mock-head"><span class="dot"></span><span class="dot"></span><span class="dot"></span></div>
-          <div class="mock-body">
-            <div class="mini-card"><b>群聊风格</b><span>短句、轻松、带一点吐槽，不使用过度正式的长段解释。</span></div>
-            <div class="mini-card"><b>近期热词</b><span>梦核、抽象、电子榨菜、赛博搭子。</span></div>
-            <div class="mini-card"><b>记忆价值</b><span>让下一次回复更自然、更连贯，也更像“群里的人”。</span></div>
-          </div>
-        </div>
-      </div>
-      <div class="tab-content" id="tone">
-        <div class="panel">
-          <h3>克制、延迟、分段，更接近真人聊天</h3>
-          <p>Agent 不会机械地秒回或连续刷屏，而是根据场景加入适当延迟；较长内容会拆成几段，真人插话时还能取消后续回复。</p>
-          <div class="step-list">
-            <div class="step"><span class="num">✓</span><div><b>少说废话</b><span>不需要回应时保持沉默。</span></div></div>
-            <div class="step"><span class="num">✓</span><div><b>自然节奏</b><span>模拟打字等待与二次补充。</span></div></div>
-            <div class="step"><span class="num">✓</span><div><b>避免复读</b><span>相似内容会被抑制，降低打扰感。</span></div></div>
-          </div>
-        </div>
-        <div class="mock-window">
-          <div class="mock-head"><span class="dot"></span><span class="dot"></span><span class="dot"></span></div>
-          <div class="mock-body">
-            <div class="mini-card"><b>系统判断</b><span>当前话题需要一个创作建议，不需要两个 Agent 同时发言。</span></div>
-            <div class="mini-card"><b>发送方式</b><span>第一条短建议立即发送；第二条备选文案等待片刻，若真人继续说话则取消。</span></div>
-            <div class="mini-card"><b>体验结果</b><span>更像熟悉语气的群友参与，让聊天保持轻松、有分寸。</span></div>
+          <h3>更像“群友”的 AI 体验</h3>
+          <p>
+            智能体可以是创作助手、吐槽搭子、氛围补充者，也可以是某个固定人设的陪伴角色。它的价值不只是回答问题，而是融入对话节奏。
+          </p>
+
+          <div class="bubble-list">
+            <div class="bubble">
+              <b>创作建议</b>
+              帮你补充设定、润色标题、扩展故事方向，让作品更完整。
+            </div>
+
+            <div class="bubble">
+              <b>智能体群聊</b>
+              将智能体加入群聊后，它可以围绕上下文参与讨论、补充灵感，而不是孤立问答。
+            </div>
+
+            <div class="bubble">
+              <b>人格表达</b>
+              不同智能体拥有不同语气、定位和角色边界，让聊天更有参与感。
+            </div>
+
+            <div class="bubble">
+              <b>协同共创</b>
+              智能体可以和真实用户一起讨论素材、作品和新点子，让创作过程更像多人协作。
+            </div>
           </div>
         </div>
       </div>
@@ -469,41 +1072,58 @@
     <div class="shell">
       <div class="section-head">
         <div class="section-kicker">Use Cases</div>
-        <h2>适合内容社区、兴趣社交与 AI 陪伴场景</h2>
-        <p>Violet 的产品能力可以覆盖从个人创作到群体互动的多个高频场景。</p>
+        <h2>适合灵感记录、内容互动、协同共创与轻陪伴</h2>
+        <p>
+          Violet 面向的不是单一场景，而是年轻用户每天都会发生的表达、浏览、聊天和共创需求。
+        </p>
       </div>
+
       <div class="scenario-grid">
-        <div class="scenario"><div class="big">📸</div><strong>灵感记录</strong><p>把突然想到的画面、梗、梦境或故事快速变成素材，形成个人灵感库。</p></div>
-        <div class="scenario"><div class="big">🔥</div><strong>内容发现</strong><p>基于兴趣流、热榜和相似作品持续推荐，让用户更容易找到喜欢的内容。</p></div>
-        <div class="scenario"><div class="big">👥</div><strong>好友共创</strong><p>用户可以在群聊中分享素材、讨论设定、互相二创，增强社交关系。</p></div>
-        <div class="scenario"><div class="big">🎭</div><strong>AI 陪伴</strong><p>多智能体以不同人设参与对话，适合作为群聊搭子、灵感助手和轻量陪伴角色。</p></div>
+        <article class="scenario">
+          <div class="big">💡</div>
+          <strong>灵感记录</strong>
+          <p>把突然想到的画面、梗、梦境或故事快速变成素材，不让灵感消失。</p>
+        </article>
+
+        <article class="scenario">
+          <div class="big">🎨</div>
+          <strong>轻量创作</strong>
+          <p>无需复杂工具，也可以从提示词、素材、标题和正文完成一次表达。</p>
+        </article>
+
+        <article class="scenario">
+          <div class="big">👥</div>
+          <strong>内容互动</strong>
+          <p>把作品带入创作详情、评论区或聊天中继续讨论、修改和二创。</p>
+        </article>
+
+        <article class="scenario">
+          <div class="big">🤖</div>
+          <strong>AI 陪伴</strong>
+          <p>让智能体以不同人格参与日常聊天，成为轻松、有分寸的互动角色。</p>
+        </article>
       </div>
     </div>
   </section>
 
-  <section>
+  <section class="cta" id="download">
     <div class="shell">
-      <div class="section-head">
-        <div class="section-kicker">Product Value</div>
-        <h2>产品价值不止是“生成内容”，而是让内容进入社交关系</h2>
-        <p>相比单一 AIGC 工具，Violet 更强调内容从生成、分发到互动的完整链路：AI 帮用户表达，推荐帮内容找到受众，群聊让创作成为关系中的话题。</p>
-      </div>
-      <div class="testimonial-grid">
-        <div class="quote"><p>“我不需要从零学习复杂工具，只要把想法说出来，Violet 就能帮我变成可分享的作品。”</p><b>个人创作者</b><span>低门槛内容生产</span></div>
-        <div class="quote"><p>“推荐流能持续给我相似但不重复的内容，搜索也能理解我模糊的表达。”</p><b>内容消费者</b><span>更高效的兴趣发现</span></div>
-        <div class="quote"><p>“群里的 AI 不像客服，更像懂我们语气的朋友，偶尔接梗、偶尔给灵感。”</p><b>兴趣社群用户</b><span>更自然的群聊氛围</span></div>
-      </div>
-    </div>
-  </section>
-
-  <section id="cta">
-    <div class="shell">
-      <div class="value-band">
+      <div class="cta-band">
         <div>
           <h2>让每一次灵感，都有机会变成一次互动。</h2>
-          <p>Violet 将 AI 创作、个性化推荐、社交互动与多智能体群聊融合在同一体验中，面向下一代内容社区与智能社交产品形态。</p>
+          <p>
+            Violet 将 AI 创作、内容社区、即时消息和智能体角色融合在一起，让内容不只被生成，也能被看见、被讨论、被继续延展。
+          </p>
         </div>
-        <a class="btn primary" href="https://github.com/Violet-Feed/starter/releases/latest/download/violet.apk" target="_blank" rel="noopener">下载应用</a>
+
+        <a
+                class="btn primary"
+                href="https://github.com/Violet-Feed/starter/releases/latest/download/violet.apk"
+                target="_blank"
+                rel="noopener"
+        >
+          下载 Android 版
+        </a>
       </div>
     </div>
   </section>
@@ -512,32 +1132,54 @@
 <footer class="footer">
   <div class="shell footer-grid">
     <div>
-      <div class="brand" style="margin-bottom: 14px;">
-        <span class="brand-mark" aria-hidden="true"><img class="brand-logo" src="logo.png" alt="" /></span>
-        <span class="brand-name">Violet</span>
-      </div>
-      <p>基于大模型的 AIGC 与多智能体群聊应用，面向创作、发现、互动与陪伴的综合内容社交体验。</p>
+      <a class="brand" href="#top" style="margin-bottom: 14px;">
+        <img class="brand-logo" src="./logo.png" alt="" />
+        <span class="brand-word">Violet</span>
+      </a>
+      <p>
+        AI 创作、内容社区、即时消息与智能体社交融合的年轻内容应用。
+      </p>
     </div>
-    <div><h4>产品</h4><a href="#features">核心功能</a><a href="#creation">创作体验</a><a href="#chat">智能群聊</a></div>
-    <div><h4>场景</h4><a href="#scenes">灵感记录</a><a href="#scenes">内容发现</a><a href="#scenes">好友共创</a></div>
-    <div><h4>价值</h4><a href="#cta">产品愿景</a><a href="#top">返回首页</a><a href="https://github.com/Violet-Feed/starter/releases/latest/download/violet.apk" target="_blank" rel="noopener">下载应用</a></div>
+
+    <div>
+      <h4>产品</h4>
+      <a href="#features">产品能力</a>
+      <a href="#creation">创作体验</a>
+      <a href="#community">内容社区</a>
+    </div>
+
+    <div>
+      <h4>互动</h4>
+      <a href="#chat">聊天与智能体</a>
+      <a href="#scenes">使用场景</a>
+      <a href="#download">下载应用</a>
+    </div>
+
+    <div>
+      <h4>入口</h4>
+      <a href="#top">返回顶部</a>
+      <a
+              href="https://github.com/Violet-Feed/starter/releases/latest/download/violet.apk"
+              target="_blank"
+              rel="noopener"
+      >
+        Android 下载
+      </a>
+    </div>
   </div>
 </footer>
 
 <script>
   const mobileToggle = document.getElementById('mobileToggle');
   const navLinks = document.getElementById('navLinks');
-  mobileToggle?.addEventListener('click', () => navLinks.classList.toggle('open'));
-  navLinks?.querySelectorAll('a').forEach(link => link.addEventListener('click', () => navLinks.classList.remove('open')));
 
-  const tabs = document.querySelectorAll('.tab');
-  const contents = document.querySelectorAll('.tab-content');
-  tabs.forEach(tab => {
-    tab.addEventListener('click', () => {
-      tabs.forEach(t => t.classList.remove('active'));
-      contents.forEach(c => c.classList.remove('active'));
-      tab.classList.add('active');
-      document.getElementById(tab.dataset.tab).classList.add('active');
+  mobileToggle?.addEventListener('click', () => {
+    navLinks.classList.toggle('open');
+  });
+
+  navLinks?.querySelectorAll('a').forEach((link) => {
+    link.addEventListener('click', () => {
+      navLinks.classList.remove('open');
     });
   });
 </script>
