@@ -32,6 +32,11 @@ public class UserServiceImpl implements UserService {
         LoginRequest loginRequest = LoginRequest.newBuilder().setUsername(username).setPassword(password).build();
         LoginResponse loginResponse = actionStub.login(loginRequest);
         if (loginResponse.getBaseResp().getStatusCode() != StatusCode.Success) {
+            if (loginResponse.getBaseResp().getStatusCode() == StatusCode.Param_Error) {
+                JSONObject data = new JSONObject();
+                data.put("message", loginResponse.getBaseResp().getStatusMessage());
+                return data;
+            }
             log.error("[login] Login rpc err, err = {}", loginResponse.getBaseResp());
             throw new RpcException(loginResponse.getBaseResp());
         }
@@ -50,6 +55,11 @@ public class UserServiceImpl implements UserService {
         RegisterRequest registerRequest = RegisterRequest.newBuilder().setUsername(username).setPassword(password).setConfirmPassword(confirmPassword).build();
         RegisterResponse registerResponse = actionStub.register(registerRequest);
         if (registerResponse.getBaseResp().getStatusCode() != StatusCode.Success) {
+            if (registerResponse.getBaseResp().getStatusCode() == StatusCode.Param_Error) {
+                JSONObject data = new JSONObject();
+                data.put("message", registerResponse.getBaseResp().getStatusMessage());
+                return data;
+            }
             log.error("[register] Register rpc err, err = {}", registerResponse.getBaseResp());
             throw new RpcException(registerResponse.getBaseResp());
         }
