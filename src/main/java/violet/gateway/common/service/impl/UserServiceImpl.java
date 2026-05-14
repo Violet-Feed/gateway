@@ -32,12 +32,9 @@ public class UserServiceImpl implements UserService {
         LoginRequest loginRequest = LoginRequest.newBuilder().setUsername(username).setPassword(password).build();
         LoginResponse loginResponse = actionStub.login(loginRequest);
         if (loginResponse.getBaseResp().getStatusCode() != StatusCode.Success) {
-            if (loginResponse.getBaseResp().getStatusCode() == StatusCode.Param_Error) {
-                JSONObject data = new JSONObject();
-                data.put("message", loginResponse.getBaseResp().getStatusMessage());
-                return data;
+            if (loginResponse.getBaseResp().getStatusCode() != StatusCode.Param_Error) {
+                log.error("[login] Login rpc err, err = {}", loginResponse.getBaseResp());
             }
-            log.error("[login] Login rpc err, err = {}", loginResponse.getBaseResp());
             throw new RpcException(loginResponse.getBaseResp());
         }
         String token = JwtUtil.createJWT(String.valueOf(loginResponse.getUserId()));
@@ -55,12 +52,9 @@ public class UserServiceImpl implements UserService {
         RegisterRequest registerRequest = RegisterRequest.newBuilder().setUsername(username).setPassword(password).setConfirmPassword(confirmPassword).build();
         RegisterResponse registerResponse = actionStub.register(registerRequest);
         if (registerResponse.getBaseResp().getStatusCode() != StatusCode.Success) {
-            if (registerResponse.getBaseResp().getStatusCode() == StatusCode.Param_Error) {
-                JSONObject data = new JSONObject();
-                data.put("message", registerResponse.getBaseResp().getStatusMessage());
-                return data;
+            if (registerResponse.getBaseResp().getStatusCode() != StatusCode.Param_Error) {
+                log.error("[register] Register rpc err, err = {}", registerResponse.getBaseResp());
             }
-            log.error("[register] Register rpc err, err = {}", registerResponse.getBaseResp());
             throw new RpcException(registerResponse.getBaseResp());
         }
         JSONObject data = new JSONObject();

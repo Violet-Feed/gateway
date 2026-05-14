@@ -28,7 +28,7 @@ public class UserController {
             resp.put("data", data);
         } catch (RpcException e) {
             resp.put("code", e.getStatus().getStatusCodeValue());
-            resp.put("message", e.getStatus().getStatusCode());
+            resp.put("message", e.getStatus().getStatusMessage());
         } catch (NullPointerException e) {
             resp.put("code", StatusCode.Param_Error_VALUE);
             resp.put("message", StatusCode.Param_Error);
@@ -51,7 +51,7 @@ public class UserController {
             resp.put("data", data);
         } catch (RpcException e) {
             resp.put("code", e.getStatus().getStatusCodeValue());
-            resp.put("message", e.getStatus().getStatusCode());
+            resp.put("message", e.getStatus().getStatusMessage());
         } catch (NullPointerException e) {
             resp.put("code", StatusCode.Param_Error_VALUE);
             resp.put("message", StatusCode.Param_Error);
