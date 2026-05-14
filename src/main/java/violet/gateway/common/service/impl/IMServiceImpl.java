@@ -187,7 +187,13 @@ public class IMServiceImpl implements IMService {
         Long userId = authentication.getUserId();
         Integer conType = req.getInteger("con_type");
         List<Long> members = req.getJSONArray("members").toJavaList(Long.class);
-        CreateConversationRequest createConversationRequest = CreateConversationRequest.newBuilder().setOwnerId(userId).setConType(conType).addAllMembers(members).build();
+        List<Long> agentMembers = req.getJSONArray("agent_members").toJavaList(Long.class);
+        CreateConversationRequest createConversationRequest = CreateConversationRequest.newBuilder()
+                .setOwnerId(userId)
+                .setConType(conType)
+                .addAllMembers(members)
+                .addAllAgentMembers(agentMembers)
+                .build();
         CreateConversationResponse createConversationResponse = imStub.createConversation(createConversationRequest);
         if (createConversationResponse.getBaseResp().getStatusCode() != StatusCode.Success) {
             log.error("[createConversation] CreateConversation rpc err, err = {}", createConversationResponse.getBaseResp());

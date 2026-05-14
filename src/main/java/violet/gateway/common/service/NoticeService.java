@@ -7,7 +7,7 @@ public interface NoticeService {
 
     JSONObject getNoticeAggList(JSONObject req) throws Exception;
 
-    JSONObject getNoticeCount(JSONObject req) throws Exception;
+    JSONObject getNoticeCounts(JSONObject req) throws Exception;
 
     JSONObject markNoticeRead(JSONObject req) throws Exception;
 }

@@ -5,6 +5,8 @@ import com.alibaba.fastjson.JSONObject;
 public interface AigcService {
     JSONObject createMaterial(JSONObject req) throws Exception;
 
+    JSONObject reCreateMaterial(JSONObject req) throws Exception;
+
     JSONObject deleteMaterial(JSONObject req) throws Exception;
 
     JSONObject videoMaterialCallback(JSONObject req);

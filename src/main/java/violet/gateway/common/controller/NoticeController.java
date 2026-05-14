@@ -64,11 +64,11 @@ public class NoticeController {
         return resp;
     }
 
-    @PostMapping("/get_notice_count")
-    public JSONObject getNoticeCount(@RequestBody JSONObject req) {
+    @PostMapping("/get_notice_counts")
+    public JSONObject getNoticeCounts(@RequestBody JSONObject req) {
         JSONObject resp = new JSONObject();
         try {
-            JSONObject data = noticeService.getNoticeCount(req);
+            JSONObject data = noticeService.getNoticeCounts(req);
             resp.put("code", StatusCode.Success_VALUE);
             resp.put("message", StatusCode.Success);
             resp.put("data", data);
@@ -78,11 +78,11 @@ public class NoticeController {
         } catch (NullPointerException e) {
             resp.put("code", StatusCode.Param_Error_VALUE);
             resp.put("message", StatusCode.Param_Error);
-            log.error("[getNoticeCount] err, err = {}", e.toString());
+            log.error("[getNoticeCounts] err, err = {}", e.toString());
         } catch (Exception e) {
             resp.put("code", StatusCode.Unknown_Error_VALUE);
             resp.put("message", StatusCode.Unknown_Error);
-            log.error("[getNoticeCount] err, err = {}", e.toString());
+            log.error("[getNoticeCounts] err, err = {}", e.toString());
         }
         return resp;
     }

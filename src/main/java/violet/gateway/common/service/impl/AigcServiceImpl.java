@@ -47,6 +47,21 @@ public class AigcServiceImpl implements AigcService {
     }
 
     @Override
+    public JSONObject reCreateMaterial(JSONObject req) throws Exception {
+        CustomAuthenticationToken authentication = (CustomAuthenticationToken) SecurityContextHolder.getContext().getAuthentication();
+        Long userId = authentication.getUserId();
+        Long materialId = req.getLong("material_id");
+        ReCreateMaterialRequest reCreateMaterialRequest = ReCreateMaterialRequest.newBuilder().setUserId(userId).setMaterialId(materialId).build();
+        ReCreateMaterialResponse reCreateMaterialResponse = aigcStub.reCreateMaterial(reCreateMaterialRequest);
+        if (reCreateMaterialResponse.getBaseResp().getStatusCode() != StatusCode.Success) {
+            log.error("[reCreateMaterialResponse] ReCreateMaterialResponse rpc err, err = {}", reCreateMaterialResponse.getBaseResp());
+            throw new RpcException(reCreateMaterialResponse.getBaseResp());
+        }
+        JSONObject data = new JSONObject();
+        return data;
+    }
+
+    @Override
     public JSONObject deleteMaterial(JSONObject req) throws Exception {
         CustomAuthenticationToken authentication = (CustomAuthenticationToken) SecurityContextHolder.getContext().getAuthentication();
         Long userId = authentication.getUserId();

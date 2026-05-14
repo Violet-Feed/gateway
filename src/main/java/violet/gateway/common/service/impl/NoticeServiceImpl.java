@@ -81,18 +81,18 @@ public class NoticeServiceImpl implements NoticeService {
     }
 
     @Override
-    public JSONObject getNoticeCount(JSONObject req) throws Exception {
+    public JSONObject getNoticeCounts(JSONObject req) throws Exception {
         CustomAuthenticationToken authentication = (CustomAuthenticationToken) SecurityContextHolder.getContext().getAuthentication();
         Long userId = authentication.getUserId();
-        Integer group = req.getInteger("group");
-        GetNoticeCountRequest getNoticeCountRequest = GetNoticeCountRequest.newBuilder().setUserId(userId).setGroup(group).build();
-        GetNoticeCountResponse getNoticeCountResponse = imStub.getNoticeCount(getNoticeCountRequest);
-        if (getNoticeCountResponse.getBaseResp().getStatusCode() != StatusCode.Success) {
-            log.error("[getNoticeCount] GetNoticeCount rpc err, err = {}", getNoticeCountResponse.getBaseResp());
-            throw new RpcException(getNoticeCountResponse.getBaseResp());
+        List<Integer> groups = req.getJSONArray("groups").toJavaList(Integer.class);
+        GetNoticeCountsRequest getNoticeCountsRequest = GetNoticeCountsRequest.newBuilder().setUserId(userId).addAllGroups(groups).build();
+        GetNoticeCountsResponse getNoticeCountsResponse = imStub.getNoticeCounts(getNoticeCountsRequest);
+        if (getNoticeCountsResponse.getBaseResp().getStatusCode() != StatusCode.Success) {
+            log.error("[getNoticeCounts] GetNoticeCounts rpc err, err = {}", getNoticeCountsResponse.getBaseResp());
+            throw new RpcException(getNoticeCountsResponse.getBaseResp());
         }
         JSONObject data = new JSONObject();
-        data.put("notice_count", getNoticeCountResponse.getNoticeCount());
+        data.put("notice_count", getNoticeCountsResponse.getNoticeCountMap());
         return data;
     }
 
