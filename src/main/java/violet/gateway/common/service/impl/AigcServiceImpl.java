@@ -124,12 +124,10 @@ public class AigcServiceImpl implements AigcService {
         CustomAuthenticationToken authentication = (CustomAuthenticationToken) SecurityContextHolder.getContext().getAuthentication();
         Long userId = authentication.getUserId();
         Long materialId = req.getLong("material_id");
-        Integer materialType = req.getInteger("material_type");
-        String materialUrl = req.getString("material_url");
         String title = req.getString("title");
         String content = req.getString("content");
         String category = req.getString("category");
-        CreateCreationRequest createCreationRequest = CreateCreationRequest.newBuilder().setMaterialId(materialId).setMaterialType(materialType).setMaterialUrl(materialUrl).setUserId(userId).setTitle(title).setContent(content).setCategory(category).build();
+        CreateCreationRequest createCreationRequest = CreateCreationRequest.newBuilder().setMaterialId(materialId).setUserId(userId).setTitle(title).setContent(content).setCategory(category).build();
         CreateCreationResponse createCreationResponse = aigcStub.createCreation(createCreationRequest);
         if (createCreationResponse.getBaseResp().getStatusCode() != StatusCode.Success) {
             log.error("[createCreation] CreateCreation rpc err, err = {}", createCreationResponse.getBaseResp());
