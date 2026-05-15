@@ -29,6 +29,7 @@ public class SecurityConfig {
                         "/share.html",
                         "/download.html",
                         "/logo.png",
+                        "/violet.png",
                         "/api/user/login",
                         "/api/user/register",
                         "/api/aigc/get_creation_by_forward",

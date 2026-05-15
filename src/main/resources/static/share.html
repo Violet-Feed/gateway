@@ -6,6 +6,7 @@
             name="viewport"
             content="width=device-width, initial-scale=1.0, viewport-fit=cover"
     />
+    <meta name="color-scheme" content="light" />
 
     <title>作品详情</title>
 
@@ -20,6 +21,10 @@
     <meta property="og:image" content="logo.png" />
 
     <style>
+        :root {
+            color-scheme: light;
+        }
+
         * {
             box-sizing: border-box;
             -webkit-tap-highlight-color: transparent;
@@ -698,6 +703,136 @@
             font-size: 14px;
             font-weight: 400;
             background: rgba(253, 231, 209, 1);
+        }
+
+        @media (prefers-color-scheme: dark) {
+            html,
+            body {
+                background: #ffffff;
+                color: #1f2329;
+            }
+
+            .page,
+            .author-section,
+            .media-section,
+            .media-img,
+            .content-section,
+            .comments-section,
+            .comment-list,
+            .empty-comments,
+            .bottom-bar,
+            .comment-input-wrapper,
+            .modal,
+            .error-box {
+                background: #ffffff;
+            }
+
+            .media-section.video-media,
+            .media-section.video-media .media-video,
+            .image-preview-mask {
+                background: #000000;
+            }
+
+            .download-bar {
+                background: rgba(255, 255, 255, 0.98);
+                border-color: rgba(240, 240, 240, 0.96);
+                box-shadow: 0 14px 38px rgba(31, 35, 41, 0.22);
+            }
+
+            .app-logo,
+            .author-avatar,
+            .comment-avatar {
+                background: #eeeeee;
+            }
+
+            .download-title,
+            .author-name,
+            .comments-title,
+            .comment-username,
+            .title,
+            .modal-title,
+            .error-title {
+                color: #1f2329;
+            }
+
+            .detail-line,
+            .detail,
+            .comment-text {
+                color: #333333;
+            }
+
+            .comments-sort,
+            .action-item,
+            .action-icon,
+            .share-action-icon {
+                color: #666666;
+            }
+
+            .author-desc,
+            .meta,
+            .comment-time,
+            .comment-reply-btn,
+            .comment-replies-toggle-text,
+            .empty-comments,
+            .more-comments,
+            .comment-placeholder,
+            .action-count,
+            .error-desc {
+                color: #999999;
+            }
+
+            .comment-like-btn {
+                color: #666666;
+            }
+
+            .comment-like-icon {
+                color: #666666;
+            }
+
+            .comment-like-btn.liked .comment-like-icon,
+            .action-icon.liked {
+                color: #ff4d67;
+            }
+
+            .follow-btn {
+                background: #ff4d67;
+                color: #ffffff;
+                box-shadow: 0 2px 8px rgba(255, 77, 103, 0.28);
+            }
+
+            .follow-btn.following {
+                background: #f0f0f0;
+                color: #666666;
+                box-shadow: none;
+            }
+
+            .category,
+            .modal-confirm,
+            .retry-btn {
+                background: rgba(253, 231, 209, 1);
+                color: #8a5a2b;
+            }
+
+            .modal-cancel {
+                background: #f2f2f2;
+                color: #555555;
+            }
+
+            .comment-input-wrapper {
+                border-color: #f0f0f0;
+            }
+
+            .content-comment-divider {
+                background: #f0f0f0;
+            }
+
+            .action-svg path {
+                stroke: #666666;
+            }
+
+            .modal-mask {
+                background: rgba(0, 0, 0, 0.28);
+            }
         }
     </style>
 </head>
