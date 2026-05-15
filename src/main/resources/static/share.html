@@ -7,6 +7,8 @@
             content="width=device-width, initial-scale=1.0, viewport-fit=cover"
     />
     <meta name="color-scheme" content="light" />
+    <meta name="supported-color-schemes" content="light" />
+    <meta name="theme-color" content="#ffffff" />
 
     <title>作品详情</title>
 
@@ -22,7 +24,7 @@
 
     <style>
         :root {
-            color-scheme: light;
+            color-scheme: only light !important;
         }
 
         * {
@@ -434,13 +436,9 @@
             margin-top: 5px;
         }
 
-        .comment-time {
-            font-size: 12px;
-            color: #999999;
-            line-height: 1;
-        }
-
-        .comment-reply-btn {
+        .comment-time,
+        .comment-reply-btn,
+        .comment-replies-toggle-text {
             font-size: 12px;
             color: #999999;
             line-height: 1;
@@ -448,12 +446,6 @@
 
         .comment-replies-toggle {
             margin-top: 8px;
-        }
-
-        .comment-replies-toggle-text {
-            font-size: 12px;
-            color: #999999;
-            line-height: 1;
         }
 
         .empty-comments {
@@ -705,11 +697,36 @@
             background: rgba(253, 231, 209, 1);
         }
 
+        html,
+        body,
+        .page,
+        .author-section,
+        .content-section,
+        .comments-section,
+        .comment-list,
+        .bottom-bar,
+        .comment-input-wrapper,
+        .modal,
+        .error-box,
+        button,
+        a {
+            forced-color-adjust: none !important;
+            color-scheme: only light !important;
+        }
+
+        img,
+        video,
+        svg,
+        canvas {
+            filter: none !important;
+            mix-blend-mode: normal !important;
+        }
+
         @media (prefers-color-scheme: dark) {
             html,
             body {
-                background: #ffffff;
-                color: #1f2329;
+                background: #ffffff !important;
+                color: #1f2329 !important;
             }
 
             .page,
@@ -724,25 +741,18 @@
             .comment-input-wrapper,
             .modal,
             .error-box {
-                background: #ffffff;
+                background: #ffffff !important;
             }
 
             .media-section.video-media,
             .media-section.video-media .media-video,
             .image-preview-mask {
-                background: #000000;
+                background: #000000 !important;
             }
 
             .download-bar {
-                background: rgba(255, 255, 255, 0.98);
-                border-color: rgba(240, 240, 240, 0.96);
-                box-shadow: 0 14px 38px rgba(31, 35, 41, 0.22);
-            }
-
-            .app-logo,
-            .author-avatar,
-            .comment-avatar {
-                background: #eeeeee;
+                background: rgba(255, 255, 255, 0.98) !important;
+                border-color: rgba(240, 240, 240, 0.96) !important;
             }
 
             .download-title,
@@ -752,20 +762,22 @@
             .title,
             .modal-title,
             .error-title {
-                color: #1f2329;
+                color: #1f2329 !important;
             }
 
             .detail-line,
             .detail,
             .comment-text {
-                color: #333333;
+                color: #333333 !important;
             }
 
             .comments-sort,
             .action-item,
             .action-icon,
-            .share-action-icon {
-                color: #666666;
+            .share-action-icon,
+            .comment-like-btn,
+            .comment-like-icon {
+                color: #666666 !important;
             }
 
             .author-desc,
@@ -777,62 +789,53 @@
             .more-comments,
             .comment-placeholder,
             .action-count,
-            .error-desc {
-                color: #999999;
-            }
-
-            .comment-like-btn {
-                color: #666666;
-            }
-
-            .comment-like-icon {
-                color: #666666;
-            }
-
-            .comment-like-btn.liked .comment-like-icon,
-            .action-icon.liked {
-                color: #ff4d67;
+            .error-desc,
+            .comment-like-count {
+                color: #999999 !important;
             }
 
             .follow-btn {
-                background: #ff4d67;
-                color: #ffffff;
-                box-shadow: 0 2px 8px rgba(255, 77, 103, 0.28);
+                background: #ff4d67 !important;
+                color: #ffffff !important;
             }
 
             .follow-btn.following {
-                background: #f0f0f0;
-                color: #666666;
-                box-shadow: none;
+                background: #f0f0f0 !important;
+                color: #666666 !important;
             }
 
             .category,
             .modal-confirm,
             .retry-btn {
-                background: rgba(253, 231, 209, 1);
-                color: #8a5a2b;
+                background: rgba(253, 231, 209, 1) !important;
+                color: #8a5a2b !important;
             }
 
             .modal-cancel {
-                background: #f2f2f2;
-                color: #555555;
-            }
-
-            .comment-input-wrapper {
-                border-color: #f0f0f0;
+                background: #f2f2f2 !important;
+                color: #555555 !important;
             }
 
             .content-comment-divider {
-                background: #f0f0f0;
+                background: #f0f0f0 !important;
             }
 
             .action-svg path {
-                stroke: #666666;
+                stroke: #666666 !important;
             }
+        }
 
-            .modal-mask {
-                background: rgba(0, 0, 0, 0.28);
-            }
+
+        html,
+        body {
+            overscroll-behavior: none !important;
+            overscroll-behavior-y: none !important;
+            overflow-x: hidden !important;
+        }
+
+        .page {
+            overscroll-behavior: none !important;
+            overscroll-behavior-y: none !important;
         }
     </style>
 </head>
@@ -904,7 +907,7 @@
 </div>
 
 <script>
-    console.log('violet share page loaded image-style-v4')
+    console.log('violet share page loaded force-light-v1')
 
     const CONFIG = {
         API_BASE: '',
@@ -959,25 +962,13 @@
         body[CONFIG.CREATION_ID_KEY] = toIdString(state.creationId)
 
         const data = await postJson(CONFIG.FORWARD_DETAIL_API, body)
-
         const raw = data || {}
-
-        const creation =
-            pickObject(raw, ['creation']) ||
-            {}
-
-        const userInfoArray =
-            pickArray(raw, ['user_info', 'userInfo', 'user_infos', 'userInfos']) ||
-            []
-
-        const author =
-            Array.isArray(userInfoArray) && userInfoArray.length
-                ? userInfoArray[0]
-                : pickObject(raw, ['user_info', 'userInfo']) || {}
-
-        const comments =
-            pickArray(raw, ['comments', 'comment_list', 'commentList']) ||
-            []
+        const creation = pickObject(raw, ['creation']) || {}
+        const userInfoArray = pickArray(raw, ['user_info', 'userInfo', 'user_infos', 'userInfos']) || []
+        const author = Array.isArray(userInfoArray) && userInfoArray.length
+            ? userInfoArray[0]
+            : pickObject(raw, ['user_info', 'userInfo']) || {}
+        const comments = pickArray(raw, ['comments', 'comment_list', 'commentList']) || []
 
         state.detail = normalizeForwardDetail({
             creation,
@@ -1818,6 +1809,56 @@
             .replace(/\n/g, '\\n')
             .replace(/\r/g, '\\r')
     }
+
+
+    ;(function () {
+        let startY = 0
+
+        function getScrollElement() {
+            return document.scrollingElement || document.documentElement || document.body
+        }
+
+        document.addEventListener(
+            'touchstart',
+            function (event) {
+                if (!event.touches || event.touches.length !== 1) {
+                    return
+                }
+
+                startY = event.touches[0].clientY
+            },
+            {
+                passive: true
+            }
+        )
+
+        document.addEventListener(
+            'touchmove',
+            function (event) {
+                if (!event.touches || event.touches.length !== 1) {
+                    return
+                }
+
+                const currentY = event.touches[0].clientY
+                const deltaY = currentY - startY
+
+                const scrollEl = getScrollElement()
+                const scrollTop = scrollEl.scrollTop
+                const scrollHeight = scrollEl.scrollHeight
+                const clientHeight = scrollEl.clientHeight
+
+                const atTop = scrollTop <= 0
+                const atBottom = scrollTop + clientHeight >= scrollHeight - 1
+
+                if ((atTop && deltaY > 0) || (atBottom && deltaY < 0)) {
+                    event.preventDefault()
+                }
+            },
+            {
+                passive: false
+            }
+        )
+    })()
 </script>
 </body>
 </html>

@@ -7,6 +7,8 @@
             content="width=device-width, initial-scale=1.0, viewport-fit=cover"
     />
     <meta name="color-scheme" content="light" />
+    <meta name="supported-color-schemes" content="light" />
+    <meta name="theme-color" content="#fffaf4" />
     <title>下载 Violet App</title>
 
     <link rel="icon" type="image/png" href="./logo.png" />
@@ -15,7 +17,7 @@
 
     <style>
         :root {
-            color-scheme: light;
+            color-scheme: only light !important;
         }
 
         * {
@@ -261,9 +263,10 @@
             font-weight: 400;
             letter-spacing: 1px;
             background: rgba(253, 231, 209, 1);
+            border: none;
             box-shadow:
                     0 18px 38px rgba(138, 90, 43, 0.22),
-                    0 6px 16px rgba(138, 90, 43, 0.1)
+                    0 6px 16px rgba(138, 90, 43, 0.1);
         }
 
         .download:active {
@@ -323,39 +326,83 @@
             }
         }
 
+        html,
+        body,
+        .page,
+        .content,
+        .hero,
+        .download-area,
+        .app-chip,
+        .download,
+        .tip,
+        .slogan-text,
+        .app-name,
+        .app-desc,
+        a,
+        button {
+            forced-color-adjust: none !important;
+            color-scheme: only light !important;
+        }
+
+        img,
+        video,
+        svg,
+        canvas {
+            filter: none !important;
+            mix-blend-mode: normal !important;
+        }
+
         @media (prefers-color-scheme: dark) {
             html,
             body {
-                color: #1f2329;
-                background: #fffaf4;
+                color: #1f2329 !important;
+                background: #fffaf4 !important;
             }
 
             .page {
                 background:
                         radial-gradient(circle at 50% 18%, rgba(255, 255, 255, 0.96) 0%, rgba(255, 255, 255, 0.68) 32%, rgba(253, 231, 209, 0.32) 58%, rgba(255, 255, 255, 0.08) 100%),
-                        linear-gradient(160deg, rgba(253, 231, 209, 0.92) 0%, #fff7ee 36%, #ffffff 66%, #fffaf5 100%);
+                        linear-gradient(160deg, rgba(253, 231, 209, 0.92) 0%, #fff7ee 36%, #ffffff 66%, #fffaf5 100%) !important;
             }
 
             .app-chip {
-                background: rgba(255, 255, 255, 0.92);
+                background: rgba(255, 255, 255, 0.92) !important;
             }
 
-            .app-name,
             .download {
-                color: #202124;
+                color: #202124 !important;
+                background: rgba(253, 231, 209, 1) !important;
+                border: none !important;
+            }
+
+            .app-name {
+                color: #202124 !important;
             }
 
             .slogan-text {
-                color: #5f6368;
+                color: #5f6368 !important;
             }
 
             .app-desc {
-                color: #7a7f87;
+                color: #7a7f87 !important;
             }
 
             .tip {
-                color: #8e8379;
+                color: #8e8379 !important;
             }
+        }
+
+
+        html,
+        body {
+            overscroll-behavior: none !important;
+            overscroll-behavior-y: none !important;
+            overflow-x: hidden !important;
+        }
+
+        .page {
+            overscroll-behavior: none !important;
+            overscroll-behavior-y: none !important;
         }
     </style>
 </head>
@@ -393,7 +440,7 @@
 
             <a
                     class="download"
-                    href="https://violet-feed.oss-cn-beijing.aliyuncs.com/apk/Violet-latest.apk"
+                    href="https://github.com/Violet-Feed/starter/releases/latest/download/Violet.apk"
             >
                 下载 Android 版
             </a>
@@ -404,5 +451,56 @@
         </section>
     </section>
 </main>
+
+<script>
+    ;(function () {
+        let startY = 0
+
+        function getScrollElement() {
+            return document.scrollingElement || document.documentElement || document.body
+        }
+
+        document.addEventListener(
+            'touchstart',
+            function (event) {
+                if (!event.touches || event.touches.length !== 1) {
+                    return
+                }
+
+                startY = event.touches[0].clientY
+            },
+            {
+                passive: true
+            }
+        )
+
+        document.addEventListener(
+            'touchmove',
+            function (event) {
+                if (!event.touches || event.touches.length !== 1) {
+                    return
+                }
+
+                const currentY = event.touches[0].clientY
+                const deltaY = currentY - startY
+
+                const scrollEl = getScrollElement()
+                const scrollTop = scrollEl.scrollTop
+                const scrollHeight = scrollEl.scrollHeight
+                const clientHeight = scrollEl.clientHeight
+
+                const atTop = scrollTop <= 0
+                const atBottom = scrollTop + clientHeight >= scrollHeight - 1
+
+                if ((atTop && deltaY > 0) || (atBottom && deltaY < 0)) {
+                    event.preventDefault()
+                }
+            },
+            {
+                passive: false
+            }
+        )
+    })()
+</script>
 </body>
 </html>
