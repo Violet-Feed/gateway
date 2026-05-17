@@ -85,7 +85,7 @@ public class AigcServiceImpl implements AigcService {
             return resp;
         }
         String status = req.getString("status");
-        if (!"Success".equals(status) && !"Fail".equals(status)) {
+        if (!"success".equals(status) && !"failed".equals(status)) {
             resp.put("status", "success");
             return resp;
         }
