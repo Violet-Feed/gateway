@@ -78,21 +78,23 @@ public class AigcServiceImpl implements AigcService {
 
     @Override
     public JSONObject videoMaterialCallback(JSONObject req) {
-log.info("req {}",req.toString());
         JSONObject resp = new JSONObject();
         Object challenge = req.get("challenge");
         if (challenge != null) {
             resp.put("challenge", challenge);
             return resp;
         }
-        String taskId = req.getString("task_id");
         String status = req.getString("status");
+        if (!"Success".equals(status) && !"Fail".equals(status)) {
+            resp.put("status", "success");
+            return resp;
+        }
+        String taskId = req.getString("task_id");
         String fileId = req.getString("file_id");
         JSONObject baseResp = req.getJSONObject("base_resp");
         if (baseResp != null) {
             int statusCode = baseResp.getIntValue("status_code");
             String statusMsg = baseResp.getString("status_msg");
-log.info("file {}",fileId);
             VideoMaterialCallbackRequest videoMaterialCallbackRequest = VideoMaterialCallbackRequest.newBuilder().setTaskId(taskId).setStatus(status).setFileId(fileId).setStatusCode(statusCode).setStatusMsg(statusMsg).build();
             VideoMaterialCallbackResponse videoMaterialCallbackResponse = aigcStub.videoMaterialCallback(videoMaterialCallbackRequest);
             if (videoMaterialCallbackResponse.getBaseResp().getStatusCode() != StatusCode.Success) {
