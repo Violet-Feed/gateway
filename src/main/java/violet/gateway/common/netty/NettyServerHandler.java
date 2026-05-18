@@ -67,6 +67,7 @@ public class NettyServerHandler extends SimpleChannelInboundHandler<Packet> {
             String key = String.format("conn:%s", this.userId);
             String channelId = ctx.channel().id().asShortText();
             redisTemplate.opsForHash().putIfAbsent(key, channelId, String.valueOf(this.userId));
+            ctx.writeAndFlush(new Packet((byte) 1, 0, new byte[0]));
         } else if (packet.getPacketType() == PacketType.Heartbeat_VALUE) {
             ctx.writeAndFlush(new Packet((byte) 2, 0, new byte[0]));
         }
