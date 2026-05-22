@@ -60,7 +60,6 @@ public class NettyServerHandler extends SimpleChannelInboundHandler<Packet> {
     // 当接收到客户端发送的消息时调用
     @Override
     protected void channelRead0(ChannelHandlerContext ctx, Packet packet) throws Exception {
-        log.info("Received from client: " + packet);
         if (packet.getPacketType() == PacketType.Connect_VALUE) {
             ConnectPacket connectPacket = ConnectPacket.parseFrom(packet.getData());
             this.userId = connectPacket.getUserId();
