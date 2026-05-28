@@ -23,6 +23,7 @@ public class CommonServiceImpl implements CommonService {
     private final String SOURCE_OSS_PATH = "material/source/%d.png";
     private final String IMAGE_MESSAGE_OSS_PATH = "message/image/%d.png";
     private final String VIDEO_MESSAGE_OSS_PATH = "message/video/%d.mp4";
+    private final String EMOJI_OSS_PATH = "emoji/%d.%s";
 
     @Override
     public JSONObject uploadImage(MultipartFile image, String type) throws Exception {
@@ -44,6 +45,9 @@ public class CommonServiceImpl implements CommonService {
             case "image_message":
                 ossPath = String.format(IMAGE_MESSAGE_OSS_PATH, imageId);
                 break;
+            case "emoji":
+                ossPath = String.format(EMOJI_OSS_PATH, imageId, resolveEmojiExt(image));
+                break;
             default:
                 log.error("Unsupported image type: {}", type);
                 throw new NullPointerException("Unsupported image type: " + type);
@@ -57,5 +61,17 @@ public class CommonServiceImpl implements CommonService {
             log.error("Failed to read file input stream: {}", e.getMessage());
             throw e;
         }
+    }
+
+    private String resolveEmojiExt(MultipartFile file) {
+        String contentType = file.getContentType();
+        if ("image/gif".equalsIgnoreCase(contentType)) {
+            return "gif";
+        }
+        String filename = file.getOriginalFilename();
+        if (filename != null && filename.toLowerCase().endsWith(".gif")) {
+            return "gif";
+        }
+        return "png";
     }
 }
