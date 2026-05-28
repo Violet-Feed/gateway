@@ -16,28 +16,33 @@ import java.io.InputStream;
 @Slf4j
 @Service
 public class CommonServiceImpl implements CommonService {
-    private final SnowFlake avatarIdGenerator = new SnowFlake(0, 0);
+    private final SnowFlake imageIdGenerator = new SnowFlake(0, 0);
     private final String USER_AVATAR_OSS_PATH = "avatar/user/%d.png";
     private final String CONV_AVATAR_OSS_PATH = "avatar/conversation/%d.png";
     private final String AGENT_AVATAR_OSS_PATH = "avatar/agent/%d.png";
     private final String SOURCE_OSS_PATH = "material/source/%d.png";
+    private final String IMAGE_MESSAGE_OSS_PATH = "message/image/%d.png";
+    private final String VIDEO_MESSAGE_OSS_PATH = "message/video/%d.mp4";
 
     @Override
     public JSONObject uploadImage(MultipartFile image, String type) throws Exception {
         String ossPath;
-        Long avatarId = avatarIdGenerator.nextId();
+        Long imageId = imageIdGenerator.nextId();
         switch (type) {
             case "user_avatar":
-                ossPath = String.format(USER_AVATAR_OSS_PATH, avatarId);
+                ossPath = String.format(USER_AVATAR_OSS_PATH, imageId);
                 break;
             case "conv_avatar":
-                ossPath = String.format(CONV_AVATAR_OSS_PATH, avatarId);
+                ossPath = String.format(CONV_AVATAR_OSS_PATH, imageId);
                 break;
             case "agent_avatar":
-                ossPath = String.format(AGENT_AVATAR_OSS_PATH, avatarId);
+                ossPath = String.format(AGENT_AVATAR_OSS_PATH, imageId);
                 break;
             case "material_source":
-                ossPath = String.format(SOURCE_OSS_PATH, avatarId);
+                ossPath = String.format(SOURCE_OSS_PATH, imageId);
+                break;
+            case "image_message":
+                ossPath = String.format(IMAGE_MESSAGE_OSS_PATH, imageId);
                 break;
             default:
                 log.error("Unsupported image type: {}", type);

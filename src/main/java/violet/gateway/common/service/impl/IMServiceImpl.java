@@ -520,4 +520,44 @@ public class IMServiceImpl implements IMService {
         data.put("agents", agentInfoMap);
         return data;
     }
+
+    @Override
+    public JSONObject addEmoji(JSONObject req) throws Exception {
+        CustomAuthenticationToken authentication = (CustomAuthenticationToken) SecurityContextHolder.getContext().getAuthentication();
+        Long userId = authentication.getUserId();
+        String emojiName = req.getString("emoji_name");
+        String emojiUri = req.getString("emoji_uri");
+        AddEmojiRequest addEmojiRequest = AddEmojiRequest.newBuilder()
+                .setUserId(userId)
+                .setEmojiName(emojiName)
+                .setEmojiUri(emojiUri)
+                .build();
+        AddEmojiResponse addEmojiResponse = imStub.addEmoji(addEmojiRequest);
+        if (addEmojiResponse.getBaseResp().getStatusCode() != StatusCode.Success) {
+            log.error("[addEmoji] AddEmoji rpc err, err = {}", addEmojiResponse.getBaseResp());
+            throw new RpcException(addEmojiResponse.getBaseResp());
+        }
+        JSONObject data = new JSONObject();
+        data.put("emoji_id", addEmojiResponse.getEmojiId());
+        return data;
+    }
+
+    @Override
+    public JSONObject getEmojiList(JSONObject req) throws Exception {
+        CustomAuthenticationToken authentication = (CustomAuthenticationToken) SecurityContextHolder.getContext().getAuthentication();
+        Long userId = authentication.getUserId();
+        Integer page = req.getInteger("page");
+        GetEmojiListRequest getEmojiListRequest = GetEmojiListRequest.newBuilder()
+                .setUserId(userId)
+                .setPage(page)
+                .build();
+        GetEmojiListResponse getEmojiListResponse = imStub.getEmojiList(getEmojiListRequest);
+        if (getEmojiListResponse.getBaseResp().getStatusCode() != StatusCode.Success) {
+            log.error("[getEmojiList] GetEmojiList rpc err, err = {}", getEmojiListResponse.getBaseResp());
+            throw new RpcException(getEmojiListResponse.getBaseResp());
+        }
+        JSONObject data = new JSONObject();
+        data.put("emojis", getEmojiListResponse.getEmojisList());
+        return data;
+    }
 }

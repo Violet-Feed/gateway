@@ -44,4 +44,8 @@ public interface IMService {
     JSONObject getConversationAgents(JSONObject req) throws Exception;
 
     JSONObject getConversationAgentsByIds(JSONObject req) throws Exception;
+
+    JSONObject addEmoji(JSONObject req) throws Exception;
+
+    JSONObject getEmojiList(JSONObject req) throws Exception;
 }
