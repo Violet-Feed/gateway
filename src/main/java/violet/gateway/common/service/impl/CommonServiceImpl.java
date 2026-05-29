@@ -2,6 +2,7 @@ package violet.gateway.common.service.impl;
 
 import com.alibaba.fastjson.JSONObject;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -16,6 +17,7 @@ import java.io.InputStream;
 @Slf4j
 @Service
 public class CommonServiceImpl implements CommonService {
+    private static RedisTemplate<String, String> redisTemplate;
     private final SnowFlake imageIdGenerator = new SnowFlake(0, 0);
     private final String USER_AVATAR_OSS_PATH = "avatar/user/%d.png";
     private final String CONV_AVATAR_OSS_PATH = "avatar/conversation/%d.png";
@@ -24,6 +26,18 @@ public class CommonServiceImpl implements CommonService {
     private final String IMAGE_MESSAGE_OSS_PATH = "message/image/%d.png";
     private final String VIDEO_MESSAGE_OSS_PATH = "message/video/%d.mp4";
     private final String EMOJI_OSS_PATH = "emoji/%d.%s";
+
+    private String resolveEmojiExt(MultipartFile file) {
+        String contentType = file.getContentType();
+        if ("image/gif".equalsIgnoreCase(contentType)) {
+            return "gif";
+        }
+        String filename = file.getOriginalFilename();
+        if (filename != null && filename.toLowerCase().endsWith(".gif")) {
+            return "gif";
+        }
+        return "png";
+    }
 
     @Override
     public JSONObject uploadImage(MultipartFile image, String type) throws Exception {
@@ -63,15 +77,13 @@ public class CommonServiceImpl implements CommonService {
         }
     }
 
-    private String resolveEmojiExt(MultipartFile file) {
-        String contentType = file.getContentType();
-        if ("image/gif".equalsIgnoreCase(contentType)) {
-            return "gif";
+    @Override
+    public JSONObject checkVersion(JSONObject req) throws Exception {
+        String version = redisTemplate.opsForValue().get("latest_version");
+        if (version == null || version.isEmpty()) {
+            log.error("Latest version not found in Redis");
+            throw new NullPointerException("Latest version not found in Redis");
         }
-        String filename = file.getOriginalFilename();
-        if (filename != null && filename.toLowerCase().endsWith(".gif")) {
-            return "gif";
-        }
-        return "png";
+        return JSONObject.parseObject(version);
     }
 }
