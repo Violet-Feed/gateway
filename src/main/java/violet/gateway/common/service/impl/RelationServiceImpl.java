@@ -68,7 +68,7 @@ public class RelationServiceImpl implements RelationService {
             throw new RpcException(getFollowListResponse.getBaseResp());
         }
         try {
-            List<UserVO> userVOList = fillUserInfo(userId, getFollowListResponse.getUserIdsList(), false, true);
+            List<UserVO> userVOList = fillUserInfo(userId, getFollowListResponse.getUserIdsList(), true, true);
             JSONObject data = new JSONObject();
             data.put("user_infos", userVOList);
             return data;
@@ -91,7 +91,7 @@ public class RelationServiceImpl implements RelationService {
             throw new RpcException(getFollowListResponse.getBaseResp());
         }
         try {
-            List<UserVO> userVOList = fillUserInfo(userId, getFollowListResponse.getUserIdsList(), true, false);
+            List<UserVO> userVOList = fillUserInfo(userId, getFollowListResponse.getUserIdsList(), true, true);
             JSONObject data = new JSONObject();
             data.put("user_infos", userVOList);
             return data;
@@ -168,8 +168,8 @@ public class RelationServiceImpl implements RelationService {
             userVo.setCreateTime(userInfo == null ? 0 : userInfo.getCreateTime());
             userVo.setStatus(userInfo == null ? 0 : userInfo.getStatus());
             userVo.setExtra(userInfo == null ? "" : userInfo.getExtra());
-            userVo.setIsFollowing(isFollowingMap.getOrDefault(id, true));
-            userVo.setIsFollower(isFollowerMap.getOrDefault(id, true));
+            userVo.setIsFollowing(isFollowingMap.getOrDefault(id, false));
+            userVo.setIsFollower(isFollowerMap.getOrDefault(id, false));
             return userVo;
         }).collect(Collectors.toList());
     }
