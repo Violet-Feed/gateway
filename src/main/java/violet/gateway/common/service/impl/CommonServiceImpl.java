@@ -2,6 +2,7 @@ package violet.gateway.common.service.impl;
 
 import com.alibaba.fastjson.JSONObject;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
@@ -17,7 +18,8 @@ import java.io.InputStream;
 @Slf4j
 @Service
 public class CommonServiceImpl implements CommonService {
-    private static RedisTemplate<String, String> redisTemplate;
+    @Autowired
+    private RedisTemplate<String, String> redisTemplate;
     private final SnowFlake imageIdGenerator = new SnowFlake(0, 0);
     private final String USER_AVATAR_OSS_PATH = "avatar/user/%d.png";
     private final String CONV_AVATAR_OSS_PATH = "avatar/conversation/%d.png";
@@ -72,7 +74,7 @@ public class CommonServiceImpl implements CommonService {
             data.put("source_url", sourceUrl);
             return data;
         } catch (IOException e) {
-            log.error("Failed to read file input stream: {}", e.getMessage());
+            log.error("[uploadImage] Failed to read file input stream: {}", e.getMessage());
             throw e;
         }
     }
@@ -81,7 +83,7 @@ public class CommonServiceImpl implements CommonService {
     public JSONObject checkVersion(JSONObject req) throws Exception {
         String version = redisTemplate.opsForValue().get("latest_version");
         if (version == null || version.isEmpty()) {
-            log.error("Latest version not found in Redis");
+            log.error("[checkVersion] Latest version not found in Redis");
             throw new NullPointerException("Latest version not found in Redis");
         }
         return JSONObject.parseObject(version);
