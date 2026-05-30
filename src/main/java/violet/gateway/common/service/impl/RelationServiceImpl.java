@@ -168,8 +168,8 @@ public class RelationServiceImpl implements RelationService {
             userVo.setCreateTime(userInfo == null ? 0 : userInfo.getCreateTime());
             userVo.setStatus(userInfo == null ? 0 : userInfo.getStatus());
             userVo.setExtra(userInfo == null ? "" : userInfo.getExtra());
-            userVo.setIsFollowing(isFollowingMap.getOrDefault(id, false));
-            userVo.setIsFollower(isFollowerMap.getOrDefault(id, false));
+            userVo.setIsFollowing(isFollowingMap.getOrDefault(id, true));
+            userVo.setIsFollower(isFollowerMap.getOrDefault(id, true));
             return userVo;
         }).collect(Collectors.toList());
     }
