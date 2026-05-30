@@ -27,56 +27,6 @@ public class CommonServiceImpl implements CommonService {
     private final String VIDEO_MESSAGE_OSS_PATH = "message/video/%d.%s";
     private final String EMOJI_OSS_PATH = "emoji/%d.%s";
 
-    private String resolveEmojiExt(MultipartFile file) {
-        String contentType = file.getContentType();
-        if ("image/gif".equalsIgnoreCase(contentType)) {
-            return "gif";
-        }
-        String filename = file.getOriginalFilename();
-        if (filename != null && filename.toLowerCase().endsWith(".gif")) {
-            return "gif";
-        }
-        return "png";
-    }
-
-    @Override
-    public JSONObject uploadImage(MultipartFile image, String type) throws Exception {
-        String ossPath;
-        Long imageId = imageIdGenerator.nextId();
-        switch (type) {
-            case "user_avatar":
-                ossPath = String.format(USER_AVATAR_OSS_PATH, imageId, "png");
-                break;
-            case "conv_avatar":
-                ossPath = String.format(CONV_AVATAR_OSS_PATH, imageId, "png");
-                break;
-            case "agent_avatar":
-                ossPath = String.format(AGENT_AVATAR_OSS_PATH, imageId, "png");
-                break;
-            case "material_source":
-                ossPath = String.format(SOURCE_OSS_PATH, imageId, "png");
-                break;
-            case "image_message":
-                ossPath = String.format(IMAGE_MESSAGE_OSS_PATH, imageId, "png");
-                break;
-            case "emoji":
-                ossPath = String.format(EMOJI_OSS_PATH, imageId, resolveEmojiExt(image));
-                break;
-            default:
-                log.error("Unsupported image type: {}", type);
-                throw new NullPointerException("Unsupported image type: " + type);
-        }
-        try (InputStream in = image.getInputStream()) {
-            String sourceUrl = OSSUtil.upload(in, ossPath);
-            JSONObject data = new JSONObject();
-            data.put("source_url", sourceUrl);
-            return data;
-        } catch (IOException e) {
-            log.error("[uploadImage] Failed to read file input stream: {}", e.getMessage());
-            throw e;
-        }
-    }
-
     private String resolveExt(String fileName, String contentType, String defaultExt) {
         if (fileName != null && !fileName.isEmpty()) {
             String lower = fileName.toLowerCase();
