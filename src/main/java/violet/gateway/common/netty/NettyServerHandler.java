@@ -2,6 +2,7 @@ package violet.gateway.common.netty;
 
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
+import io.netty.handler.timeout.IdleStateEvent;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
@@ -37,7 +38,7 @@ public class NettyServerHandler extends SimpleChannelInboundHandler<Packet> {
     @Override
     public void channelActive(ChannelHandlerContext ctx) throws Exception {
         String channelId = ctx.channel().id().asShortText();
-        log.info("Client connected: " + channelId);
+        log.info("Client connected. channelId={}", channelId);
         channelContextMap.put(channelId, ctx);
         super.channelActive(ctx);
     }
@@ -45,14 +46,16 @@ public class NettyServerHandler extends SimpleChannelInboundHandler<Packet> {
     // 当客户端连接断开时，从map中移除对应的ChannelHandlerContext
     @Override
     public void channelInactive(ChannelHandlerContext ctx) throws Exception {
-        log.info("Client disconnected");
         String channelId = ctx.channel().id().asShortText();
+        log.info("Client disconnected. userId={}, channelId={}", userId, channelId);
         channelContextMap.remove(channelId);
-        String key = String.format("conn:%s", this.userId);
-        try {
-            redisTemplate.opsForHash().delete(key, channelId);
-        } catch (Exception e) {
-            log.warn("redis delete connection err. err = {}: ", e.getMessage());
+        if (userId != null) {
+            String key = String.format("conn:%s", this.userId);
+            try {
+                redisTemplate.opsForHash().delete(key, channelId);
+            } catch (Exception e) {
+                log.warn("redis delete connection err. err = {}: ", e.getMessage());
+            }
         }
         super.channelInactive(ctx);
     }
@@ -66,6 +69,7 @@ public class NettyServerHandler extends SimpleChannelInboundHandler<Packet> {
             String key = String.format("conn:%s", this.userId);
             String channelId = ctx.channel().id().asShortText();
             redisTemplate.opsForHash().putIfAbsent(key, channelId, String.valueOf(this.userId));
+            log.info("Client authenticated. userId={}, channelId={}", this.userId, channelId);
             ctx.writeAndFlush(new Packet((byte) 1, 0, new byte[0]));
         } else if (packet.getPacketType() == PacketType.Heartbeat_VALUE) {
             ctx.writeAndFlush(new Packet((byte) 2, 0, new byte[0]));
@@ -75,9 +79,29 @@ public class NettyServerHandler extends SimpleChannelInboundHandler<Packet> {
     // 捕获处理过程中发生的异常
     @Override
     public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) {
-        cause.printStackTrace();
-        // 关闭通道以避免资源泄漏
+        String channelId = ctx.channel().id().asShortText();
+        if (cause instanceof java.io.IOException) {
+            String msg = cause.getMessage();
+            if (msg != null && (msg.contains("Connection reset") || msg.contains("Connection timed out") || msg.contains("Broken pipe"))) {
+                log.info("Client connection closed abnormally. userId={}, channelId={}, reason={}", userId, channelId, msg);
+            } else {
+                log.warn("Client IO exception. userId={}, channelId={}", userId, channelId, cause);
+            }
+        } else {
+            log.error("Netty handler exception. userId={}, channelId={}", userId, channelId, cause);
+        }
         ctx.close();
+    }
+
+    @Override
+    public void userEventTriggered(ChannelHandlerContext ctx, Object evt) throws Exception {
+        if (evt instanceof IdleStateEvent) {
+            String channelId = ctx.channel().id().asShortText();
+            log.info("Client heartbeat timeout. userId={}, channelId={}", userId, channelId);
+            ctx.close();
+            return;
+        }
+        super.userEventTriggered(ctx, evt);
     }
 
     public static PushResponse push(PushRequest req) {
